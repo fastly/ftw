@@ -1,0 +1,59 @@
+---
+  meta: 
+    author: "Zack"
+    enabled: true
+    name: "Name"
+    description: "Description"
+  tests: 
+    - 
+      rule_id: 1234
+      stages: 
+        - 
+          stage: 
+            input: 
+              method: "GET"
+              port: 80
+              headers: 
+                - 
+                  User-Agent: "Foo"
+              protocol: "http"
+              url: "/index.html"
+            output: 
+              status: 200
+              html_contains: "*error*"
+              log_contains: "*error1234*"
+    - 
+      rule_id: 1235
+      stages: 
+        - 
+          stage: 
+            input: 
+              method: "POST"
+              data: "I'm slim shady"
+              port: 443
+              headers: 
+                - 
+                  User-Agent: "Foo"
+                  API-Key: "abcdefghijklmnopqrztuvwxyz"
+              protocol: "http"
+              url: "/index.html"
+            output: 
+              status: 200
+              html_contains: "Rap Lyric Received"
+              log_contains: "API key abcdefghijklmnopqrstuvwxyz submitted lyric"
+        - 
+          stage: 
+            input: 
+              method: "POST"
+              data: "{\"last_lyric:\":\"I'm slim shady\",\"delete\":true}"
+              port: 443
+              headers: 
+                - 
+                  User-Agent: "Foo"
+                  API-Key: "abcdefghijklmnopqrztuvwxyz"
+              protocol: "http"
+              url: "/index.html"
+            output: 
+              status: 200
+              html_contains: "Rap Lyric Received"
+              log_contains: "API key abcdefghijklmnopqrstuvwxyz submitted lyric"
