@@ -1,0 +1,74 @@
+---
+clean:
+    - test:
+        - meta:
+            name: "Test 1"
+            id: 1
+            author: "Chaim Sanders"
+        - input:
+            protocol: 'http'
+            port: '80'
+            method: 'GET'
+            url: '/index.php?t=test'
+            headers: [
+                user-agent: 'test'
+            ]
+        - output:
+            status: 201
+
+        - input:
+            method: 'GET'
+            url: '/CHAIM'
+            headers: [
+                useragent: 'xyz',
+                host: 'zyx'
+            ]
+        - output:
+            status: 202
+
+        - input:
+            protocol: 'http'
+            port: '80'
+            method: 'GET'
+            url: '/'
+        - output:
+            status: 200
+
+xss:
+    - test:
+        - meta:
+            name: "Test 2"
+            id: 2
+            author: "Chaim Sanders"
+        - input:
+            protocol: 'http'
+            addr: 'www.cnn.com'
+            port: '80'
+            url: '/t.php'
+        - output:
+            saveCookie: true
+            status: 200
+    - test:
+        - meta:
+            name: "Test 3"
+            id: 3
+            author: "Chaim Sanders"
+        - input:
+            protocol: 'http'
+            addr: 'reddit.com'
+            port: '443'
+            url: '/'
+        - output:
+            status: 200
+    - test:
+        - input:
+            protocol: 'http'
+            addr: 'www.chaimsanders.com'
+            port: '80'
+            rawRequest: |
+                GET / HTTP/1.1 
+                Host: www.chaimsanders.com
+                User-Agent: test
+
+        - output:
+            status: 200

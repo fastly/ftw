@@ -1,0 +1,5 @@
+PyYAML>3.09
+requests>0.11.1
+pylint>=1.5.0
+IPy>0.75
+#locustio>=0.7.3

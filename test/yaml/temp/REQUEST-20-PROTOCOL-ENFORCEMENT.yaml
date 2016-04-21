@@ -1,0 +1,108 @@
+---
+Protocol Enforcment:
+    - test:
+        - meta:
+            name: "Test Trigger no Rules"
+            id: 1
+            author: "Chaim Sanders"
+            enabled: False
+        - input:
+            protocol: 'http'
+            port: '80'
+            method: 'GET'
+            url: '/'
+        - output:
+            status: 200
+            triggers: []
+            log_contains: "error"
+            site_contains: "Bank"
+    - test:
+        - meta:
+            name: "Triggering Rule 920170"
+            id: 1
+            author: "Chaim Sanders"
+            enabled: False
+        - input:
+            protocol: 'http'
+            port: '80'
+            method: 'GET'
+            url: '/index.php'
+            data: 'test'
+        - output:
+            status: 302
+            triggers: [920170]
+            site_contains: "hello worl[a-z]"
+            log_contains: "octopus"
+    - test:
+        - meta:
+            name: "Triggering Rule 911100"
+            id: 1
+            author: "Chaim Sanders"
+            enabled: False
+        - input:
+            protocol: 'http'
+            port: '80'
+            method: 'options'
+            url: '* x'
+        - output:
+            status: 501
+            triggers: [920100]
+            log_contains: "error"            
+    - test:
+        - meta:
+            name: "Triggering Rule 920110"
+            id: 1
+            author: "Chaim Sanders"
+            enabled: False
+        - input:
+            protocol: 'http'
+            port: '80'
+            method: 'GET x'
+            url: 'http://host:80/abspathxy?query'
+            data: 'test'
+        - output:
+            status: 400
+            triggers: [920110]
+            log_contains: "error"  
+    # Working   
+    - test:
+        - meta:
+            name: "Test Trigger 920420"
+            id: 1
+            author: "Chaim Sanders"
+            enabled: False
+        - input:
+            protocol: 'http'
+            destAddr: 'localhost'
+            port: '80'
+            method: POST
+            headers: [
+                Content-Type: 'html/txt'
+            ]
+            data: 'x'
+        - output:
+            status: 200
+            triggers: [920420]
+            log_contains: 'Request content type is not allowed by policy'
+    # Perhaps we update this rule to include other requests that require content-length - Working        
+    - test:
+        - meta:
+            name: "Test Trigger 920180"
+            id: 1
+            author: "Chaim Sanders"
+            enabled: False
+        - input:
+            protocol: 'http'
+            destAddr: 'localhost'
+            port: '80'
+            rawRequest: |
+                POST / HTTP/1.1
+                Host: localhost
+                User-Agent: OWASP CRS Regression
+                
+                data
+        - output:
+            status: 200
+            triggers: [920180]
+            log_contains: 'POST request missing Content-Length Header.'            
+                       
