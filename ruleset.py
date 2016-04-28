@@ -1,9 +1,32 @@
+import re
 class Output():
     """
     This class holds the expected output from a corresponding FTW HTTP Input
+    We are stricter in this definition by requiring at least one of status,
+    html_contains or log_contains
     """
     def __init__(self, output_dict):
-        pass
+        self.STATUS = 'status'
+        self.LOG = 'log_contains'
+        self.HTML = 'html_contains'
+        self.output_dict = output_dict
+        self.status = output_dict[self.STATUS] \
+            if output_dict.has_key(self.STATUS) else None
+        self.html_contains = self.process_regex(self.HTML) 
+        self.log_contains = self.process_regex(self.LOG)
+        if self.status == None and self.html_contains == None \
+            and self.log_contains == None:
+            raise ValueError('Need at least one status, html_contains or log_contains')
+
+    def process_regex(self, key):
+        """
+        Extract the value of key from dictionary if available
+        and process it as a python regex
+        """
+        if self.output_dict.has_key(key):
+            return re.compile(self.output_dict[key])    
+        else:
+            return None
 
 class Input():
     """
@@ -40,8 +63,7 @@ class Stage():
     def __init__(self, stage_dict):
         self.stage_dict = stage_dict
         self.input = Input(**stage_dict['input'])
-        self.output = Output(**stage_dict['output'])
-        import pdb; pdb.set_trace()
+        self.output = Output(stage_dict['output'])
         
 class Test():
     """
@@ -55,8 +77,8 @@ class Test():
         """
         Processes and loads an array of stages from the test dictionary
         """
-        self.stages = map(lambda stage_dict: Stage(stage_dict['stage']), \
-                            self.test_dict['stages'])
+        return map(lambda stage_dict: Stage(stage_dict['stage']), \
+                    self.test_dict['stages'])
         
 class Ruleset():
     """
@@ -69,13 +91,15 @@ class Ruleset():
         self.author = self.meta['author']
         self.description = self.meta['description']
         self.enabled = self.meta['enabled']
-        print self.enabled
         self.tests = self.extract_tests() if self.enabled else []
 
     def extract_tests(self):
         """
         Processes a loaded YAML document and creates test objects based on input 
         """
-        print 'in extract tests'
-        self.tests = map(lambda test_dict: Test(test_dict), \
-                            self.yaml_file['tests'])
+        try:
+            tests = map(lambda test_dict: Test(test_dict), \
+                             self.yaml_file['tests'])
+            return tests
+        except Exception as e:
+            raise Exception('Caught error. Message: %s on test with metadata: %s' % (str(e), str(self.meta)))
