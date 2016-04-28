@@ -17,7 +17,7 @@
                 - 
                   User-Agent: "Foo"
               protocol: "http"
-              url: "/index.html"
+              uri: "/index.html"
             output: 
               status: 200
               html_contains: "*error*"
@@ -36,7 +36,7 @@
                   User-Agent: "Foo"
                   API-Key: "abcdefghijklmnopqrztuvwxyz"
               protocol: "http"
-              url: "/index.html"
+              uri: "/index.html"
             output: 
               status: 200
               html_contains: "Rap Lyric Received"
@@ -52,7 +52,7 @@
                   User-Agent: "Foo"
                   API-Key: "abcdefghijklmnopqrztuvwxyz"
               protocol: "http"
-              url: "/index.html"
+              uri: "/index.html"
             output: 
               status: 200
               html_contains: "Rap Lyric Received"
