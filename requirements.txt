@@ -1,5 +1,10 @@
-PyYAML>3.09
-requests>0.11.1
-pylint>=1.5.0
-IPy>0.75
-#locustio>=0.7.3
+astroid==1.4.5
+colorama==0.3.7
+IPy==0.83
+lazy-object-proxy==1.2.2
+nose==1.3.7
+pylint==1.5.5
+PyYAML==3.11
+requests==2.9.1
+six==1.10.0
+wrapt==1.10.8
