@@ -1,16 +1,18 @@
 import unittest
-from ftw import util, ruleset
+from ftw import util, ruleset, http
 
 class TestModSecurityv2(unittest.TestCase):
     def setUp(self):
         self.yaml_files = util.get_files('test/yaml', 'yaml')
         self.extracted_yaml = util.extract_yaml(self.yaml_files)
         self.ruleset = ruleset.Ruleset(self.extracted_yaml)
-        # instantiate web parser library thing
-        # for each test
-            # provide request parameters to web parser
-            # issue web request
-            # check response and assert
+        for test in self.ruleset.tests:
+            for stage in test.stages:
+                # provide request parameters to web parser
+                http_ua = http.HttpUA(stage.input)
+                # issue web request
+                http_ua.send_request()
+                # check response and assert
         print 'Setting up!'
 
     def tearDown(self):
