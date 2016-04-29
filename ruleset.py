@@ -46,6 +46,7 @@ class Input():
                     ):
         self.raw_request = raw_request
         self.protocol = protocol
+        self.dest_addr = dest_addr
         self.port = port
         self.method = method
         self.uri = uri
