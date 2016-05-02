@@ -140,7 +140,7 @@ class HttpUA(object):
         
     def process_response(self):
         """
-    iParses an HTTP response after an HTTP request is sent
+        Parses an HTTP response after an HTTP request is sent
         """
         split_response = self.response.split(self.CRLF)
         response_line = split_response[0]
