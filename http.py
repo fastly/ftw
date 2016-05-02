@@ -18,6 +18,13 @@ class HttpUA(object):
         Initalize an HTTP object
         """
         self.request_object = http_request
+        self.CIPHERS = 'ADH-AES256-SHA:ECDHE-ECDSA-AES128-GCM-SHA256: \
+                ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:'
+        self.CRLF = '\r\n'
+        self.HTTP_TIMEOUT = .3
+        self.RECEIVE_BYTES = 8192
+        self.SOCKET_TIMEOUT = 5
+
 
     def send_request(self):
         """
@@ -45,39 +52,36 @@ class HttpUA(object):
         """
         try:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.sock.settimeout(5)
+            self.sock.settimeout(self.SOCKET_TIMEOUT)
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             # Check if SSL
-            if self.request_object.protocol == "https":
-                ciphers = "ADH-AES256-SHA:ECDHE-ECDSA-AES128-GCM-SHA256: \
-                ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:"
-                self.sock = ssl.wrap_socket(self.sock, ciphers=ciphers)
+            if self.request_object.protocol == 'https':
+                self.sock = ssl.wrap_socket(self.sock, ciphers=self.ciphers)
             self.sock.connect((self.request_object.dest_addr, self.request_object.port))
         except socket.error as msg:
-            print "Error", msg
+            print 'Error', msg
         
 
     def build_request(self):
-        crlf = "\r\n"
-        request = '#method# #url##version#%s#headers#%s#data#' % (crlf, crlf)
-        request = string.replace(request, "#method#", self.request_object.method)
+        request = '#method# #url##version#%s#headers#%s#data#' % (self.CRLF, self.CRLF)
+        request = string.replace(request, '#method#', self.request_object.method)
         # We add a space after here to account for HEAD requests with no url
-        request = string.replace(request, "#url#", self.request_object.uri+" ")
-        request = string.replace(request, "#version#", self.request_object.version)
+        request = string.replace(request, '#url#', self.request_object.uri+' ')
+        request = string.replace(request, '#version#', self.request_object.version)
 
         # Expand out our headers into a string
-        headers = ""
+        headers = ''
         if self.request_object.headers != {}:
             for hname, hvalue in self.request_object.headers.iteritems():
-                headers += str(hname)+": "+str(hvalue) + str(crlf)
-        request = string.replace(request, "#headers#", headers)
+                headers += str(hname)+': '+str(hvalue) + str(self.CRLF)
+        request = string.replace(request, '#headers#', headers)
 
         # If we have data append it
-        if self.request_object.data != "":
-            data = str(self.request_object.data) + str(crlf)
-            request = string.replace(request, "#data#", data)
+        if self.request_object.data != '':
+            data = str(self.request_object.data) + str(self.CRLF)
+            request = string.replace(request, '#data#', data)
         else:
-            request = string.replace(request, "#data#", "")
+            request = string.replace(request, '#data#', '')
         self.request = request
 
     def get_response(self):
@@ -88,25 +92,24 @@ class HttpUA(object):
         self.sock.setblocking(0)
         our_data = []
         data = ''
-        timeout = .3
         # Beginning time
         begin = time.time()
         while True:
             # If we have data then if we're passed the timeout break
-            if our_data and time.time()-begin > timeout:
+            if our_data and time.time()-begin > self.HTTP_TIMEOUT:
                 break
             # If we're dataless wait just a bit
-            elif time.time()-begin > timeout*2:
+            elif time.time()-begin > self.HTTP_TIMEOUT*2:
                 break
             # Recv data
             try:
-                data = self.sock.recv(8192)
+                data = self.sock.recv(self.RECEIVE_BYTES)
                 if data:
                     our_data.append(data)
                     begin = time.time()
                 else:
                     # Sleep for sometime to indicate a gap
-                    time.sleep(0.2)
+                    time.sleep(self.HTTP_TIMEOUT)
             except socket.error as err:
                 # Check if we got a timeout
                 if err.errno == errno.EAGAIN:
@@ -120,12 +123,28 @@ class HttpUA(object):
             self.sock.close()
         except socket.error as err:
             pass
-  
+    
+    def parse_content_encoding(self, response):
+        """
+        Parses a response that contains Content-Encoding to retrieve response_data
+        """
+        response_data = None
+        if response_headers['Content-Encoding'] == 'gzip':
+            buf = StringIO.StringIO(self.response)
+            f = gzip.GzipFile(fileobj=buf)
+            response_data = f.read()
+        elif response_headers['Content-Encoding'] == 'deflate':
+            data = StringIO.StringIO(zlib.decompress(self.response))
+            response_data = data.read()
+        return response_data
+        
     def process_response(self):
-        crlf = "\r\n"
-        split_response = self.response.split('\r\n')
+        """
+        Parses an HTTP response after an HTTP request is sent
+        """
+        split_response = self.response.split(self.CRLF)
         response_line = split_response[0]
-        repsonse_headers = {}
+        response_headers = {}
         response_data = None
         data_line = None
         for line_num in range(1,len(split_response[1:])):
@@ -135,26 +154,19 @@ class HttpUA(object):
                 break
             else:
                 # Headers are all split by ':'
-                header = split_response[line_num].split(":",1)
-                if(len(header) != 2):
-                    print "ERROR"
+                header = split_response[line_num].split(':',1)
+                if len(header) != 2:
+                    print 'ERROR'
                     sys.exit()
-                repsonse_headers[header[0]] = header[1].lstrip()
+                response_headers[header[0]] = header[1].lstrip()
         
         if data_line != None and data_line < len(split_response):
-            response_data = "\r\n".join(split_response[data_line:])
+            response_data = self.CRLF.join(split_response[data_line:])
 
         # if the output headers say there is encoding
-        if('Content-Encoding' in repsonse_headers.keys()):
-            # If it is gzip then ungzip it
-            if(repsonse_headers["Content-Encoding"] == "gzip"):
-                buf = StringIO.StringIO(self.response)
-                f = gzip.GzipFile(fileobj=buf)
-                response_data = f.read()
-            # if it is deflate then decompress it
-            elif(repsonse_headers["Content-Encoding"] == "deflate"):
-                data = StringIO.StringIO(zlib.decompress(self.response))
-                response_data = data.read()
+        if 'Content-Encoding' in response_headers.keys():
+            response_data = parse_content_encoding(response_headers)
+
         self.response_line = response_line
-        self.response_headers = repsonse_headers
+        self.response_headers = response_headers
         self.response_data = response_data
