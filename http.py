@@ -63,10 +63,10 @@ class HttpUA(object):
         
 
     def build_request(self):
-        request = '#method# #url##version#%s#headers#%s#data#' % (self.CRLF, self.CRLF)
+        request = '#method# #uri##version#%s#headers#%s#data#' % (self.CRLF, self.CRLF)
         request = string.replace(request, '#method#', self.request_object.method)
         # We add a space after here to account for HEAD requests with no url
-        request = string.replace(request, '#url#', self.request_object.uri+' ')
+        request = string.replace(request, '#uri#', self.request_object.uri+' ')
         request = string.replace(request, '#version#', self.request_object.version)
 
         # Expand out our headers into a string
@@ -140,7 +140,7 @@ class HttpUA(object):
         
     def process_response(self):
         """
-        Parses an HTTP response after an HTTP request is sent
+    iParses an HTTP response after an HTTP request is sent
         """
         split_response = self.response.split(self.CRLF)
         response_line = split_response[0]
