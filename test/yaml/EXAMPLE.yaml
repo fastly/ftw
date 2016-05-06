@@ -2,7 +2,7 @@
   meta: 
     author: "Zack"
     enabled: true
-    name: "DERP TESTS"
+    name: "Example Test"
     description: "Description"
   tests: 
     - 
@@ -19,7 +19,7 @@
               protocol: "http"
               uri: "/"
             output: 
-              status: 201
+              status: 200
     - 
       rule_id: 1235
       stages: 
