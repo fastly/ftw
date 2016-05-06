@@ -18,6 +18,12 @@ class HttpUA(object):
         Initalize an HTTP object
         """
         self.request_object = http_request
+        self.response = None
+        self.response_line = None
+        self.response_headers = None
+        self.response_data = None
+        self.request = None
+        self.sock = None
         self.CIPHERS = 'ADH-AES256-SHA:ECDHE-ECDSA-AES128-GCM-SHA256: \
                 ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:'
         self.CRLF = '\r\n'
@@ -30,21 +36,14 @@ class HttpUA(object):
         """
         Send a request and get response
         """    
-        self.sock = None
         self.build_socket()
-        self.request = None
         self.build_request()
         try:
             self.sock.send(self.request)
         except socket.error as exc:
             print exc
-        self.response = None
         self.get_response()
-        self.response_line = None
-        self.response_headers = None
-        self.response_data = None
         self.process_response()
-        return (self.response_line, self.response_headers, self.response_data)
 
     def build_socket(self):
         """
