@@ -2,7 +2,7 @@
   meta: 
     author: "Zack"
     enabled: true
-    name: "Name"
+    name: "DERP TESTS"
     description: "Description"
   tests: 
     - 
@@ -19,41 +19,19 @@
               protocol: "http"
               uri: "/"
             output: 
-              status: 200
-              html_contains: "^error"
-              log_contains: "^error"
+              status: 201
     - 
       rule_id: 1235
       stages: 
         - 
           stage: 
             input: 
-              method: "POST"
-              data: "I'm slim shady"
+              method: "GET"
               port: 80
               headers: 
                   User-Agent: "Foo"
                   Host: "localhost"
-                  API-Key: "abcdefghijklmnopqrztuvwxyz"
               protocol: "http"
-              uri: "/index.php"
+              uri: "/fail.html"
             output: 
-              status: 200
-              html_contains: "Rap Lyric Received"
-              log_contains: "API key abcdefghijklmnopqrstuvwxyz submitted lyric"
-        - 
-          stage: 
-            input: 
-              method: "POST"
-              data: "{\"last_lyric:\":\"I'm slim shady\",\"delete\":true}"
-              port: 80
-              headers: 
-                  User-Agent: "Foo"
-                  Host: "localhost"
-                  API-Key: "abcdefghijklmnopqrztuvwxyz"
-              protocol: "http"
-              uri: "/index.php"
-            output: 
-              status: 200
-              html_contains: "Rap Lyric Received"
-              log_contains: "API key abcdefghijklmnopqrstuvwxyz submitted lyric"
+              status: 404
