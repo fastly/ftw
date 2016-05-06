@@ -28,12 +28,13 @@ def get_testdata(meta, tests):
     """
     return map(lambda test: enrich_meta(meta, test), tests) 
 
-def test_id(meta):
+def test_id(val):
     """
     Dynamically names tests, useful for when we are running dozens to hundreds
     of tests
     """
-    return '%s_ruleid_%s' % (meta['name'], meta['rule_id'])
+    if isinstance(val, (dict,)):
+        return '%s_ruleid_%s' % (val['name'], val['rule_id'])
 
 def pytest_addoption(parser):
     """
