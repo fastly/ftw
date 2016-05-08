@@ -8,8 +8,9 @@ import StringIO
 import gzip
 import sys
 
+
 class HttpResponse(object):
-    def __init__(self,http_response):
+    def __init__(self, http_response):
         self.response = http_response
         self.response_line = None
         self.status = None
@@ -17,13 +18,13 @@ class HttpResponse(object):
         self.version = None
         self.headers = None
         self.data = None
-        self.CRLF = '\r\n' 
+        self.CRLF = '\r\n'
         self.process_response()
-        
-        
+
     def parse_content_encoding(self, response):
         """
-        Parses a response that contains Content-Encoding to retrieve response_data
+        Parses a response that contains Content-Encoding to retrieve
+        response_data
         """
         response_data = None
         if response_headers['Content-Encoding'] == 'gzip':
@@ -33,7 +34,8 @@ class HttpResponse(object):
         elif response_headers['Content-Encoding'] == 'deflate':
             data = StringIO.StringIO(zlib.decompress(self.response))
             response_data = data.read()
-        return response_data        
+        return response_data
+
     def process_response(self):
         """
         Parses an HTTP response after an HTTP request is sent
@@ -43,32 +45,36 @@ class HttpResponse(object):
         response_headers = {}
         response_data = None
         data_line = None
-        for line_num in range(1,len(split_response[1:])):
+        for line_num in range(1, len(split_response[1:])):
             # CRLF represents the start of data
             if split_response[line_num] == '':
                 data_line = line_num + 1
                 break
             else:
                 # Headers are all split by ':'
-                header = split_response[line_num].split(':',1)
+                header = split_response[line_num].split(':', 1)
                 if len(header) != 2:
                     print 'ERROR'
                     sys.exit()
                 response_headers[header[0]] = header[1].lstrip()
-        
-        if data_line != None and data_line < len(split_response):
+
+        if data_line is not None and data_line < len(split_response):
             response_data = self.CRLF.join(split_response[data_line:])
 
         # if the output headers say there is encoding
         if 'Content-Encoding' in response_headers.keys():
             response_data = parse_content_encoding(response_headers)
-        self.status = int(response_line.split(' ',2)[1])
-        self.status_msg = response_line.split(' ',2)[2]
-        self.version = response_line.split(' ',2)[0]
+        self.status = int(response_line.split(' ', 2)[1])
+        self.status_msg = response_line.split(' ', 2)[2]
+        self.version = response_line.split(' ', 2)[0]
         self.response_line = response_line
         self.headers = response_headers
-        self.data = response_data        
+        self.data = response_data
+
+
 """This script will handle all the HTTP requests and responses"""
+
+
 class HttpUA(object):
     """
     Act as the User Agent for our regression testing
@@ -79,9 +85,6 @@ class HttpUA(object):
         """
         self.request_object = http_request
         self.response_object = None
-        #self.response_line = None
-        #self.response_headers = None
-        #self.response_data = None
         self.request = None
         self.sock = None
         self.CIPHERS = 'ADH-AES256-SHA:ECDHE-ECDSA-AES128-GCM-SHA256: \
@@ -91,11 +94,10 @@ class HttpUA(object):
         self.RECEIVE_BYTES = 8192
         self.SOCKET_TIMEOUT = 5
 
-
     def send_request(self):
         """
         Send a request and get response
-        """    
+        """
         self.build_socket()
         self.build_request()
         try:
@@ -103,7 +105,6 @@ class HttpUA(object):
         except socket.error as exc:
             print exc
         self.get_response()
-        #self.process_response()
 
     def build_socket(self):
         """
@@ -119,7 +120,6 @@ class HttpUA(object):
             self.sock.connect((self.request_object.dest_addr, self.request_object.port))
         except socket.error as msg:
             print 'Error', msg
-        
 
     def build_request(self):
         request = '#method# #uri##version#%s#headers#%s#data#' % (self.CRLF, self.CRLF)
@@ -182,7 +182,3 @@ class HttpUA(object):
             self.sock.close()
         except socket.error as err:
             pass
-    
-
-        
-
