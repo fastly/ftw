@@ -17,7 +17,7 @@ class HttpResponse(object):
         self.version = None
         self.headers = None
         self.data = None
-        self.CRLF = '\r\n'        
+        self.CRLF = '\r\n' 
         self.process_response()
         
         
