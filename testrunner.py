@@ -19,14 +19,6 @@ class TestRunner():
         """
         assert expected_status == actual_status
         
-    def extract_status(self, expected_output, actual_output):
-        """
-        Extracts status information from the stage and the expected data structure
-        """
-        actual_status = int(actual_output.split(' ')[1])
-        expected_status = expected_output.status
-        self.test_status(expected_status, actual_status)
-
     def run_stage(self, stage):
         """
         Runs a stage in a test by building an httpua object with the stage
@@ -34,5 +26,4 @@ class TestRunner():
         """
         http_ua = http.HttpUA(stage.input)
         http_ua.send_request()
-        response_line = http_ua.response_line 
-        self.extract_status(stage.output, response_line)
+        self.test_status(stage.output.status,http_ua.response_object.status)
