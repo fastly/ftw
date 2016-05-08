@@ -10,7 +10,7 @@ class Output():
         self.LOG = 'log_contains'
         self.HTML = 'html_contains'
         self.output_dict = output_dict
-        self.status = output_dict[self.STATUS] \
+        self.status = int(output_dict[self.STATUS]) \
             if output_dict.has_key(self.STATUS) else None
         self.html_contains = self.process_regex(self.HTML) 
         self.log_contains = self.process_regex(self.LOG)
@@ -72,6 +72,7 @@ class Test():
     """
     def __init__(self, test_dict):
         self.test_dict = test_dict
+        self.rule_id = test_dict['rule_id']
         self.stages = self.build_stages()
 
     def build_stages(self):

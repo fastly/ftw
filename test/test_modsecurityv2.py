@@ -1,25 +1,18 @@
-import unittest
-from ftw import util, ruleset, http
+import pytest
+from ftw import testrunner
 
-class TestModSecurityv2(unittest.TestCase):
-    def setUp(self):
-        self.yaml_files = util.get_files('test/yaml', 'yaml')
-        self.extracted_yaml = util.extract_yaml(self.yaml_files)
-        self.ruleset = ruleset.Ruleset(self.extracted_yaml)
-        for test in self.ruleset.tests:
-            for stage in test.stages:
-                # provide request parameters to web parser
-                http_ua = http.HttpUA(stage.input)
-                # issue web request
-                http_ua.send_request()
-                # check response and assert
-        print 'Setting up!'
+@pytest.fixture
+def modsec_logger_obj():
+    """
+    Modsec logger object to access in the verifier
+    @TODO
+    """
+    return 0
 
-    def tearDown(self):
-        print 'Tearing down!'
-
-    def test_c(self):
-        assert len(self.extracted_yaml) > 0
-
-    def test_yaml(self):
-        pass 
+def test_modsecurityv2(modsec_logger_obj, meta, test):
+    """
+    Modsec specific test
+    """
+    runner = testrunner.TestRunner() 
+    for stage in test.stages:
+        runner.run_stage(stage)

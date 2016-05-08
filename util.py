@@ -26,4 +26,4 @@ def extract_yaml(yaml_files):
         except Error as e:
             print 'General error'
             raise e
-    return loaded_yaml[0]
+    return loaded_yaml
