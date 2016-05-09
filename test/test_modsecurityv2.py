@@ -9,7 +9,7 @@ def modsec_logger_obj():
     """
     return 0
 
-def test_modsecurityv2(modsec_logger_obj, meta, test):
+def test_modsecurityv2(modsec_logger_obj, ruleset, test):
     """
     Modsec specific test
     """

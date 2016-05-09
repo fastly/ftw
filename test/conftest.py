@@ -1,4 +1,5 @@
 import pytest
+from ftw import ruleset
 
 def get_rulesets(ruledir):
     """
@@ -12,36 +13,32 @@ def get_rulesets(ruledir):
         rulesets.append(ruleset.Ruleset(extracted_yaml))
     return rulesets
 
-def enrich_meta(meta, test):
-    """
-    Enrich metadata dictionary since metafunc.parametrize will only pass along
-    the first variable
-    """
-    meta['rule_id'] = test.rule_id
-    return (meta, test)
-
-def get_testdata(meta, tests):
+def get_testdata(rulesets):
     """
     In order to do test-level parametrization (is this a word?), we have to
-    bundle the test data into tuples so its broken out and distributed
-    with accurate metadata
+    bundle the test data from rulesets into tuples so py.test can understand 
+    how to run tests across the whole suite of rulesets
     """
-    return map(lambda test: enrich_meta(meta, test), tests) 
+    testdata = []
+    for ruleset in rulesets:
+        for test in ruleset.tests:
+            testdata.append((ruleset, test))
 
+    return testdata
 def test_id(val):
     """
     Dynamically names tests, useful for when we are running dozens to hundreds
     of tests
     """
-    if isinstance(val, (dict,)):
-        return '%s_ruleid_%s' % (val['name'], val['rule_id'])
+    if isinstance(val, (dict,ruleset.Test,)):
+        return '%s_ruleid_%s' % (val.ruleset_meta['name'], val.rule_id)
 
 def pytest_addoption(parser):
     """
     Adds command line options to py.test
     """
     parser.addoption('--ruledir', action='store', default='.',
-        help='list of stringinputs to pass to test functions')
+        help='rule directory that holds YAML files for testing')
 
 def pytest_generate_tests(metafunc):
     """
@@ -49,9 +46,13 @@ def pytest_generate_tests(metafunc):
     """
     if metafunc.config.option.ruledir:
         rulesets = get_rulesets(metafunc.config.option.ruledir)
-        if 'test' in metafunc.fixturenames and 'meta' in metafunc.fixturenames:
-            for ruleset in rulesets:
-                metafunc.parametrize(
-                    'meta,test', 
-                    get_testdata(ruleset.meta, ruleset.tests),
-                    ids=test_id) 
+        if 'ruleset' in metafunc.fixturenames and 'test' in metafunc.fixturenames:
+            metafunc.parametrize('ruleset,test', get_testdata(rulesets),
+                ids=test_id)
+#        if 'test' in metafunc.fixturenames and 'meta' in metafunc.fixturenames:
+#            
+#            for ruleset in rulesets:
+#                metafunc.parametrize(
+#                    'meta,test', 
+#                    get_testdata(ruleset.meta, ruleset.tests),
+#                    ids=test_id) 
