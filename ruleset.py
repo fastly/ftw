@@ -112,7 +112,6 @@ class Ruleset():
         try:
             return map(lambda test_dict: Test(test_dict, self.meta), \
                          self.yaml_file['tests'])
-#        return tests
         except errors.TestError as e:
             e.args[1]['meta'] = self.meta 
             raise e

@@ -49,10 +49,3 @@ def pytest_generate_tests(metafunc):
         if 'ruleset' in metafunc.fixturenames and 'test' in metafunc.fixturenames:
             metafunc.parametrize('ruleset,test', get_testdata(rulesets),
                 ids=test_id)
-#        if 'test' in metafunc.fixturenames and 'meta' in metafunc.fixturenames:
-#            
-#            for ruleset in rulesets:
-#                metafunc.parametrize(
-#                    'meta,test', 
-#                    get_testdata(ruleset.meta, ruleset.tests),
-#                    ids=test_id) 
