@@ -24,7 +24,8 @@ class Output():
                 {
                     'status':   self.status,
                     'html_contains':    self.html_contains,
-                    'log_contains':     self.log_contains
+                    'log_contains':     self.log_contains,
+                    'function': 'ruleset.Output.__init__'
                 })
                 
     def process_regex(self, key):
