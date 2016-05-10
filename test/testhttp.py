@@ -1,4 +1,5 @@
-from ftw import ruleset, http
+from ftw import ruleset, http, errors
+import pytest
 #import http
 #import ruleset
 
@@ -11,11 +12,36 @@ from ftw import ruleset, http
 #                    headers = {},
 #                    data = '',
 #                    status = 200,
-    # Basic GET request - Should return 200 with <h1>Example Domain</h1>
+
+
+# Will return mail -- not header should cause error
+def test_error1():
+    x = ruleset.Input(dest_addr="Smtp.aol.com",port=25,headers={"Host":"example.com"})
+    http_ua = http.HttpUA(x)
+    with pytest.raises(errors.TestError):
+        http_ua.send_request()
+
+
+    # Invalid request should cause timeout
+def test_error2():
+    x = ruleset.Input(dest_addr="example.com",port=123,headers={"Host":"example.com"})
+    http_ua = http.HttpUA(x)
+    with pytest.raises(errors.TestError):
+        http_ua.send_request()
+
+# Invalid status returned in response line
+def test_error3():
+    with pytest.raises(errors.TestError):
+        response = http.HttpResponse("HTTP1.1 test OK\r\n")
+
+# Wrong number of elements returned in response line
+def test_error4():
+    with pytest.raises(errors.TestError):
+        response = http.HttpResponse("HTTP1.1 OK\r\n")
+
 def test1():
     x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
     http_ua = http.HttpUA(x)
-    # issue web request
     http_ua.send_request()
     assert http_ua.response_object.status == 200
   
@@ -96,4 +122,3 @@ def test12():
     http_ua = http.HttpUA(x)
     http_ua.send_request()
     assert http_ua.response_object.status == 200
-
