@@ -22,19 +22,26 @@ class HttpResponse(object):
         self.CRLF = '\r\n'
         self.process_response()
 
-    def parse_content_encoding(self, response):
+    def parse_content_encoding(self, response_headers, response_data):
         """
         Parses a response that contains Content-Encoding to retrieve
         response_data
         """
-        response_data = None
-        if response_headers['Content-Encoding'] == 'gzip':
-            buf = StringIO.StringIO(self.response)
+        
+        if response_headers['content-encoding'] == 'gzip':
+            buf = StringIO.StringIO(response_data)
             f = gzip.GzipFile(fileobj=buf)
             response_data = f.read()
-        elif response_headers['Content-Encoding'] == 'deflate':
-            data = StringIO.StringIO(zlib.decompress(self.response))
+        elif response_headers['content-encoding'] == 'deflate':
+            data = StringIO.StringIO(zlib.decompress(response_data))
             response_data = data.read()
+        else:
+            raise errors.TestError(
+                'Received unknown Content-Encoding',
+                {
+                    'content-encoding':   str(response_headers['content-encoding']),
+                    'function': 'http.HttpResponse.parse_content_encoding'
+                })        
         return response_data
 
     def process_response(self):
@@ -59,22 +66,22 @@ class HttpResponse(object):
                         'Did not receive a response with valid headers',
                         {
                             'header_rcvd':   str(header),
-                            'function': 'http.HttpUA.process_response'
+                            'function': 'http.HttpResponse.process_response'
                         })
-                response_headers[header[0]] = header[1].lstrip()
+                response_headers[header[0].lower()] = header[1].lstrip()
 
         if data_line is not None and data_line < len(split_response):
             response_data = self.CRLF.join(split_response[data_line:])
 
         # if the output headers say there is encoding
-        if 'Content-Encoding' in response_headers.keys():
-            response_data = parse_content_encoding(response_headers)
+        if 'content-encoding' in response_headers.keys():
+            response_data = self.parse_content_encoding(response_headers,response_data)
         if(len(response_line.split(' ', 2)) != 3):
             raise errors.TestError(
                 'The HTTP response line returned the wrong args',
                 {
                     'response_line':   str(response_line),
-                    'function': 'http.HttpUA.process_response'
+                    'function': 'http.HttpResponse.process_response'
                 })
         try:
             self.status = int(response_line.split(' ', 2)[1])
@@ -83,7 +90,7 @@ class HttpResponse(object):
                 'The status num of the response line isn\'t convertable',
                 {
                     'response_line':   str(response_line),
-                    'function': 'http.HttpUA.process_response'
+                    'function': 'http.HttpResponse.process_response'
                 })        
         self.status_msg = response_line.split(' ', 2)[2]
         self.version = response_line.split(' ', 2)[0]

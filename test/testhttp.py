@@ -15,13 +15,26 @@ import pytest
 
 
 # Will return mail -- not header should cause error
-def test_error1():
-    x = ruleset.Input(dest_addr="Smtp.aol.com",port=25,headers={"Host":"example.com"})
-    http_ua = http.HttpUA(x)
+#def test_error1():
+#    x = ruleset.Input(dest_addr="Smtp.aol.com",port=25,headers={"Host":"example.com"})
+#    http_ua = http.HttpUA(x)
+#    with pytest.raises(errors.TestError):
+#        http_ua.send_request()
+
+# Invalid Header should cause error
+def test_error5():
     with pytest.raises(errors.TestError):
-        http_ua.send_request()
+        response = http.HttpResponse("HTTP/1.1 200 OK\r\ntest\r\n")
 
+# Valid HTTP response should process fine
+def test_error6():
+    response = http.HttpResponse("HTTP/1.1 200 OK\r\ntest: hello\r\n")
 
+# Invalid content-type should fail
+def test_error7():
+    with pytest.raises(errors.TestError):
+        response = http.HttpResponse("HTTP/1.1 200 OK\r\nContent-Encoding: XYZ\r\n")
+"""
     # Invalid request should cause timeout
 def test_error2():
     x = ruleset.Input(dest_addr="example.com",port=123,headers={"Host":"example.com"})
@@ -122,3 +135,4 @@ def test12():
     http_ua = http.HttpUA(x)
     http_ua.send_request()
     assert http_ua.response_object.status == 200
+"""
