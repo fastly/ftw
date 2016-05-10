@@ -76,7 +76,7 @@ class HttpResponse(object):
         # if the output headers say there is encoding
         if 'content-encoding' in response_headers.keys():
             response_data = self.parse_content_encoding(response_headers,response_data)
-        if(len(response_line.split(' ', 2)) != 3):
+        if len(response_line.split(' ', 2)) != 3:
             raise errors.TestError(
                 'The HTTP response line returned the wrong args',
                 {

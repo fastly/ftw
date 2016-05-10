@@ -11,7 +11,10 @@ class Output():
         self.LOG = 'log_contains'
         self.HTML = 'html_contains'
         if output_dict is None:
-            raise errors.TestError('No output dictionary found', {})
+            raise errors.TestError('No output dictionary found',
+            {
+                'function': 'ruleset.Output.__init__'
+            })
         self.output_dict = output_dict
         self.status = int(output_dict[self.STATUS]) \
             if output_dict.has_key(self.STATUS) else None
