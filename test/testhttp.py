@@ -34,8 +34,8 @@ def test_error6():
 def test_error7():
     with pytest.raises(errors.TestError):
         response = http.HttpResponse("HTTP/1.1 200 OK\r\nContent-Encoding: XYZ\r\n")
-"""
-    # Invalid request should cause timeout
+
+# Invalid request should cause timeout
 def test_error2():
     x = ruleset.Input(dest_addr="example.com",port=123,headers={"Host":"example.com"})
     http_ua = http.HttpUA(x)
@@ -135,4 +135,3 @@ def test12():
     http_ua = http.HttpUA(x)
     http_ua.send_request()
     assert http_ua.response_object.status == 200
-"""
