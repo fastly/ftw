@@ -1,4 +1,5 @@
 import re
+import errors
 class Output():
     """
     This class holds the expected output from a corresponding FTW HTTP Input
@@ -9,6 +10,11 @@ class Output():
         self.STATUS = 'status'
         self.LOG = 'log_contains'
         self.HTML = 'html_contains'
+        if output_dict is None:
+            raise errors.TestError('No output dictionary found',
+            {
+                'function': 'ruleset.Output.__init__'
+            })
         self.output_dict = output_dict
         self.status = int(output_dict[self.STATUS]) \
             if output_dict.has_key(self.STATUS) else None
@@ -16,8 +22,15 @@ class Output():
         self.log_contains = self.process_regex(self.LOG)
         if self.status == None and self.html_contains == None \
             and self.log_contains == None:
-            raise ValueError('Need at least one status, html_contains or log_contains')
-
+            raise errors.TestError(
+                'Need at least one status, html_contains or log_contains',
+                {
+                    'status':   self.status,
+                    'html_contains':    self.html_contains,
+                    'log_contains':     self.log_contains,
+                    'function': 'ruleset.Output.__init__'
+                })
+                
     def process_regex(self, key):
         """
         Extract the value of key from dictionary if available
@@ -70,8 +83,9 @@ class Test():
     """
     This class holds information for 1 test and potentially many stages
     """
-    def __init__(self, test_dict):
+    def __init__(self, test_dict, ruleset_meta):
         self.test_dict = test_dict
+        self.ruleset_meta = ruleset_meta
         self.rule_id = test_dict['rule_id']
         self.stages = self.build_stages()
 
@@ -100,8 +114,10 @@ class Ruleset():
         Processes a loaded YAML document and creates test objects based on input 
         """
         try:
-            tests = map(lambda test_dict: Test(test_dict), \
-                             self.yaml_file['tests'])
-            return tests
+            return map(lambda test_dict: Test(test_dict, self.meta), \
+                         self.yaml_file['tests'])
+        except errors.TestError as e:
+            e.args[1]['meta'] = self.meta 
+            raise e
         except Exception as e:
             raise Exception('Caught error. Message: %s on test with metadata: %s' % (str(e), str(self.meta)))

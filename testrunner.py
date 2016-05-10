@@ -1,9 +1,8 @@
-import Queue
-import threading
-import util
-import ruleset
+import errors
 import http
 import pytest
+import ruleset
+import util
 
 class TestRunner():
     """

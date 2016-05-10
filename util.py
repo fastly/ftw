@@ -1,12 +1,13 @@
 import glob
 import yaml
 import syslog
+import errors
 
-def get_files(directory,extension): 
+def get_files(directory, extension): 
     """
     Take a directory and an extension and return the files that match the extension
     """
-    return glob.glob('%s/*.%s' % (directory,extension))
+    return glob.glob('%s/*.%s' % (directory, extension))
 
 def extract_yaml(yaml_files):
     """
