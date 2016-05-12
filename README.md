@@ -1,13 +1,14 @@
-### OWASP-CRS-Regressions
+### Framework for Testing WAFs (FTW)
 
-##### What is this repo?
-These are the unit tests for crs-regressions.
-Before any new rule is accepted it must have unit tests prepared for it.
-The unit tests are written in YAML. Unlike the rules for the ModSecurity Core, these rules do not require you to include the physical rule.
+##### Purpose 
+This project was created by researchers from ModSecurity and Fastly to help provide rigorous tests for WAF rules. It uses the OWASP Core Ruleset V3 as a baseline to test rules on a WAF. Each rule from the ruleset is loaded into a YAML file that issues HTTP requests that will trigger these rules. 
 
-#PreRequistes.
-* YAML Parsing.
-    * YAML parsing does not come preequipped with python (yet). As a result, we use PyYAML. Any YAML parser should work equally well, but this configuration is tested using PyYAML version 3.11
+Goals / Use cases include:
+
+* Find regressions in WAF deployments by using continuous integration and issuing repeatable attacks to a WAF
+* Provide a testing framework for new rules into ModSecurity, if a rule is submitted it MUST have corresponding positive & negative tests
+* Evaluate WAFs against a common, agreeable baseline ruleset (OWASP)
+* Test and verify custom rules for WAFs that are not part of the core rule set
 
 ## Installation
 * `git clone git@github.com:fastly/ftw.git`
