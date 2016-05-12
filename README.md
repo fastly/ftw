@@ -1,4 +1,4 @@
-### Framework for Testing WAFs (FTW)
+## Framework for Testing WAFs (FTW)
 
 ##### Purpose 
 This project was created by researchers from ModSecurity and Fastly to help provide rigorous tests for WAF rules. It uses the OWASP Core Ruleset V3 as a baseline to test rules on a WAF. Each rule from the ruleset is loaded into a YAML file that issues HTTP requests that will trigger these rules. 
@@ -17,4 +17,5 @@ Goals / Use cases include:
 
 ## Running Tests
 * *start your test server*
+* Create YAML files that point to your webserver with a WAF in front of it
 * `py.test test/test_modsecurityv2.py --ruledir test/yaml`
