@@ -15,6 +15,10 @@ FTW contributors (sorted alphabeticaly)
   * HTTP request/response parser
   * Rule Design
 
+* **[Ezekiel Templin](https://github.com/ezkl/)**
+
+  * Other
+
 * **[Jared Stroud](https://github.com/jaredestroud/)**
   * HTTP Library
 
@@ -24,3 +28,4 @@ FTW contributors (sorted alphabeticaly)
   * Testing format
   * Framework refactoring
   * Error handling
+
