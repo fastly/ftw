@@ -6,7 +6,7 @@ try:
     import ruleset
     import util
 except ImportError as err:
-    print("[-] Error, no module %s" % (err))
+    print("[-] Error, no module %s. Quitting." % (err))
     sys.exit()
 
 class TestRunner():
