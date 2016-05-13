@@ -1,8 +1,13 @@
-import errors
-import http
-import pytest
-import ruleset
-import util
+try:
+    import sys
+    import errors
+    import http
+    import pytest
+    import ruleset
+    import util
+except ImportError as err:
+    print("[-] Error, no module %s" % (err))
+    sys.exit()
 
 class TestRunner():
     """
