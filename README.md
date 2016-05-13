@@ -16,6 +16,6 @@ Goals / Use cases include:
 * `pip install -r requirements.txt`
 
 ## Running Tests
-* *start your test server*
+* *start your test web server*
 * Create YAML files that point to your webserver with a WAF in front of it
 * `py.test test/test_modsecurityv2.py --ruledir test/yaml`
