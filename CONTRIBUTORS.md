@@ -16,7 +16,7 @@ FTW contributors (sorted alphabeticaly)
   * Rule Design
 
 * **[Jared Stroud](https://github.com/jaredestroud/)**
-  * Original Framework Author
+  * HTTP Library
 
 * **[Zack Allen](https://github.com/zmallen/)**
 
