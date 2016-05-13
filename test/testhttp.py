@@ -5,7 +5,7 @@ try:
     #import http
     #import ruleset
 except ImportError as err:
-    print("[-] Error, no module named %s" %(err))
+    print("[-] Error, no module named %s. Quitting." %(err))
     sys.exit()
 
 # protocol = 'http',
