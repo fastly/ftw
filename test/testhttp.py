@@ -1,7 +1,12 @@
-from ftw import ruleset, http, errors
-import pytest
-#import http
-#import ruleset
+try:
+    import sys
+    from ftw import ruleset, http, errors
+    import pytest
+    #import http
+    #import ruleset
+except ImportError as err:
+    print("[-] Error, no module named %s" %(err))
+    sys.exit()
 
 # protocol = 'http',
 #                    dest_addr = 'localhost',
