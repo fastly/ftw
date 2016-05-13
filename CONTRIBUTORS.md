@@ -15,6 +15,9 @@ FTW contributors (sorted alphabeticaly)
   * HTTP request/response parser
   * Rule Design
 
+* **[Jared Stroud](https://github.com/jaredestroud/)**
+  * HTTP Library
+
 * **[Zack Allen](https://github.com/zmallen/)**
 
   * Rule design
