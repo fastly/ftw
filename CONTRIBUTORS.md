@@ -17,7 +17,8 @@ FTW contributors (sorted alphabeticaly)
 
 * **[Ezekiel Templin](https://github.com/ezkl/)**
 
-  * Other
+	* Rule design
+  * Documentation
 
 * **[Jared Stroud](https://github.com/jaredestroud/)**
   * HTTP Library
