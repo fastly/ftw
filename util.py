@@ -1,7 +1,12 @@
-import glob
-import yaml
-import syslog
-import errors
+try:
+    import sys
+    import glob
+    import yaml
+    import syslog
+    import errors
+except ImportError as err:
+    print("[-] Error, no module named %s. Quitting." % (err))
+    sys.exit()
 
 def get_files(directory, extension): 
     """

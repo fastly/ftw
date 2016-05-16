@@ -1,5 +1,10 @@
-import pytest
-from ftw import testrunner, errors
+try:
+    import sys
+    import pytest
+    from ftw import testrunner, errors
+except ImportError as err:
+    print("[-] Error, no module named %s. Quitting." % (err))
+    sys.exit()
 
 @pytest.fixture
 def modsec_logger_obj():
