@@ -9,13 +9,15 @@ def modsec_logger_obj():
     """
     return 0
 
-def test_modsecurityv2(modsec_logger_obj, ruleset, test):
+def test_modsecurityv2(modsec_logger_obj, ruleset, test, destaddr):
     """
     Modsec specific test
     """
     runner = testrunner.TestRunner() 
     try:
         for stage in test.stages:
+            if destaddr is not None:
+                stage.input.dest_addr = destaddr
             runner.run_stage(stage)
     except errors.TestError as e:
         e.args[1]['meta'] = ruleset.meta

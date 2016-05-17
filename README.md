@@ -19,3 +19,7 @@ Goals / Use cases include:
 * *start your test web server*
 * Create YAML files that point to your webserver with a WAF in front of it
 * `py.test test/test_modsecurityv2.py --ruledir test/yaml`
+
+## Running Tests while overriding destination address in the yaml files to custom domain
+* *start your test web server*
+* `py.test test/test_modsecurityv2.py --ruledir=test/yaml --destaddr=domain.com`
