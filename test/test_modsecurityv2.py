@@ -7,7 +7,7 @@ def modsec_logger_obj():
     Modsec logger object to access in the verifier
     @TODO
     """
-    return 0
+    return None
 
 def test_modsecurityv2(modsec_logger_obj, ruleset, test, destaddr):
     """
@@ -18,10 +18,7 @@ def test_modsecurityv2(modsec_logger_obj, ruleset, test, destaddr):
         for stage in test.stages:
             if destaddr is not None:
                 stage.input.dest_addr = destaddr
-            runner.run_stage(stage)
+            runner.run_stage(stage, modsec_logger_obj)
     except errors.TestError as e:
         e.args[1]['meta'] = ruleset.meta
         pytest.fail('Failure! Message -> {0}, Context -> {1}'
-                .format(e.args[0],e.args[1]))
-    except Exception as e:
-        pytest.fail('General failure! Message -> {0}'.format(str(e)))
