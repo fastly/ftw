@@ -25,6 +25,7 @@ def get_testdata(rulesets):
             testdata.append((ruleset, test))
 
     return testdata
+
 def test_id(val):
     """
     Dynamically names tests, useful for when we are running dozens to hundreds
@@ -33,12 +34,18 @@ def test_id(val):
     if isinstance(val, (dict,ruleset.Test,)):
         return '%s_ruleid_%s' % (val.ruleset_meta['name'], val.rule_id)
 
+@pytest.fixture
+def destaddr(request):
+    return request.config.getoption('--destaddr')
+
 def pytest_addoption(parser):
     """
     Adds command line options to py.test
     """
     parser.addoption('--ruledir', action='store', default='.',
         help='rule directory that holds YAML files for testing')
+    parser.addoption('--destaddr', action='store', default=None,
+        help='destination address to direct tests towards')
 
 def pytest_generate_tests(metafunc):
     """
