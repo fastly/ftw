@@ -4,7 +4,8 @@ import pytest
 import ruleset
 import util
 
-class TestRunner():
+
+class TestRunner(object):
     """
     Runner that accepts stages of a test and verifies expected and actual
     responses
@@ -25,4 +26,4 @@ class TestRunner():
         """
         http_ua = http.HttpUA(stage.input)
         http_ua.send_request()
-        self.test_status(stage.output.status,http_ua.response_object.status)
+        self.test_status(stage.output.status, http_ua.response_object.status)

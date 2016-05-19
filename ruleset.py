@@ -1,6 +1,8 @@
 import re
 import errors
-class Output():
+
+
+class Output(object):
     """
     This class holds the expected output from a corresponding FTW HTTP Input
     We are stricter in this definition by requiring at least one of status,
@@ -11,23 +13,25 @@ class Output():
         self.LOG = 'log_contains'
         self.HTML = 'html_contains'
         if output_dict is None:
-            raise errors.TestError('No output dictionary found',
-            {
-                'function': 'ruleset.Output.__init__'
-            })
+            raise errors.TestError(
+                'No output dictionary found',
+                {
+                    'function': 'ruleset.Output.__init__'
+                }
+            )
         self.output_dict = output_dict
         self.status = int(output_dict[self.STATUS]) \
-            if output_dict.has_key(self.STATUS) else None
+            if output_dict in self.STATUS else None
         self.html_contains = self.process_regex(self.HTML) 
         self.log_contains = self.process_regex(self.LOG)
-        if self.status == None and self.html_contains == None \
-            and self.log_contains == None:
+        if self.status is None and self.html_contains is None \
+                and self.log_contains is None:
             raise errors.TestError(
                 'Need at least one status, html_contains or log_contains',
                 {
-                    'status':   self.status,
-                    'html_contains':    self.html_contains,
-                    'log_contains':     self.log_contains,
+                    'status': self.status,
+                    'html_contains': self.html_contains,
+                    'log_contains': self.log_contains,
                     'function': 'ruleset.Output.__init__'
                 })
                 
@@ -36,27 +40,26 @@ class Output():
         Extract the value of key from dictionary if available
         and process it as a python regex
         """
-        if self.output_dict.has_key(key):
-            return re.compile(self.output_dict[key])    
-        else:
-            return None
+        return re.compile(self.output_dict[key]) if \
+            key in self.output_dict else None
 
-class Input():
+
+class Input(object):
     """
     This class holds the data associated with an HTTP Input request in FTW
     """
-    def __init__(self, raw_request = '',
-                    protocol = 'http',
-                    dest_addr = 'localhost',
-                    port = 80,
-                    method = 'GET',
-                    uri = '/',
-                    version = 'HTTP/1.1',
-                    headers = {},
-                    data = '',
-                    status = 200,
-                    save_cookie = False,
-                    ):
+    def __init__(self, raw_request ='',
+                 protocol='http',
+                 dest_addr='localhost',
+                 port=80,
+                 method='GET',
+                 uri='/',
+                 version='HTTP/1.1',
+                 headers={},
+                 data='',
+                 status=200,
+                 save_cookie=False
+                 ):
         self.raw_request = raw_request
         self.protocol = protocol
         self.dest_addr = dest_addr
@@ -69,7 +72,8 @@ class Input():
         self.status = status
         self.save_cookie = save_cookie
 
-class Stage():
+
+class Stage(object):
     """
     This class holds information about 1 stage in a test, which contains
     1 input and 1 output
@@ -78,8 +82,9 @@ class Stage():
         self.stage_dict = stage_dict
         self.input = Input(**stage_dict['input'])
         self.output = Output(stage_dict['output'])
-        
-class Test():
+
+
+class Test(object):
     """
     This class holds information for 1 test and potentially many stages
     """
@@ -93,10 +98,13 @@ class Test():
         """
         Processes and loads an array of stages from the test dictionary
         """
-        return map(lambda stage_dict: Stage(stage_dict['stage']), \
-                    self.test_dict['stages'])
-        
-class Ruleset():
+        return map(
+            lambda stage_dict: Stage(stage_dict['stage']),
+            self.test_dict['stages']
+        )
+
+
+class Ruleset(object):
     """
     This class holds test and stage information from a YAML test file
     These YAML files are used to test the OWASP/Modsec CRSv3 rules 
@@ -114,10 +122,15 @@ class Ruleset():
         Processes a loaded YAML document and creates test objects based on input 
         """
         try:
-            return map(lambda test_dict: Test(test_dict, self.meta), \
-                         self.yaml_file['tests'])
+            return map(
+                lambda test_dict: Test(test_dict, self.meta),
+                self.yaml_file['tests']
+            )
         except errors.TestError as e:
             e.args[1]['meta'] = self.meta 
             raise e
         except Exception as e:
-            raise Exception('Caught error. Message: %s on test with metadata: %s' % (str(e), str(self.meta)))
+            raise Exception(
+                'Caught error. Message: %s on test with metadata: %s'
+                % (str(e), str(self.meta))
+            )
