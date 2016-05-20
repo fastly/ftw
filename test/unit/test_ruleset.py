@@ -1,4 +1,4 @@
-from ftw import ruleset, http, errors
+from ftw import ruleset, errors
 import pytest
 
 def test_output():

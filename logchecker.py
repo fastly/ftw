@@ -1,11 +1,12 @@
-from abc import ABCMeta, abstractmethod
+import abc
 
-class LogChecker(metaclass=ABCMeta):
+class LogChecker():
     """
     LogChecker is an abstract class that integrations with WAFs MUST implement.
     This class is used by the testrunner to test log lines against an expected
     regex
     """
+    __metaclass__= abc.ABCMeta
     def __init__(self):
         self.start = None
         self.end = None
@@ -14,7 +15,7 @@ class LogChecker(metaclass=ABCMeta):
         self.start = start
         self.end = end
 
-    @abstractmethod
+    @abc.abstractmethod
     def get_logs(self):
         """
         MUST be implemented, MUST return an array of strings
