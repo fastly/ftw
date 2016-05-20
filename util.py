@@ -26,7 +26,7 @@ def extract_yaml(yaml_files):
         except yaml.YAMLError as e:
             print 'Error parsing file %s' % yaml_file
             raise e
-        except Error as e:
+        except Exception as e:
             print 'General error'
             raise e
     return loaded_yaml
