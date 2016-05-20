@@ -116,7 +116,7 @@ class HttpUA(object):
         self.request = None
         self.sock = None
         self.CIPHERS = \
-            'ADH-AES256-SHA:ECDHE-ECDSA-AES128-GCM-SHA256: ' \
+            'ADH-AES256-SHA:ECDHE-ECDSA-AES128-GCM-SHA256:' \
             'ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:'
         self.CRLF = '\r\n'
         self.HTTP_TIMEOUT = .3
