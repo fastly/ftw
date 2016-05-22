@@ -11,7 +11,7 @@ class LogChecker():
         self.start = None
         self.end = None
 
-    def set_times(start, end): 
+    def set_times(self, start, end):
         self.start = start
         self.end = end
 

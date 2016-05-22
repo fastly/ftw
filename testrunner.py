@@ -19,7 +19,7 @@ class TestRunner():
         """
         assert expected_status == actual_status
     
-    def test_log(lines, log_contains):
+    def test_log(self, lines, log_contains):
         """
         Checks if a series of log lines contains a regex specified in the
         output stage. It will flag true on teh first log_contains regex match
@@ -44,12 +44,6 @@ class TestRunner():
             end = datetime.datetime.now()
             logger_obj.set_times(start, end)
             lines = logger_obj.get_logs()
-            if type(lines) != []:
-               raise errors.TestError('logger_obj.get_logs() did not return []', 
-                {
-                   'function':  'testrunner.TestRunner.run_stage',
-                   'lines_type':        type(lines)
-                })
             self.test_log(lines, stage.output.log_contains)
         else:
             http_ua.send_request()

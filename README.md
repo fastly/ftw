@@ -23,3 +23,6 @@ Goals / Use cases include:
 ## Running Tests while overriding destination address in the yaml files to custom domain
 * *start your test web server*
 * `py.test test/test_modsecurityv2.py --ruledir=test/yaml --destaddr=domain.com`
+
+## Run integration test, local webserver, may have to use sudo
+* `sudo py.test test/integration/test_logcontains.py -s --ruledir=test/integration/`
