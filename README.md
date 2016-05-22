@@ -26,3 +26,6 @@ Goals / Use cases include:
 
 ## Run integration test, local webserver, may have to use sudo
 * `sudo py.test test/integration/test_logcontains.py -s --ruledir=test/integration/`
+
+## HOW TO INTEGRATE LOGS
+* Check out `test/integration/test_logcontains.py`. This code instantiates an object that inherits LogChecker. The only thing you have to implement is `get_logs()`. The ide abehind this function is that you integrate your WAF logs in this function. FTW will perform its tests and pass off `start` and `end` times which are accessible via `self.start` and `self.end`. Use these two timers to open up your log file, API call or whatever you need to pull the necessary log lines out of the WAF. Return an array of strings and FTW will take this array and test it against the `log_contains` regex passed in from the `yaml` file.
