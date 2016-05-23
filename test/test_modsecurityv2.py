@@ -22,3 +22,4 @@ def test_modsecurityv2(modsec_logger_obj, ruleset, test, destaddr):
     except errors.TestError as e:
         e.args[1]['meta'] = ruleset.meta
         pytest.fail('Failure! Message -> {0}, Context -> {1}'
+                        .format(e.args[0],e.args[1]))
