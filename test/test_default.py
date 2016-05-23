@@ -1,7 +1,7 @@
 import pytest
 from ftw import testrunner, errors
 
-def test_default(, ruleset, test, destaddr):
+def test_default(ruleset, test, destaddr):
     """
     Default tester with no logger obj. Useful for HTML contains and Status code
     Not useful for testing loggers
