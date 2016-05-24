@@ -1,24 +1,17 @@
 import pytest
 from ftw import testrunner, errors
 
-@pytest.fixture
-def modsec_logger_obj():
+def test_default(ruleset, test, destaddr):
     """
-    Modsec logger object to access in the verifier
-    @TODO
-    """
-    return None
-
-def test_modsecurityv2(modsec_logger_obj, ruleset, test, destaddr):
-    """
-    Modsec specific test
+    Default tester with no logger obj. Useful for HTML contains and Status code
+    Not useful for testing loggers
     """
     runner = testrunner.TestRunner() 
     try:
         for stage in test.stages:
             if destaddr is not None:
                 stage.input.dest_addr = destaddr
-            runner.run_stage(stage, modsec_logger_obj)
+            runner.run_stage(stage, None)
     except errors.TestError as e:
         e.args[1]['meta'] = ruleset.meta
         pytest.fail('Failure! Message -> {0}, Context -> {1}'
