@@ -1,8 +1,7 @@
 language: python
-sudo: required
 python:
   - "2.7"
 install: "pip install -r requirements.txt"
 script:
     - py.test test/unit/ -s -v
-    - sudo py.test test/integration/test_logcontains.py -s -v --ruledir=test/integration/ 
+    - py.test test/integration/test_logcontains.py -s -v --ruledir=test/integration/ 

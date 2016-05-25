@@ -11,11 +11,12 @@
         - 
           stage: 
             input: 
+              dest_addr: "example.com"
               method: "GET"
               port: 80
               headers: 
                   User-Agent: "Foo"
-                  Host: "localhost"
+                  Host: "example.com"
               protocol: "http"
               uri: "/"
             output: 

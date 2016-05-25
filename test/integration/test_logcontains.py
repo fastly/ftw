@@ -24,22 +24,14 @@ def logchecker_obj():
     """
     return LoggerTestObj()
 
-def test_logcontains_withlog(logchecker_obj, ruleset, test, http_serv_obj):
-    thread = threading.Thread(target = http_serv_obj.serve_forever)
-    thread.daemon = True
-    thread.start()
+def test_logcontains_withlog(logchecker_obj, ruleset, test):
     runner = testrunner.TestRunner()
     for stage in test.stages:
         runner.run_stage(stage, logchecker_obj)
-    http_serv_obj.shutdown()
 
-def test_logcontains_nolog(logchecker_obj, ruleset, test, http_serv_obj):
+def test_logcontains_nolog(logchecker_obj, ruleset, test):
     logchecker_obj.do_nothing = True
-    thread = threading.Thread(target = http_serv_obj.serve_forever)
-    thread.daemon = True
-    thread.start()
     runner = testrunner.TestRunner()
     with(pytest.raises(AssertionError)):
         for stage in test.stages:
             runner.run_stage(stage, logchecker_obj)
-    http_serv_obj.shutdown()
