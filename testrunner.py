@@ -33,15 +33,13 @@ class TestRunner(object):
             break
         assert(found)
 
+
     def run_stage(self, stage, logger_obj):
         """
         Runs a stage in a test by building an httpua object with the stage
         input, waits for output then compares expected vs actual output
         """
         http_ua = http.HttpUA(stage.input)
-        http_ua.send_request()
-        self.test_status(stage.output.status, http_ua.response_object.status)
-
         if stage.output.log_contains:
             start = datetime.datetime.now()
             http_ua.send_request()
