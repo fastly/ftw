@@ -5,7 +5,8 @@ import pytest
 import ruleset
 import util
 
-class TestRunner():
+
+class TestRunner(object):
     """
     Runner that accepts stages of a test and verifies expected and actual
     responses
@@ -31,6 +32,7 @@ class TestRunner():
             found = True
             break
         assert(found)
+
 
     def run_stage(self, stage, logger_obj):
         """

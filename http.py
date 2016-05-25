@@ -6,7 +6,6 @@ import errno
 import time
 import StringIO
 import gzip
-import sys
 import errors
 
 
@@ -39,7 +38,8 @@ class HttpResponse(object):
             raise errors.TestError(
                 'Received unknown Content-Encoding',
                 {
-                    'content-encoding':   str(response_headers['content-encoding']),
+                    'content-encoding':
+                        str(response_headers['content-encoding']),
                     'function': 'http.HttpResponse.parse_content_encoding'
                 })        
         return response_data
@@ -65,7 +65,7 @@ class HttpResponse(object):
                     raise errors.TestError(
                         'Did not receive a response with valid headers',
                         {
-                            'header_rcvd':   str(header),
+                            'header_rcvd': str(header),
                             'function': 'http.HttpResponse.process_response'
                         })
                 response_headers[header[0].lower()] = header[1].lstrip()
@@ -75,12 +75,13 @@ class HttpResponse(object):
 
         # if the output headers say there is encoding
         if 'content-encoding' in response_headers.keys():
-            response_data = self.parse_content_encoding(response_headers,response_data)
+            response_data = self.parse_content_encoding(
+                response_headers, response_data)
         if len(response_line.split(' ', 2)) != 3:
             raise errors.TestError(
                 'The HTTP response line returned the wrong args',
                 {
-                    'response_line':   str(response_line),
+                    'response_line': str(response_line),
                     'function': 'http.HttpResponse.process_response'
                 })
         try:
@@ -89,7 +90,7 @@ class HttpResponse(object):
             raise errors.TestError(
                 'The status num of the response line isn\'t convertable',
                 {
-                    'response_line':   str(response_line),
+                    'response_line': str(response_line),
                     'function': 'http.HttpResponse.process_response'
                 })        
         self.status_msg = response_line.split(' ', 2)[2]
@@ -114,8 +115,9 @@ class HttpUA(object):
         self.response_object = None
         self.request = None
         self.sock = None
-        self.CIPHERS = 'ADH-AES256-SHA:ECDHE-ECDSA-AES128-GCM-SHA256: \
-                ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:'
+        self.CIPHERS = \
+            'ADH-AES256-SHA:ECDHE-ECDSA-AES128-GCM-SHA256:' \
+            'ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:'
         self.CRLF = '\r\n'
         self.HTTP_TIMEOUT = .3
         self.RECEIVE_BYTES = 8192
@@ -131,7 +133,8 @@ class HttpUA(object):
             self.sock.send(self.request)
         except socket.error as exc:
             print exc
-        self.get_response()
+        finally:
+            self.get_response()
 
     def build_socket(self):
         """
@@ -144,30 +147,35 @@ class HttpUA(object):
             # Check if SSL
             if self.request_object.protocol == 'https':
                 self.sock = ssl.wrap_socket(self.sock, ciphers=self.ciphers)
-            self.sock.connect((self.request_object.dest_addr, self.request_object.port))
+            self.sock.connect(
+                (self.request_object.dest_addr, self.request_object.port))
         except socket.error as msg:
             raise errors.TestError(
                 'Failed to connect to server',
                 {
                     'host': self.request_object.dest_addr,
                     'port': self.request_object.port,
-                    'proto':    self.request_object.protocol,
-                    'message':   msg,
+                    'proto': self.request_object.protocol,
+                    'message': msg,
                     'function': 'http.HttpUA.build_socket'
                 })
 
     def build_request(self):
-        request = '#method# #uri##version#%s#headers#%s#data#' % (self.CRLF, self.CRLF)
-        request = string.replace(request, '#method#', self.request_object.method)
+        request = '#method# #uri##version#%s#headers#%s#data#' % \
+                  (self.CRLF, self.CRLF)
+        request = string.replace(
+            request, '#method#', self.request_object.method)
         # We add a space after here to account for HEAD requests with no url
-        request = string.replace(request, '#uri#', self.request_object.uri+' ')
-        request = string.replace(request, '#version#', self.request_object.version)
+        request = string.replace(
+            request, '#uri#', self.request_object.uri + ' ')
+        request = string.replace(
+            request, '#version#', self.request_object.version)
 
         # Expand out our headers into a string
         headers = ''
         if self.request_object.headers != {}:
             for hname, hvalue in self.request_object.headers.iteritems():
-                headers += str(hname)+': '+str(hvalue) + str(self.CRLF)
+                headers += str(hname) + ': ' + str(hvalue) + str(self.CRLF)
         request = string.replace(request, '#headers#', headers)
 
         # If we have data append it
@@ -185,15 +193,14 @@ class HttpUA(object):
         # Make socket non blocking
         self.sock.setblocking(0)
         our_data = []
-        data = ''
         # Beginning time
         begin = time.time()
         while True:
             # If we have data then if we're passed the timeout break
-            if our_data and time.time()-begin > self.HTTP_TIMEOUT:
+            if our_data and time.time() - begin > self.HTTP_TIMEOUT:
                 break
             # If we're dataless wait just a bit
-            elif time.time()-begin > self.HTTP_TIMEOUT*2:
+            elif time.time() - begin > self.HTTP_TIMEOUT * 2:
                 break
             # Recv data
             try:
