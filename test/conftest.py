@@ -1,4 +1,6 @@
 import pytest
+from SimpleHTTPServer import SimpleHTTPRequestHandler
+from BaseHTTPServer import HTTPServer
 from ftw import ruleset
 
 def get_rulesets(ruledir):
@@ -36,7 +38,17 @@ def test_id(val):
 
 @pytest.fixture
 def destaddr(request):
+    """
+    Destination address override for tests
+    """
     return request.config.getoption('--destaddr')
+
+@pytest.fixture
+def http_serv_obj():
+    """
+    Return an HTTP object listening on localhost port 80 for testing
+    """
+    return HTTPServer(('localhost', 80), SimpleHTTPRequestHandler)
 
 def pytest_addoption(parser):
     """

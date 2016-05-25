@@ -1,0 +1,23 @@
+---
+  meta: 
+    author: "Zack"
+    enabled: true
+    name: "LOGCONTAINSFIXTURE.yaml"
+    description: "Tests log contains functionality with an integration object"
+  tests: 
+    - 
+      rule_id: 1234
+      stages: 
+        - 
+          stage: 
+            input: 
+              method: "GET"
+              port: 80
+              headers: 
+                  User-Agent: "Foo"
+                  Host: "localhost"
+              protocol: "http"
+              uri: "/"
+            output: 
+              status: 200
+              log_contains: "rule-id-[1-9]{2}" 
