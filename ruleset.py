@@ -21,7 +21,7 @@ class Output(object):
             )
         self.output_dict = output_dict
         self.status = int(output_dict[self.STATUS]) \
-            if output_dict in self.STATUS else None
+            if self.STATUS in output_dict else None
         self.html_contains = self.process_regex(self.HTML) 
         self.log_contains = self.process_regex(self.LOG)
         if self.status is None and self.html_contains is None \
