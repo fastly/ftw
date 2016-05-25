@@ -26,7 +26,7 @@ Goals / Use cases include:
 * `py.test test/test_modsecurityv2.py --ruledir=test/yaml --destaddr=domain.com`
 
 ## Run integration test, local webserver, may have to use sudo
-* `sudo py.test test/integration/test_logcontains.py -s --ruledir=test/integration/`
+* `py.test test/integration/test_logcontains.py -s --ruledir=test/integration/`
 
 ## HOW TO INTEGRATE LOGS
 1. Create a `*.py` file with the necessary imports, an example is shown in `test/integration/test_logcontains.py`
