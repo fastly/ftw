@@ -8,7 +8,7 @@ import StringIO
 import gzip
 import errors
 import sys
-
+import re
 
 class HttpResponse(object):
     def __init__(self, http_response):
@@ -123,6 +123,32 @@ class HttpUA(object):
         self.HTTP_TIMEOUT = .3
         self.RECEIVE_BYTES = 8192
         self.SOCKET_TIMEOUT = 5
+
+    def search_response(self,regex):
+        if self.response_object == None:
+            raise errors.TestError(
+                'Searching before response received',
+                {
+                    'host': self.request_object.dest_addr,
+                    'regex': regex,
+                    'function': 'http.HttpUA.search_response'
+                })
+        try:
+            match = re.search(regex, self.response_object.response)
+        except re.error as err:
+            raise errors.TestError(
+                'An invalid regex was passed',
+                {
+                    'host': self.request_object.dest_addr,
+                    'regex': regex,
+                    'msg': err,
+                    'function': 'http.HttpUA.search_response'
+                })                        
+        if match is not None:
+            return True
+        else:
+            return False
+
 
     def send_request(self):
         """

@@ -1,13 +1,48 @@
 from ftw import ruleset, http, errors
 import pytest
+import sys
 
+# Should return a test error because its searching before response
+def test_search1():   
+    x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
+    http_ua = http.HttpUA(x)
+    with pytest.raises(errors.TestError):    
+        http_ua.search_response('dog')
+
+# Should return a failure because it is searching for a word not there
+def test_search2():   
+    x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    result = http_ua.search_response('dog')
+    assert result == False
+
+# Should return a success because it is searching for a word not there
+def test_search3():   
+    x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    result = http_ua.search_response('established to be used for')
+    assert result == True
+ 
+# Should return a success because we found our regex
+def test_search4():   
+    x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    result = http_ua.search_response('.*')
+    assert result == True
+    
+"""
 # Will return mail -- not header should cause error
 def test_error1():
+    
+    
     x = ruleset.Input(dest_addr="Smtp.aol.com",port=25,headers={"Host":"example.com"})
     http_ua = http.HttpUA(x)
     with pytest.raises(errors.TestError):
         http_ua.send_request()
-
+        
 # Invalid Header should cause error
 def test_error5():
     with pytest.raises(errors.TestError):
@@ -172,3 +207,4 @@ def test19():
     http_ua = http.HttpUA(x)
     http_ua.send_request()
     assert http_ua.request_object.data == "test=hello%3Fx"
+    """
