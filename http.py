@@ -9,6 +9,7 @@ import gzip
 import errors
 import sys
 import re
+import base64
 
 class HttpResponse(object):
     def __init__(self, http_response):
@@ -212,6 +213,22 @@ class HttpUA(object):
             request = string.replace(request, '#data#', data)
         else:
             request = string.replace(request, '#data#', '')
+        # If we have a Raw Request we should use that instead
+        if self.request_object.raw_request is not None:
+            if self.request_object.encoded_request is not None:
+                raise errors.TestError(
+                    'Cannot specify both raw and encoded modes',
+                    {
+                        'function': 'http.HttpUA.build_request'
+                    })                
+            request = self.request_object.raw_request           
+            # Check for newlines (without CR prior)
+            request = re.sub(r'(?<!x)\n', '\r\n', request)
+            request = request.decode('string_escape')
+        if self.request_object.encoded_request is not None:     
+            request = base64.b64decode(self.request_object.encoded_request)
+            request = request.decode('string_escape')                   
+        # if we have an Encoded request we should use that
         self.request = request
 
     def get_response(self):

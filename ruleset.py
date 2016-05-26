@@ -50,7 +50,8 @@ class Input(object):
     """
     This class holds the data associated with an HTTP Input request in FTW
     """
-    def __init__(self, raw_request ='',
+    def __init__(self, raw_request=None,
+                 encoded_request=None,
                  protocol='http',
                  dest_addr='localhost',
                  port=80,
@@ -63,6 +64,7 @@ class Input(object):
                  save_cookie=False
                  ):
         self.raw_request = raw_request
+        self.encoded_request = encoded_request
         self.protocol = protocol
         self.dest_addr = dest_addr
         self.port = port

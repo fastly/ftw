@@ -2,6 +2,34 @@ from ftw import ruleset, http, errors
 import pytest
 import sys
 
+def test_raw1():
+    x = ruleset.Input(dest_addr="example.com",raw_request="""GET / HTTP/1.1\r\nHost: example.com\r\n\r\n""")
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    assert http_ua.response_object.status == 200    
+
+def test_raw2():
+    x = ruleset.Input(dest_addr="example.com",raw_request="""GET / HTTP/1.1
+Host: example.com
+    
+
+""")
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    assert http_ua.response_object.status == 200    
+    
+def test_both1():
+    x = ruleset.Input(dest_addr="example.com", raw_request="""GET / HTTP/1.1\r\nHost: example.com\r\n\r\n""", encoded_request="abc123==")
+    http_ua = http.HttpUA(x)
+    with pytest.raises(errors.TestError):
+        http_ua.send_request()
+
+def test_encoded1():
+    x = ruleset.Input(dest_addr="example.com", encoded_request="R0VUIC8gSFRUUC8xLjFcclxuSG9zdDogZXhhbXBsZS5jb21cclxuXHJcbg==")
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    assert http_ua.response_object.status == 200     
+"""
 # Should return a test error because its searching before response
 def test_search1():   
     x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
@@ -33,7 +61,7 @@ def test_search4():
     result = http_ua.search_response('.*')
     assert result == True
     
-"""
+
 # Will return mail -- not header should cause error
 def test_error1():
     
