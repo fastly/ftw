@@ -7,7 +7,8 @@ import time
 import StringIO
 import gzip
 import errors
-
+import sys
+import re
 
 class HttpResponse(object):
     def __init__(self, http_response):
@@ -123,6 +124,32 @@ class HttpUA(object):
         self.RECEIVE_BYTES = 8192
         self.SOCKET_TIMEOUT = 5
 
+    def search_response(self,regex):
+        if self.response_object == None:
+            raise errors.TestError(
+                'Searching before response received',
+                {
+                    'host': self.request_object.dest_addr,
+                    'regex': regex,
+                    'function': 'http.HttpUA.search_response'
+                })
+        try:
+            match = re.search(regex, self.response_object.response)
+        except re.error as err:
+            raise errors.TestError(
+                'An invalid regex was passed',
+                {
+                    'host': self.request_object.dest_addr,
+                    'regex': regex,
+                    'msg': err,
+                    'function': 'http.HttpUA.search_response'
+                })                        
+        if match is not None:
+            return True
+        else:
+            return False
+
+
     def send_request(self):
         """
         Send a request and get response
@@ -144,9 +171,10 @@ class HttpUA(object):
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.sock.settimeout(self.SOCKET_TIMEOUT)
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            #self.sock.setblocking(0)
             # Check if SSL
             if self.request_object.protocol == 'https':
-                self.sock = ssl.wrap_socket(self.sock, ciphers=self.ciphers)
+                self.sock = ssl.wrap_socket(self.sock, ciphers=self.CIPHERS)
             self.sock.connect(
                 (self.request_object.dest_addr, self.request_object.port))
         except socket.error as msg:
@@ -170,7 +198,7 @@ class HttpUA(object):
             request, '#uri#', self.request_object.uri + ' ')
         request = string.replace(
             request, '#version#', self.request_object.version)
-
+    
         # Expand out our headers into a string
         headers = ''
         if self.request_object.headers != {}:
@@ -180,7 +208,7 @@ class HttpUA(object):
 
         # If we have data append it
         if self.request_object.data != '':
-            data = str(self.request_object.data) + str(self.CRLF)
+            data = str(self.request_object.data)
             request = string.replace(request, '#data#', data)
         else:
             request = string.replace(request, '#data#', '')
@@ -215,9 +243,21 @@ class HttpUA(object):
                 # Check if we got a timeout
                 if err.errno == errno.EAGAIN:
                     pass
+                # SSL will return SSLWantRead instead of EAGAIN
+                elif self.request_object.protocol == "https" and sys.exc_info()[0].__name__ == "SSLWantReadError":
+                    pass
                 # If we didn't it's an error
                 else:
-                    print err
+                    print err.errno
+                    raise errors.TestError(
+                    'Failed to connect to server',
+                    {
+                        'host': self.request_object.dest_addr,
+                        'port': self.request_object.port,
+                        'proto': self.request_object.protocol,
+                        'message': err,
+                        'function': 'http.HttpUA.get_response'
+                    })                    
         self.response_object = HttpResponse(''.join(our_data))
         try:
             self.sock.shutdown(1)
