@@ -79,16 +79,16 @@ class Input(object):
         # Check if there is any data and do defaults
         if self.data != '':
             # Default values for content length and header
-            if "Content-Type" not in headers.keys():
-                headers["Content-Type"] = "application/x-www-form-urlencoded"
+            if 'Content-Type' not in headers.keys():
+                headers['Content-Type'] = 'application/x-www-form-urlencoded'
             # check if encoded and encode if it should be
-            if headers["Content-Type"] == "application/x-www-form-urlencoded":
+            if headers['Content-Type'] == 'application/x-www-form-urlencoded':
                 if urllib.unquote(self.data).decode('utf8') == self.data:
                     query_string = urlparse.parse_qsl(self.data) 
                     encoded_args = urllib.urlencode(query_string)
                     self.data = encoded_args
-            if "Content-Length" not in headers.keys():
-                headers["Content-Length"] = len(self.data)                    
+            if 'Content-Length' not in headers.keys():
+                headers['Content-Length'] = len(self.data)                    
 
 
 class Stage(object):

@@ -198,7 +198,7 @@ class HttpUA(object):
                     })                
             request = self.request_object.raw_request           
             # Check for newlines (without CR prior)
-            request = re.sub(r'(?<!x)\n', '\r\n', request)
+            request = re.sub(r'(?<!x)\n', self.CRLF, request)
             request = request.decode('string_escape')
         if self.request_object.encoded_request is not None:     
             request = base64.b64decode(self.request_object.encoded_request)
@@ -240,7 +240,6 @@ class HttpUA(object):
                     pass
                 # If we didn't it's an error
                 else:
-                    print err.errno
                     raise errors.TestError(
                     'Failed to connect to server',
                     {
