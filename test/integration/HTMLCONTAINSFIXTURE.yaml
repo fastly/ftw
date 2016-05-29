@@ -1,0 +1,24 @@
+---
+  meta: 
+    author: "Chaim"
+    enabled: true
+    name: "HTMLCONTAINSFIXTURE.yaml"
+    description: "Tests html contains functionality with an integration object"
+  tests: 
+    - 
+      rule_id: 1234
+      stages: 
+        - 
+          stage: 
+            input: 
+              dest_addr: "example.com"
+              method: "GET"
+              port: 80
+              headers: 
+                  User-Agent: "Foo"
+                  Host: "example.com"
+              protocol: "http"
+              uri: "/"
+            output: 
+              status: 200
+              html_contains: "established to be used for" 

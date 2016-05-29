@@ -125,31 +125,6 @@ class HttpUA(object):
         self.RECEIVE_BYTES = 8192
         self.SOCKET_TIMEOUT = 5
 
-    def search_response(self,regex):
-        if self.response_object == None:
-            raise errors.TestError(
-                'Searching before response received',
-                {
-                    'host': self.request_object.dest_addr,
-                    'regex': regex,
-                    'function': 'http.HttpUA.search_response'
-                })
-        try:
-            match = re.search(regex, self.response_object.response)
-        except re.error as err:
-            raise errors.TestError(
-                'An invalid regex was passed',
-                {
-                    'host': self.request_object.dest_addr,
-                    'regex': regex,
-                    'msg': err,
-                    'function': 'http.HttpUA.search_response'
-                })                        
-        if match is not None:
-            return True
-        else:
-            return False
-
 
     def send_request(self):
         """
@@ -261,7 +236,7 @@ class HttpUA(object):
                 if err.errno == errno.EAGAIN:
                     pass
                 # SSL will return SSLWantRead instead of EAGAIN
-                elif self.request_object.protocol == "https" and sys.exc_info()[0].__name__ == "SSLWantReadError":
+                elif self.request_object.protocol == 'https' and sys.exc_info()[0].__name__ == 'SSLWantReadError':
                     pass
                 # If we didn't it's an error
                 else:

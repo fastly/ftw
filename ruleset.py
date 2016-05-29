@@ -24,16 +24,17 @@ class Output(object):
         self.output_dict = output_dict
         self.status = int(output_dict[self.STATUS]) \
             if self.STATUS in output_dict else None
-        self.html_contains = self.process_regex(self.HTML) 
-        self.log_contains = self.process_regex(self.LOG)
-        if self.status is None and self.html_contains is None \
-                and self.log_contains is None:
+        self.html_contains_str = self.process_regex(self.HTML)
+        
+        self.log_contains_str = self.process_regex(self.LOG)
+        if self.status is None and self.html_contains_str is None \
+                and self.log_contains_str is None:
             raise errors.TestError(
-                'Need at least one status, html_contains or log_contains',
+                'Need at least one status, html_contains_str or log_contains_str',
                 {
                     'status': self.status,
-                    'html_contains': self.html_contains,
-                    'log_contains': self.log_contains,
+                    'html_contains_str': self.html_contains_str,
+                    'log_contains_str': self.log_contains_str,
                     'function': 'ruleset.Output.__init__'
                 })
                 
