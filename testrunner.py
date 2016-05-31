@@ -28,11 +28,10 @@ class TestRunner(object):
         """
         found = False
         for line in lines:
-           if log_contains.search(line):
-            found = True
-            break
+            if log_contains.search(line):
+                found = True
+                break
         assert(found)
-
 
     def run_stage(self, stage, logger_obj):
         """
