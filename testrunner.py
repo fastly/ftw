@@ -4,6 +4,7 @@ import http
 import pytest
 import ruleset
 import util
+import re
 
 
 class TestRunner(object):
@@ -23,7 +24,7 @@ class TestRunner(object):
     def test_log(self, lines, log_contains):
         """
         Checks if a series of log lines contains a regex specified in the
-        output stage. It will flag true on teh first log_contains regex match
+        output stage. It will flag true on the first log_contains regex match
         and then assert on the flag at the end of the function
         """
         found = False
@@ -31,23 +32,43 @@ class TestRunner(object):
            if log_contains.search(line):
             found = True
             break
-        assert(found)
+        assert found
+
+    def test_response(self, response_object, regex):
+        """
+        Checks if the HTML response contains a regex specified in the
+        output stage. It will assert that the regex is present.
+        """
+        if response_object == None:
+            raise errors.TestError(
+                'Searching before response received',
+                {
+                    'regex': regex,
+                    'response_object': response_object,
+                    'function': 'testrunner.TestRunner.test_response'
+                })
+        if regex.search(response_object.response):                 
+            assert True
+        else:
+            assert False
 
 
-    def run_stage(self, stage, logger_obj):
+    def run_stage(self, stage, logger_obj=None):
         """
         Runs a stage in a test by building an httpua object with the stage
         input, waits for output then compares expected vs actual output
         """
         http_ua = http.HttpUA(stage.input)
-        if stage.output.log_contains:
+        if stage.output.log_contains_str and logger_obj is not None:
             start = datetime.datetime.now()
             http_ua.send_request()
             end = datetime.datetime.now()
             logger_obj.set_times(start, end)
             lines = logger_obj.get_logs()
-            self.test_log(lines, stage.output.log_contains)
+            self.test_log(lines, stage.output.log_contains_str)
         else:
             http_ua.send_request()
+        if stage.output.html_contains_str:
+            self.test_response(http_ua.response_object, stage.output.html_contains_str)
         if stage.output.status:
-            self.test_status(stage.output.status,http_ua.response_object.status)
+            self.test_status(stage.output.status, http_ua.request_object.status)

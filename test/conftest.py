@@ -1,14 +1,15 @@
 import pytest
-from SimpleHTTPServer import SimpleHTTPRequestHandler
-from BaseHTTPServer import HTTPServer
-from ftw import ruleset
+from ftw import ruleset, util
+import os
 
 def get_rulesets(ruledir):
     """
     List of ruleset objects extracted from the yaml directory
     """
-    from ftw import ruleset, util
-    yaml_files = util.get_files(ruledir, 'yaml')
+    if os.path.isdir(ruledir):
+        yaml_files = util.get_files(ruledir, 'yaml')
+    elif os.path.isfile(ruledir):
+        yaml_files = [ruledir]
     extracted_files = util.extract_yaml(yaml_files)
     rulesets = []
     for extracted_yaml in extracted_files:
@@ -54,17 +55,22 @@ def pytest_addoption(parser):
     """
     Adds command line options to py.test
     """
-    parser.addoption('--ruledir', action='store', default='.',
+    parser.addoption('--ruledir', action='store', default=None,
         help='rule directory that holds YAML files for testing')
     parser.addoption('--destaddr', action='store', default=None,
         help='destination address to direct tests towards')
+    parser.addoption('--rule', action='store', default=None,
+        help='fully qualified path to one rule')
 
 def pytest_generate_tests(metafunc):
     """
     Pre-test configurations, mostly used for parametrization
     """
-    if metafunc.config.option.ruledir:
-        rulesets = get_rulesets(metafunc.config.option.ruledir)
+    if metafunc.config.option.ruledir or metafunc.config.option.rule:
+        if metafunc.config.option.ruledir:
+            rulesets = get_rulesets(metafunc.config.option.ruledir)
+        if metafunc.config.option.rule:
+            rulesets = get_rulesets(metafunc.config.option.rule)
         if 'ruleset' in metafunc.fixturenames and 'test' in metafunc.fixturenames:
             metafunc.parametrize('ruleset,test', get_testdata(rulesets),
                 ids=test_id)

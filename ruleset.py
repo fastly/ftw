@@ -1,5 +1,7 @@
 import re
 import errors
+import urllib
+import urlparse
 
 
 class Output(object):
@@ -22,16 +24,17 @@ class Output(object):
         self.output_dict = output_dict
         self.status = int(output_dict[self.STATUS]) \
             if self.STATUS in output_dict else None
-        self.html_contains = self.process_regex(self.HTML) 
-        self.log_contains = self.process_regex(self.LOG)
-        if self.status is None and self.html_contains is None \
-                and self.log_contains is None:
+        self.html_contains_str = self.process_regex(self.HTML)
+        
+        self.log_contains_str = self.process_regex(self.LOG)
+        if self.status is None and self.html_contains_str is None \
+                and self.log_contains_str is None:
             raise errors.TestError(
-                'Need at least one status, html_contains or log_contains',
+                'Need at least one status, html_contains_str or log_contains_str',
                 {
                     'status': self.status,
-                    'html_contains': self.html_contains,
-                    'log_contains': self.log_contains,
+                    'html_contains_str': self.html_contains_str,
+                    'log_contains_str': self.log_contains_str,
                     'function': 'ruleset.Output.__init__'
                 })
                 
@@ -48,7 +51,8 @@ class Input(object):
     """
     This class holds the data associated with an HTTP Input request in FTW
     """
-    def __init__(self, raw_request ='',
+    def __init__(self, raw_request=None,
+                 encoded_request=None,
                  protocol='http',
                  dest_addr='localhost',
                  port=80,
@@ -61,6 +65,7 @@ class Input(object):
                  save_cookie=False
                  ):
         self.raw_request = raw_request
+        self.encoded_request = encoded_request
         self.protocol = protocol
         self.dest_addr = dest_addr
         self.port = port
@@ -71,6 +76,19 @@ class Input(object):
         self.data = data
         self.status = status
         self.save_cookie = save_cookie
+        # Check if there is any data and do defaults
+        if self.data != '':
+            # Default values for content length and header
+            if 'Content-Type' not in headers.keys():
+                headers['Content-Type'] = 'application/x-www-form-urlencoded'
+            # check if encoded and encode if it should be
+            if headers['Content-Type'] == 'application/x-www-form-urlencoded':
+                if urllib.unquote(self.data).decode('utf8') == self.data:
+                    query_string = urlparse.parse_qsl(self.data) 
+                    encoded_args = urllib.urlencode(query_string)
+                    self.data = encoded_args
+            if 'Content-Length' not in headers.keys():
+                headers['Content-Length'] = len(self.data)                    
 
 
 class Stage(object):

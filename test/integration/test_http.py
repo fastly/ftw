@@ -1,26 +1,45 @@
 from ftw import ruleset, http, errors
 import pytest
-#import http
-#import ruleset
+import sys
 
-# protocol = 'http',
-#                    dest_addr = 'localhost',
-#                    port = 80,
-#                    method = 'GET',
-#                    uri = '/',
-#                    version = 'HTTP/1.1',
-#                    headers = {},
-#                    data = '',
-#                    status = 200,
+def test_raw1():
+    x = ruleset.Input(dest_addr="example.com",raw_request="""GET / HTTP/1.1\r\nHost: example.com\r\n\r\n""")
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    assert http_ua.response_object.status == 200    
 
+def test_raw2():
+    x = ruleset.Input(dest_addr="example.com",raw_request="""GET / HTTP/1.1
+Host: example.com
+    
+
+""")
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    assert http_ua.response_object.status == 200    
+    
+def test_both1():
+    x = ruleset.Input(dest_addr="example.com", raw_request="""GET / HTTP/1.1\r\nHost: example.com\r\n\r\n""", encoded_request="abc123==")
+    http_ua = http.HttpUA(x)
+    with pytest.raises(errors.TestError):
+        http_ua.send_request()
+
+def test_encoded1():
+    x = ruleset.Input(dest_addr="example.com", encoded_request="R0VUIC8gSFRUUC8xLjFcclxuSG9zdDogZXhhbXBsZS5jb21cclxuXHJcbg==")
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    assert http_ua.response_object.status == 200     
+    
 
 # Will return mail -- not header should cause error
-#def test_error1():
-#    x = ruleset.Input(dest_addr="Smtp.aol.com",port=25,headers={"Host":"example.com"})
-#    http_ua = http.HttpUA(x)
-#    with pytest.raises(errors.TestError):
-#        http_ua.send_request()
-
+def test_error1():
+    
+    
+    x = ruleset.Input(dest_addr="Smtp.aol.com",port=25,headers={"Host":"example.com"})
+    http_ua = http.HttpUA(x)
+    with pytest.raises(errors.TestError):
+        http_ua.send_request()
+        
 # Invalid Header should cause error
 def test_error5():
     with pytest.raises(errors.TestError):
@@ -115,10 +134,9 @@ def test9():
     http_ua.send_request()
     assert http_ua.response_object.status == 200
 
-@pytest.mark.skip(reason="@TODO")
 def test10():
     # HEAD method - Expect 200
-    x = ruleset.Input(method="HEAD",dest_addr="example.com",version="HTTP/1.0",headers={})
+    x = ruleset.Input(method="HEAD",dest_addr="example.com",version="HTTP/1.0",headers={"Host":"example.com"})
     http_ua = http.HttpUA(x)
     http_ua.send_request()
     assert http_ua.response_object.status == 200
@@ -130,10 +148,58 @@ def test11():
     http_ua.send_request()
     assert http_ua.response_object.status == 411
 
-@pytest.mark.skip(reason="@TODO not working")
 def test12():
     # POST method no data with content length header - Expect 200
-    x = ruleset.Input(method="POST",dest_addr="example.com",version="HTTP/1.0",headers={"Content-Length":"0"},data="")
+    x = ruleset.Input(method="POST",dest_addr="example.com",version="HTTP/1.0",headers={"Content-Length":"0","Host":"example.com"},data="")
     http_ua = http.HttpUA(x)
     http_ua.send_request()
     assert http_ua.response_object.status == 200
+
+def test13():
+    # Request https on port 80 (default)
+    x = ruleset.Input(protocol="https",dest_addr="example.com",headers={"Host":"example.com"})
+    http_ua = http.HttpUA(x)
+    with pytest.raises(errors.TestError):
+        http_ua.send_request()    
+
+def test14():
+    # Request https on port 443 should work
+    x = ruleset.Input(protocol="https",port=443,dest_addr="example.com",headers={"Host":"example.com"})
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    assert http_ua.response_object.status == 200
+    
+    
+def test15():
+    # Request with content-type and content-length specified
+    x = ruleset.Input(method="POST", protocol="http",port=80,dest_addr="example.com",headers={"Content-Type": "application/x-www-form-urlencoded","Host":"example.com","Content-Length":"7"},data="test=hi")
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    assert http_ua.response_object.status == 200    
+    
+def test16():
+    # Post request with content-type but not content-length
+    x = ruleset.Input(method="POST", protocol="http",port=80,dest_addr="example.com",headers={"Content-Type": "application/x-www-form-urlencoded","Host":"example.com"},data="test=hi")
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    assert http_ua.response_object.status == 200
+
+def test17():
+    # # Post request with no content-type AND no content-length
+    x = ruleset.Input(method="POST", protocol="http",port=80,uri="/",dest_addr="example.com",headers={"Host":"example.com"},data="test=hi")
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    assert http_ua.response_object.status == 200
+    
+def test18():
+    # Send a request and check that the space is encoded automagically
+    x = ruleset.Input(method="POST", protocol="http",port=80,uri="/",dest_addr="example.com",headers={"Host":"example.com"},data="test=hit f&test2=hello")
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    assert http_ua.request_object.data == "test=hit+f&test2=hello"
+def test19():
+    # Send a raw question mark and test it is encoded automagically
+    x = ruleset.Input(method="POST", protocol="http",port=80,uri="/",dest_addr="example.com",headers={"Host":"example.com"},data="test=hello?x")
+    http_ua = http.HttpUA(x)
+    http_ua.send_request()
+    assert http_ua.request_object.data == "test=hello%3Fx"

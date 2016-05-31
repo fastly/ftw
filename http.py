@@ -7,7 +7,9 @@ import time
 import StringIO
 import gzip
 import errors
-
+import sys
+import re
+import base64
 
 class HttpResponse(object):
     def __init__(self, http_response):
@@ -123,6 +125,7 @@ class HttpUA(object):
         self.RECEIVE_BYTES = 8192
         self.SOCKET_TIMEOUT = 5
 
+
     def send_request(self):
         """
         Send a request and get response
@@ -144,9 +147,10 @@ class HttpUA(object):
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.sock.settimeout(self.SOCKET_TIMEOUT)
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            #self.sock.setblocking(0)
             # Check if SSL
             if self.request_object.protocol == 'https':
-                self.sock = ssl.wrap_socket(self.sock, ciphers=self.ciphers)
+                self.sock = ssl.wrap_socket(self.sock, ciphers=self.CIPHERS)
             self.sock.connect(
                 (self.request_object.dest_addr, self.request_object.port))
         except socket.error as msg:
@@ -170,7 +174,7 @@ class HttpUA(object):
             request, '#uri#', self.request_object.uri + ' ')
         request = string.replace(
             request, '#version#', self.request_object.version)
-
+    
         # Expand out our headers into a string
         headers = ''
         if self.request_object.headers != {}:
@@ -180,10 +184,26 @@ class HttpUA(object):
 
         # If we have data append it
         if self.request_object.data != '':
-            data = str(self.request_object.data) + str(self.CRLF)
+            data = str(self.request_object.data)
             request = string.replace(request, '#data#', data)
         else:
             request = string.replace(request, '#data#', '')
+        # If we have a Raw Request we should use that instead
+        if self.request_object.raw_request is not None:
+            if self.request_object.encoded_request is not None:
+                raise errors.TestError(
+                    'Cannot specify both raw and encoded modes',
+                    {
+                        'function': 'http.HttpUA.build_request'
+                    })                
+            request = self.request_object.raw_request           
+            # Check for newlines (without CR prior)
+            request = re.sub(r'(?<!x)\n', self.CRLF, request)
+            request = request.decode('string_escape')
+        if self.request_object.encoded_request is not None:     
+            request = base64.b64decode(self.request_object.encoded_request)
+            request = request.decode('string_escape')                   
+        # if we have an Encoded request we should use that
         self.request = request
 
     def get_response(self):
@@ -215,9 +235,20 @@ class HttpUA(object):
                 # Check if we got a timeout
                 if err.errno == errno.EAGAIN:
                     pass
+                # SSL will return SSLWantRead instead of EAGAIN
+                elif self.request_object.protocol == 'https' and sys.exc_info()[0].__name__ == 'SSLWantReadError':
+                    pass
                 # If we didn't it's an error
                 else:
-                    print err
+                    raise errors.TestError(
+                    'Failed to connect to server',
+                    {
+                        'host': self.request_object.dest_addr,
+                        'port': self.request_object.port,
+                        'proto': self.request_object.protocol,
+                        'message': err,
+                        'function': 'http.HttpUA.get_response'
+                    })                    
         self.response_object = HttpResponse(''.join(our_data))
         try:
             self.sock.shutdown(1)
