@@ -22,7 +22,7 @@ class Output(object):
         self.output_dict = output_dict
         self.status = int(output_dict[self.STATUS]) \
             if self.STATUS in output_dict else None
-        self.html_contains = self.process_regex(self.HTML) 
+        self.html_contains = self.process_regex(self.HTML)
         self.log_contains = self.process_regex(self.LOG)
         if self.status is None and self.html_contains is None \
                 and self.log_contains is None:
@@ -34,7 +34,7 @@ class Output(object):
                     'log_contains': self.log_contains,
                     'function': 'ruleset.Output.__init__'
                 })
-                
+
     def process_regex(self, key):
         """
         Extract the value of key from dictionary if available
@@ -48,7 +48,7 @@ class Input(object):
     """
     This class holds the data associated with an HTTP Input request in FTW
     """
-    def __init__(self, raw_request ='',
+    def __init__(self, raw_request='',
                  protocol='http',
                  dest_addr='localhost',
                  port=80,
@@ -75,8 +75,8 @@ class Input(object):
 
 class Stage(object):
     """
-    This class holds information about 1 stage in a test, which contains
-    1 input and 1 output
+    This class holds information about 1 stage in a test, which
+    contains 1 input and 1 output
     """
     def __init__(self, stage_dict):
         self.stage_dict = stage_dict
@@ -107,11 +107,11 @@ class Test(object):
 class Ruleset(object):
     """
     This class holds test and stage information from a YAML test file
-    These YAML files are used to test the OWASP/Modsec CRSv3 rules 
+    These YAML files are used to test the OWASP/Modsec CRSv3 rules
     """
     def __init__(self, yaml_file):
         self.yaml_file = yaml_file
-        self.meta = yaml_file['meta'] 
+        self.meta = yaml_file['meta']
         self.author = self.meta['author']
         self.description = self.meta['description']
         self.enabled = self.meta['enabled']
@@ -119,7 +119,8 @@ class Ruleset(object):
 
     def extract_tests(self):
         """
-        Processes a loaded YAML document and creates test objects based on input 
+        Processes a loaded YAML document and creates test objects based on
+        input
         """
         try:
             return map(
@@ -127,7 +128,7 @@ class Ruleset(object):
                 self.yaml_file['tests']
             )
         except errors.TestError as e:
-            e.args[1]['meta'] = self.meta 
+            e.args[1]['meta'] = self.meta
             raise e
         except Exception as e:
             raise Exception(
