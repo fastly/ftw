@@ -49,4 +49,5 @@ class TestRunner(object):
         else:
             http_ua.send_request()
         if stage.output.status:
-            self.test_status(stage.output.status, http_ua.response_object.status)
+            self.test_status(stage.output.status,
+                             http_ua.response_object.status)
