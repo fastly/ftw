@@ -4,4 +4,5 @@ python:
 install: "pip install -r requirements.txt"
 script:
     - py.test test/unit/ -s -v
-    - py.test test/integration/test_logcontains.py -s -v --ruledir=test/integration/ 
+    - py.test test/integration/test_logcontains.py -s -v --rule=test/integration/LOGCONTAINSFIXTURE.yaml
+    - py.test test/integration/test_htmlcontains.py -s -v --rule=test/integration/HTMLCONTAINSFIXTURE.yaml
