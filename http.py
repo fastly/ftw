@@ -26,7 +26,6 @@ class HttpResponse(object):
         Parses a response that contains Content-Encoding to retrieve
         response_data
         """
-        
         if response_headers['content-encoding'] == 'gzip':
             buf = StringIO.StringIO(response_data)
             f = gzip.GzipFile(fileobj=buf)
@@ -41,7 +40,7 @@ class HttpResponse(object):
                     'content-encoding':
                         str(response_headers['content-encoding']),
                     'function': 'http.HttpResponse.parse_content_encoding'
-                })        
+                })
         return response_data
 
     def process_response(self):
@@ -92,7 +91,7 @@ class HttpResponse(object):
                 {
                     'response_line': str(response_line),
                     'function': 'http.HttpResponse.process_response'
-                })        
+                })
         self.status_msg = response_line.split(' ', 2)[2]
         self.version = response_line.split(' ', 2)[0]
         self.response_line = response_line
