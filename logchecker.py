@@ -21,7 +21,7 @@ class LogChecker():
     def get_logs(self):
         """
         MUST be implemented, MUST return an array of strings
-        These strings represent distinct log lines that were pulled from an 
+        These strings represent distinct log lines that were pulled from an
         outside logfile. The times are used by the testrunner to assist the
         implementers in pulling out the correct lines from the log file
         """
