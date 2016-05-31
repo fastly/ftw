@@ -8,6 +8,7 @@ class LogChecker():
     regex
     """
     __metaclass__ = abc.ABCMeta
+
     def __init__(self):
         self.start = None
         self.end = None
