@@ -19,7 +19,7 @@ class TestRunner(object):
         In a separate function to make debugging easy with py.test
         """
         assert expected_status == actual_status
-    
+
     def test_log(self, lines, log_contains):
         """
         Checks if a series of log lines contains a regex specified in the
