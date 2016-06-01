@@ -240,14 +240,14 @@ class HttpUA(object):
                 # If we didn't it's an error
                 else:
                     raise errors.TestError(
-                    'Failed to connect to server',
-                    {
-                        'host': self.request_object.dest_addr,
-                        'port': self.request_object.port,
-                        'proto': self.request_object.protocol,
-                        'message': err,
-                        'function': 'http.HttpUA.get_response'
-                    })                    
+                        'Failed to connect to server',
+                        {
+                            'host': self.request_object.dest_addr,
+                            'port': self.request_object.port,
+                            'proto': self.request_object.protocol,
+                            'message': err,
+                            'function': 'http.HttpUA.get_response'
+                        })                    
         self.response_object = HttpResponse(''.join(our_data))
         try:
             self.sock.shutdown(1)
