@@ -235,7 +235,8 @@ class HttpUA(object):
                 if err.errno == errno.EAGAIN:
                     pass
                 # SSL will return SSLWantRead instead of EAGAIN
-                elif self.request_object.protocol == 'https' and sys.exc_info()[0].__name__ == 'SSLWantReadError':
+                elif (self.request_object.protocol == 'https' and
+                      sys.exc_info()[0].__name__ == 'SSLWantReadError'):
                     pass
                 # If we didn't it's an error
                 else:
