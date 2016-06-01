@@ -247,7 +247,7 @@ class HttpUA(object):
                             'proto': self.request_object.protocol,
                             'message': err,
                             'function': 'http.HttpUA.get_response'
-                        })                    
+                        })
         self.response_object = HttpResponse(''.join(our_data))
         try:
             self.sock.shutdown(1)
