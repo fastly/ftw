@@ -30,14 +30,15 @@ class Output(object):
         if self.status is None and self.html_contains_str is None \
                 and self.log_contains_str is None:
             raise errors.TestError(
-                'Need at least one status, html_contains_str or log_contains_str',
+                'Need at least one status, html_contains_str ' +
+                'or log_contains_str',
                 {
                     'status': self.status,
                     'html_contains_str': self.html_contains_str,
                     'log_contains_str': self.log_contains_str,
                     'function': 'ruleset.Output.__init__'
                 })
-                
+
     def process_regex(self, key):
         """
         Extract the value of key from dictionary if available
