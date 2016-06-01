@@ -173,7 +173,7 @@ class HttpUA(object):
             request, '#uri#', self.request_object.uri + ' ')
         request = string.replace(
             request, '#version#', self.request_object.version)
-    
+
         # Expand out our headers into a string
         headers = ''
         if self.request_object.headers != {}:
