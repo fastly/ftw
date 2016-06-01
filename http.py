@@ -194,14 +194,14 @@ class HttpUA(object):
                     'Cannot specify both raw and encoded modes',
                     {
                         'function': 'http.HttpUA.build_request'
-                    })                
-            request = self.request_object.raw_request           
+                    })
+            request = self.request_object.raw_request
             # Check for newlines (without CR prior)
             request = re.sub(r'(?<!x)\n', self.CRLF, request)
             request = request.decode('string_escape')
-        if self.request_object.encoded_request is not None:     
+        if self.request_object.encoded_request is not None:
             request = base64.b64decode(self.request_object.encoded_request)
-            request = request.decode('string_escape')                   
+            request = request.decode('string_escape')
         # if we have an Encoded request we should use that
         self.request = request
 
