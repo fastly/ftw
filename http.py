@@ -11,6 +11,7 @@ import sys
 import re
 import base64
 
+
 class HttpResponse(object):
     def __init__(self, http_response):
         self.response = http_response
@@ -123,7 +124,6 @@ class HttpUA(object):
         self.HTTP_TIMEOUT = .3
         self.RECEIVE_BYTES = 8192
         self.SOCKET_TIMEOUT = 5
-
 
     def send_request(self):
         """
