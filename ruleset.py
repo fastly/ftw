@@ -25,7 +25,7 @@ class Output(object):
         self.status = int(output_dict[self.STATUS]) \
             if self.STATUS in output_dict else None
         self.html_contains_str = self.process_regex(self.HTML)
-        
+
         self.log_contains_str = self.process_regex(self.LOG)
         if self.status is None and self.html_contains_str is None \
                 and self.log_contains_str is None:
