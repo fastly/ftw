@@ -47,11 +47,10 @@ class TestRunner(object):
                     'response_object': response_object,
                     'function': 'testrunner.TestRunner.test_response'
                 })
-        if regex.search(response_object.response):                 
+        if regex.search(response_object.response):
             assert True
         else:
             assert False
-
 
     def run_stage(self, stage, logger_obj=None):
         """
