@@ -20,7 +20,7 @@ class TestRunner(object):
         In a separate function to make debugging easy with py.test
         """
         assert expected_status == actual_status
-    
+
     def test_log(self, lines, log_contains):
         """
         Checks if a series of log lines contains a regex specified in the
@@ -29,9 +29,9 @@ class TestRunner(object):
         """
         found = False
         for line in lines:
-           if log_contains.search(line):
-            found = True
-            break
+            if log_contains.search(line):
+                found = True
+                break
         assert found
 
     def test_response(self, response_object, regex):
