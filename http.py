@@ -11,6 +11,7 @@ import sys
 import re
 import base64
 
+
 class HttpResponse(object):
     def __init__(self, http_response):
         self.response = http_response
@@ -28,7 +29,6 @@ class HttpResponse(object):
         Parses a response that contains Content-Encoding to retrieve
         response_data
         """
-        
         if response_headers['content-encoding'] == 'gzip':
             buf = StringIO.StringIO(response_data)
             f = gzip.GzipFile(fileobj=buf)
@@ -43,7 +43,7 @@ class HttpResponse(object):
                     'content-encoding':
                         str(response_headers['content-encoding']),
                     'function': 'http.HttpResponse.parse_content_encoding'
-                })        
+                })
         return response_data
 
     def process_response(self):
@@ -94,7 +94,7 @@ class HttpResponse(object):
                 {
                     'response_line': str(response_line),
                     'function': 'http.HttpResponse.process_response'
-                })        
+                })
         self.status_msg = response_line.split(' ', 2)[2]
         self.version = response_line.split(' ', 2)[0]
         self.response_line = response_line
@@ -125,7 +125,6 @@ class HttpUA(object):
         self.RECEIVE_BYTES = 8192
         self.SOCKET_TIMEOUT = 5
 
-
     def send_request(self):
         """
         Send a request and get response
@@ -147,7 +146,7 @@ class HttpUA(object):
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.sock.settimeout(self.SOCKET_TIMEOUT)
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            #self.sock.setblocking(0)
+            # self.sock.setblocking(0)
             # Check if SSL
             if self.request_object.protocol == 'https':
                 self.sock = ssl.wrap_socket(self.sock, ciphers=self.CIPHERS)
@@ -174,7 +173,7 @@ class HttpUA(object):
             request, '#uri#', self.request_object.uri + ' ')
         request = string.replace(
             request, '#version#', self.request_object.version)
-    
+
         # Expand out our headers into a string
         headers = ''
         if self.request_object.headers != {}:
@@ -195,14 +194,14 @@ class HttpUA(object):
                     'Cannot specify both raw and encoded modes',
                     {
                         'function': 'http.HttpUA.build_request'
-                    })                
-            request = self.request_object.raw_request           
+                    })
+            request = self.request_object.raw_request
             # Check for newlines (without CR prior)
             request = re.sub(r'(?<!x)\n', self.CRLF, request)
             request = request.decode('string_escape')
-        if self.request_object.encoded_request is not None:     
+        if self.request_object.encoded_request is not None:
             request = base64.b64decode(self.request_object.encoded_request)
-            request = request.decode('string_escape')                   
+            request = request.decode('string_escape')
         # if we have an Encoded request we should use that
         self.request = request
 
@@ -236,19 +235,20 @@ class HttpUA(object):
                 if err.errno == errno.EAGAIN:
                     pass
                 # SSL will return SSLWantRead instead of EAGAIN
-                elif self.request_object.protocol == 'https' and sys.exc_info()[0].__name__ == 'SSLWantReadError':
+                elif (self.request_object.protocol == 'https' and
+                      sys.exc_info()[0].__name__ == 'SSLWantReadError'):
                     pass
                 # If we didn't it's an error
                 else:
                     raise errors.TestError(
-                    'Failed to connect to server',
-                    {
-                        'host': self.request_object.dest_addr,
-                        'port': self.request_object.port,
-                        'proto': self.request_object.protocol,
-                        'message': err,
-                        'function': 'http.HttpUA.get_response'
-                    })                    
+                        'Failed to connect to server',
+                        {
+                            'host': self.request_object.dest_addr,
+                            'port': self.request_object.port,
+                            'proto': self.request_object.protocol,
+                            'message': err,
+                            'function': 'http.HttpUA.get_response'
+                        })
         self.response_object = HttpResponse(''.join(our_data))
         try:
             self.sock.shutdown(1)

@@ -20,7 +20,7 @@ class TestRunner(object):
         In a separate function to make debugging easy with py.test
         """
         assert expected_status == actual_status
-    
+
     def test_log(self, lines, log_contains):
         """
         Checks if a series of log lines contains a regex specified in the
@@ -29,9 +29,9 @@ class TestRunner(object):
         """
         found = False
         for line in lines:
-           if log_contains.search(line):
-            found = True
-            break
+            if log_contains.search(line):
+                found = True
+                break
         assert found
 
     def test_response(self, response_object, regex):
@@ -39,7 +39,7 @@ class TestRunner(object):
         Checks if the HTML response contains a regex specified in the
         output stage. It will assert that the regex is present.
         """
-        if response_object == None:
+        if response_object is None:
             raise errors.TestError(
                 'Searching before response received',
                 {
@@ -47,11 +47,10 @@ class TestRunner(object):
                     'response_object': response_object,
                     'function': 'testrunner.TestRunner.test_response'
                 })
-        if regex.search(response_object.response):                 
+        if regex.search(response_object.response):
             assert True
         else:
             assert False
-
 
     def run_stage(self, stage, logger_obj=None):
         """
@@ -69,6 +68,8 @@ class TestRunner(object):
         else:
             http_ua.send_request()
         if stage.output.html_contains_str:
-            self.test_response(http_ua.response_object, stage.output.html_contains_str)
+            self.test_response(http_ua.response_object,
+                               stage.output.html_contains_str)
         if stage.output.status:
-            self.test_status(stage.output.status, http_ua.request_object.status)
+            self.test_status(stage.output.status,
+                             http_ua.request_object.status)
