@@ -313,7 +313,7 @@ class HttpUA(object):
                             # we don't overwrite a user specified cookie with a saved one
                             pass                           
                         else:
-                            TotalCookie[cookieKey] = cookieX[cookieKey].value                       
+                            TotalCookie[cookieKey] = cookie[cookieKey].value                       
                 for key, value in TotalCookie.iteritems():
                     cookie_value += (str(key) + "=" + str(value) + "; ")
                     # Remove the trailing semicolon
