@@ -58,7 +58,7 @@ class TestRunner(object):
         Runs a stage in a test by building an httpua object with the stage
         input, waits for output then compares expected vs actual output
         """
-        http_ua = http.HttpUA(stage.input)
+        http_ua = http.HttpUA()
         if stage.output.log_contains_str and logger_obj is not None:
             start = datetime.datetime.now()
             http_ua.send_request()
@@ -67,7 +67,7 @@ class TestRunner(object):
             lines = logger_obj.get_logs()
             self.test_log(lines, stage.output.log_contains_str)
         else:
-            http_ua.send_request()
+            http_ua.send_request(stage.input)
         if stage.output.html_contains_str:
             self.test_response(http_ua.response_object, stage.output.html_contains_str)
         if stage.output.status:
