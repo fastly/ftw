@@ -287,20 +287,45 @@ class HttpUA(object):
             request, '#uri#', self.request_object.uri + ' ')
         request = string.replace(
             request, '#version#', self.request_object.version)
-        cookies = self.find_cookie()
-        # TODO: If the user has requested a tracked cookie and we have one set it
-        if cookies:
-            cookie_value = ''
-            for cookie in cookies:
-                if 'cookie' in self.request_object.headers.keys():
-                    #TODO: If the cookie already exists don't overwrite
-                    pass
-                else:
+        available_cookies = self.find_cookie()
+        # If the user has requested a tracked cookie and we have one set it
+        if available_cookies:
+            cookie_value = ""
+            if 'cookie' in self.request_object.headers.keys():
+                # Create a SimpleCookie out of our provided cookie
+                try:
+                    cookieX = Cookie.SimpleCookie()
+                    cookieX.load(self.request_object.headers["cookie"])
+                except Cookie.CookieError as err:
+                    raise errors.TestError(
+                        'Error processing the existing cookie into a SimpleCookie',
+                        {
+                            'msg': str(err),
+                            'set_cookie': str(self.request_object.headers["cookie"]),
+                            'function': 'http.HttpResponse.build_request'
+                        })
+                TotalCookie = {}
+                for  cookieKey, cookieMorsal in cookieX.iteritems():
+                    TotalCookie[cookieKey] = cookieX[cookieKey].value
+                for cookie in available_cookies:
+                    for cookieKey, cookieMorsal in cookie.iteritems():  
+                        if cookieKey in TotalCookie.keys():
+                            # we don't overwrite a user specified cookie with a saved one
+                            pass                           
+                        else:
+                            TotalCookie[cookieKey] = cookieX[cookieKey].value                       
+                for key, value in TotalCookie.iteritems():
+                    cookie_value += (str(key) + "=" + str(value) + "; ")
+                    # Remove the trailing semicolon
+                cookie_value = cookie_value[:-2]      
+                self.request_object.headers["cookie"] = cookie_value
+            else:
+                for cookie in available_cookies:
                     for cookieKey, cookieMorsal in cookie.iteritems():
                         cookie_value += (str(cookieKey) + "=" + str(cookieMorsal.coded_value) + "; ")
                         # Remove the trailing semicolon
-                        cookie_value = cookie_value[:-2]                
-                    self.request_object.headers["cookie"] = cookie_value
+                    cookie_value = cookie_value[:-2]      
+                    self.request_object.headers["cookie"] = cookie_value                 
         # Expand out our headers into a string
         headers = ''
         if self.request_object.headers != {}:

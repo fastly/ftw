@@ -6,8 +6,11 @@ def test_cookies1():
     http_ua = http.HttpUA()
     x = ruleset.Input(dest_addr="ieee.org",headers={"Host":"ieee.org"})    
     http_ua.send_request(x)
+    with pytest.raises(KeyError):
+        print http_ua.request_object.headers["cookie"]
     x = ruleset.Input(dest_addr="ieee.org",headers={"Host":"ieee.org"})    
     http_ua.send_request(x)
+    assert(http_ua.request_object.headers["cookie"].split('=')[0] == "TS01293935")
 
 def test_cookies2():
     http_ua = http.HttpUA()
@@ -15,29 +18,39 @@ def test_cookies2():
     http_ua.send_request(x)
     x = ruleset.Input(dest_addr="ieee.org",headers={"Host":"ieee.org","cookie":"TS01293935=012f3506234413e6c5cb14e8c0d5bf890fdd02481614b01cd6cd30911c6733e3e6f79e72aa"})    
     http_ua.send_request(x)
+    assert([chunk.split('=')[0] for chunk in http_ua.request_object.headers["cookie"].split(';')] == ['TS01293935'])    
 
-#def test_raw1():
-#    x = ruleset.Input(dest_addr="example.com",raw_request="""GET / HTTP/1.1\r\nHost: example.com\r\n\r\n""")
-#    http_ua = http.HttpUA()
-#    http_ua.send_request(x)
-#    assert http_ua.response_object.status == 200    
+def test_cookies3():
+    http_ua = http.HttpUA()
+    x = ruleset.Input(dest_addr="ieee.org",headers={"Host":"ieee.org"})
+    http_ua.send_request(x)
+    x = ruleset.Input(dest_addr="ieee.org",headers={"Host":"ieee.org","cookie":"TS01293935=012f3506234413e6c5cb14e8c0d5bf890fdd02481614b01cd6cd30911c6733e3e6f79e72aa; XYZ=123"})
+    http_ua.send_request(x)
+    assert([chunk.split('=')[0] for chunk in http_ua.request_object.headers["cookie"].split(';')] == ['XYZ', ' TS01293935'])
 
-#def test_raw2():
-#    x = ruleset.Input(dest_addr="example.com",raw_request="""GET / HTTP/1.1
-#Host: example.com
-#    
-#
-#""")
-#    http_ua = http.HttpUA()
-#    http_ua.send_request(x)
-#    assert http_ua.response_object.status == 200    
 
-#def test_both1():
-#    x = ruleset.Input(dest_addr="example.com", raw_request="""GET / HTTP/1.1\r\nHost: example.com\r\n\r\n""", encoded_request="abc123==")
-#    http_ua = http.HttpUA()
-#    with pytest.raises(errors.TestError):
-#        http_ua.send_request(x)
-"""
+def test_raw1():
+    x = ruleset.Input(dest_addr="example.com",raw_request="""GET / HTTP/1.1\r\nHost: example.com\r\n\r\n""")
+    http_ua = http.HttpUA()
+    http_ua.send_request(x)
+    assert http_ua.response_object.status == 200    
+
+def test_raw2():
+    x = ruleset.Input(dest_addr="example.com",raw_request="""GET / HTTP/1.1
+Host: example.com
+    
+
+""")
+    http_ua = http.HttpUA()
+    http_ua.send_request(x)
+    assert http_ua.response_object.status == 200    
+
+def test_both1():
+    x = ruleset.Input(dest_addr="example.com", raw_request="""GET / HTTP/1.1\r\nHost: example.com\r\n\r\n""", encoded_request="abc123==")
+    http_ua = http.HttpUA()
+    with pytest.raises(errors.TestError):
+        http_ua.send_request(x)
+
 def test_encoded1():
     x = ruleset.Input(dest_addr="example.com", encoded_request="R0VUIC8gSFRUUC8xLjFcclxuSG9zdDogZXhhbXBsZS5jb21cclxuXHJcbg==")
     http_ua = http.HttpUA()
@@ -223,4 +236,3 @@ def test19():
     http_ua = http.HttpUA()
     http_ua.send_request(x)
     assert http_ua.request_object.data == "test=hello%3Fx"
-"""
