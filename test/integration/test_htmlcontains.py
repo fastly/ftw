@@ -13,7 +13,7 @@ def test_logcontains(ruleset, test):
 def test_search1():
     runner = testrunner.TestRunner()
     x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
-    http_ua = http.HttpUA(x) 
+    http_ua = http.HttpUA() 
     with pytest.raises(errors.TestError):    
         runner.test_response(http_ua.response_object,re.compile('dog'))
 
@@ -21,8 +21,8 @@ def test_search1():
 def test_search2():   
     runner = testrunner.TestRunner()
     x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
-    http_ua = http.HttpUA(x)
-    http_ua.send_request()    
+    http_ua = http.HttpUA()
+    http_ua.send_request(x)    
     with pytest.raises(AssertionError):   
         runner.test_response(http_ua.response_object,re.compile('dog'))
 
@@ -30,15 +30,15 @@ def test_search2():
 def test_search3():
     runner = testrunner.TestRunner()
     x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
-    http_ua = http.HttpUA(x)
-    http_ua.send_request()    
+    http_ua = http.HttpUA()
+    http_ua.send_request(x)    
     runner.test_response(http_ua.response_object,re.compile('established to be used for'))
 
 # Should return a success because we found our regex
 def test_search4():   
     runner = testrunner.TestRunner()
     x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
-    http_ua = http.HttpUA(x)
-    http_ua.send_request()      
+    http_ua = http.HttpUA()
+    http_ua.send_request(x)      
     runner.test_response(http_ua.response_object,re.compile('.*'))       
  
