@@ -138,7 +138,7 @@ class Ruleset(object):
 
     def extract_tests(self):
         """
-        Processes a loaded YAML document and 
+        Processes a loaded YAML document and
         creates test objects based on input
         """
         try:
