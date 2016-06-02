@@ -39,7 +39,7 @@ class TestRunner(object):
         Checks if the HTML response contains a regex specified in the
         output stage. It will assert that the regex is present.
         """
-        if response_object == None:
+        if response_object is None:
             raise errors.TestError(
                 'Searching before response received',
                 {
