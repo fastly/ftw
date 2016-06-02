@@ -61,7 +61,7 @@ class TestRunner(object):
         http_ua = http.HttpUA()
         if stage.output.log_contains_str and logger_obj is not None:
             start = datetime.datetime.now()
-            http_ua.send_request()
+            http_ua.send_request(stage.input)
             end = datetime.datetime.now()
             logger_obj.set_times(start, end)
             lines = logger_obj.get_logs()
