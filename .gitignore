@@ -31,5 +31,5 @@ INSTALL_RECEIPT.json
 # Ignore VirtualEnv
 venv/*
 
-# Ignore test cache
-test/.cache/*
+# Ignore all .cache
+.cache
