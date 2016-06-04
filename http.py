@@ -1,15 +1,21 @@
 #!/usr/bin/env python
+from __future__ import print_function
+
 import socket
 import ssl
 import string
 import errno
 import time
-import StringIO
 import gzip
 import errors
 import sys
 import re
 import base64
+
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 
 class HttpResponse(object):
@@ -30,11 +36,11 @@ class HttpResponse(object):
         response_data
         """
         if response_headers['content-encoding'] == 'gzip':
-            buf = StringIO.StringIO(response_data)
+            buf = StringIO(response_data)
             f = gzip.GzipFile(fileobj=buf)
             response_data = f.read()
         elif response_headers['content-encoding'] == 'deflate':
-            data = StringIO.StringIO(zlib.decompress(response_data))
+            data = StringIO(zlib.decompress(response_data))
             response_data = data.read()
         else:
             raise errors.TestError(
@@ -134,7 +140,7 @@ class HttpUA(object):
         try:
             self.sock.send(self.request)
         except socket.error as exc:
-            print exc
+            print(exc)
         finally:
             self.get_response()
 
@@ -254,4 +260,4 @@ class HttpUA(object):
             self.sock.shutdown(1)
             self.sock.close()
         except socket.error as err:
-            print err
+            print(err)
