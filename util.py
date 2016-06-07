@@ -2,7 +2,7 @@ import glob
 import yaml
 
 
-def get_files(directory, extension): 
+def get_files(directory, extension):
     """
     Take a directory and an extension and return the files
     that match the extension
@@ -19,9 +19,9 @@ def extract_yaml(yaml_files):
     for yaml_file in yaml_files:
         try:
             with open(yaml_file, 'r') as fd:
-                loaded_yaml.append(yaml.safe_load(fd)) 
-        except IOError as e:     
-            print 'Error reading file %s' % yaml_file 
+                loaded_yaml.append(yaml.safe_load(fd))
+        except IOError as e:
+            print 'Error reading file %s' % yaml_file
             raise e
         except yaml.YAMLError as e:
             print 'Error parsing file %s' % yaml_file

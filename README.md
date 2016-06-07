@@ -38,3 +38,13 @@ Goals / Use cases include:
 4. Make use of `py.test fixtures`. Use a function decorator `@pytest.fixture`, return your new `LogChecker` object. Whenever you use a function argument in your tests that matches the name of that `@pytest.fixture`, it will instantiate your object and make it easier to run tests. An example of this is in the python file from step 1.
 5. Write a testing configuration in the `*.yaml` format as seen in `test/integration/LOGCONTAINSFIXTURE.yaml`, the `log_contains` line requires a string that is a regex. FTW will compile the `log_contains` string from each stage in the YAML file into a regex. This regex will then be used alongside the lines of logs passed in from `get_logs()` to look for a match. The `log_contains` string, then, should be a unique rule-id as FTW is greedy and will pass on the first match. False positives are mitigated from the start/end time passed to the `LogChecker` object, but it is best to stay safe and use unique regexes.
 6. For each stage, the `get_logs()` function is called, so be sure to account for API calls if thats how you retrieve your logs. 
+
+## Making HTTP requests programmatically
+Although it is preffered to make requests using the YAML format, often automated tests require making many dynamic requests. In such a case it is reccomended to make use of the py.test framework in order to produce test cases that can be run as part of the whole.
+Generally making an HTTP request is simple:
+1. create an instance of the `HttpUA()` class
+2. create an instance of the `Input()` class providing whatever parameters you don\'t want to be defaulted
+3. provide the instance of the input class to `HttpUA.send_request()`
+
+*For some examples see the http integration tests*
+

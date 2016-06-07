@@ -15,6 +15,7 @@ from IPy import IP
 import errors
 
 
+
 class HttpResponse(object):
     def __init__(self, http_response, user_agent):
         self.response = http_response
@@ -38,7 +39,10 @@ class HttpResponse(object):
         Parses a response that contains Content-Encoding to retrieve
         response_data
         """
+<<<<<<< HEAD
 
+=======
+>>>>>>> 83d1ad67366b64c159274a4e623db931e94f3271
         if response_headers['content-encoding'] == 'gzip':
             buf = StringIO.StringIO(response_data)
             zipbuf = gzip.GzipFile(fileobj=buf)
@@ -221,7 +225,11 @@ class HttpUA(object):
         self.RECEIVE_BYTES = 8192
         self.SOCKET_TIMEOUT = 5
 
+<<<<<<< HEAD
     def send_request(self, http_request):
+=======
+    def send_request(self):
+>>>>>>> 83d1ad67366b64c159274a4e623db931e94f3271
         """
         Send a request and get response
         """
@@ -243,6 +251,10 @@ class HttpUA(object):
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.sock.settimeout(self.SOCKET_TIMEOUT)
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+<<<<<<< HEAD
+=======
+            # self.sock.setblocking(0)
+>>>>>>> 83d1ad67366b64c159274a4e623db931e94f3271
             # Check if SSL
             if self.request_object.protocol == 'https':
                 self.sock = ssl.wrap_socket(self.sock, ciphers=self.CIPHERS)
@@ -290,6 +302,7 @@ class HttpUA(object):
             request, '#uri#', self.request_object.uri + ' ')
         request = string.replace(
             request, '#version#', self.request_object.version)
+<<<<<<< HEAD
         available_cookies = self.find_cookie()
         # If the user has requested a tracked cookie and we have one set it
         if available_cookies:
@@ -329,6 +342,9 @@ class HttpUA(object):
                         # Remove the trailing semicolon
                     cookie_value = cookie_value[:-2]
                     self.request_object.headers['cookie'] = cookie_value
+=======
+
+>>>>>>> 83d1ad67366b64c159274a4e623db931e94f3271
         # Expand out our headers into a string
         headers = ''
         if self.request_object.headers != {}:
@@ -390,7 +406,8 @@ class HttpUA(object):
                 if err.errno == errno.EAGAIN:
                     pass
                 # SSL will return SSLWantRead instead of EAGAIN
-                elif self.request_object.protocol == 'https' and sys.exc_info()[0].__name__ == 'SSLWantReadError':
+                elif (self.request_object.protocol == 'https' and
+                      sys.exc_info()[0].__name__ == 'SSLWantReadError'):
                     pass
                 # If we didn't it's an error
                 else:
@@ -403,7 +420,11 @@ class HttpUA(object):
                             'message': err,
                             'function': 'http.HttpUA.get_response'
                         })
+<<<<<<< HEAD
         self.response_object = HttpResponse(''.join(our_data), self)
+=======
+        self.response_object = HttpResponse(''.join(our_data))
+>>>>>>> 83d1ad67366b64c159274a4e623db931e94f3271
         try:
             self.sock.shutdown(1)
             self.sock.close()
