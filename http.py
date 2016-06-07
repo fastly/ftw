@@ -6,20 +6,23 @@ import errno
 import time
 import StringIO
 import gzip
-import errors
 import sys
 import re
 import base64
+import zlib
 import Cookie
+from IPy import IP
+import errors
+
 
 class HttpResponse(object):
     def __init__(self, http_response, user_agent):
         self.response = http_response
-        # For testing purposes HTTPResponse might be called OOL        
+        # For testing purposes HTTPResponse might be called OOL
         try:
             self.dest_addr = user_agent.request_object.dest_addr
         except AttributeError:
-            self.dest_addr = "127.0.0.1" 
+            self.dest_addr = '127.0.0.1'
         self.response_line = None
         self.status = None
         self.cookiejar = user_agent.cookiejar
@@ -35,11 +38,11 @@ class HttpResponse(object):
         Parses a response that contains Content-Encoding to retrieve
         response_data
         """
-        
+
         if response_headers['content-encoding'] == 'gzip':
             buf = StringIO.StringIO(response_data)
-            f = gzip.GzipFile(fileobj=buf)
-            response_data = f.read()
+            zipbuf = gzip.GzipFile(fileobj=buf)
+            response_data = zipbuf.read()
         elif response_headers['content-encoding'] == 'deflate':
             data = StringIO.StringIO(zlib.decompress(response_data))
             response_data = data.read()
@@ -50,69 +53,73 @@ class HttpResponse(object):
                     'content-encoding':
                         str(response_headers['content-encoding']),
                     'function': 'http.HttpResponse.parse_content_encoding'
-                })        
+                })
         return response_data
 
-    def checkForCookie(self, cookie):
+    def check_for_cookie(self, cookie):
         # http://bayou.io/draft/cookie.domain.html
         # Check if our originDomain is an IP
-        originIsIP = True
+        origin_is_ip = True
         try:
             IP(self.dest_addr)
-        except:
-            originIsIP = False
-        
-        for cookieName, cookieMorsals in cookie.iteritems():
+        except ValueError:
+            origin_is_ip = False
+        for cookie_morsals in cookie.values():
             # If the coverdomain is blank or the domain is an IP set the domain to be the origin
-            if cookieMorsals['domain'] == "" or originIsIP is True:
+            if cookie_morsals['domain'] == '' or origin_is_ip is True:
                 # We want to always add a domain so it's easy to parse later
                 return (cookie, self.dest_addr)
             # If the coverdomain is set it can be any subdomain
             else:
-                coverDomain = cookieMorsals['domain']
+                cover_domain = cookie_morsals['domain']
                 # strip leading dots
                 # Find all leading dots not just first one
                 # http://tools.ietf.org/html/rfc6265#section-4.1.2.3
-                firstNonDot = 0
-                for i in range(len(coverDomain)):
-                    if coverDomain[i] != '.':
-                        firstNonDot = i
+                first_non_dot = 0
+                for i in range(len(cover_domain)):
+                    if cover_domain[i] != '.':
+                        first_non_dot = i
                         break
-                coverDomain = coverDomain[firstNonDot:]
+                cover_domain = cover_domain[first_non_dot:]
                 # We must parse the coverDomain to make sure its not in the suffix list
                 try:
-                    with open('util/public_suffix_list.dat', 'r') as f:
-                        for line in f:
-                            if line[:2] == "//" or line[0] == " " or line[0].strip() == "":
+                    with open('util/public_suffix_list.dat', 'r') as public_suffixs:
+                        for line in public_suffixs:
+                            if line[:2] == '//' or line[0] == ' ' or line[0].strip() == '':
                                 continue
-                            if coverDomain == line.strip():
+                            if cover_domain == line.strip():
                                 return False
                 except IOError:
-                    return returnError("We were unable to open the needed publix suffix list")
+                    raise errors.TestError(
+                        'unable to open the needed publix suffix list',
+                        {
+                            'path': 'util/public_suffix_list.dat',
+                            'function': 'http.HttpResponse.check_for_cookie'
+                        })
                 # Generate Origin Domain TLD
-                i = self.dest_addr.rfind(".")
-                oTLD = self.dest_addr[i+1:]
+                i = self.dest_addr.rfind('.')
+                o_tld = self.dest_addr[i+1:]
                 # if our cover domain is the origin TLD we ignore
                 # Quick sanity check
-                if coverDomain == oTLD:
+                if cover_domain == o_tld:
                     return False
                 # check if our coverdomain is a subset of our origin domain
                 # Domain match (case insensative)
-                if coverDomain == self.dest_addr:
+                if cover_domain == self.dest_addr:
                     return (cookie, self.dest_addr)
-                # Domain match algorithm
-                B = coverDomain.lower()
-                HDN = self.dest_addr.lower()
-                NEnd = HDN.find(B)
-                if NEnd is not False:
-                    N = HDN[0:NEnd]
+                # Domain match algorithm (rfc2965)
+                bvalue = cover_domain.lower()
+                hdn = self.dest_addr.lower()
+                nend = hdn.find(bvalue)
+                if nend is not False:
+                    nvalue = hdn[0:nend]
                     # Modern browsers don't care about dot
-                    if N[-1] == '.':
-                        N = N[0:-1]
+                    if nvalue[-1] == '.':
+                        nvalue = nvalue[0:-1]
                 else:
                     # We don't have an address of the form
                     return False
-                if N == "":
+                if nvalue == '':
                     return False
                 return (cookie, self.dest_addr)
 
@@ -141,31 +148,28 @@ class HttpResponse(object):
                             'function': 'http.HttpResponse.process_response'
                         })
                 response_headers[header[0].lower()] = header[1].lstrip()
-        #print response_headers
-        if "set-cookie" in response_headers.keys():
+        if 'set-cookie' in response_headers.keys():
             try:
                 cookie = Cookie.SimpleCookie()
-                cookie.load(response_headers["set-cookie"])
+                cookie.load(response_headers['set-cookie'])
             except Cookie.CookieError as err:
                 raise errors.TestError(
                     'Error processing the cookie content into a SimpleCookie',
                     {
                         'msg': str(err),
-                        'set_cookie': str(response_headers["set-cookie"]),
+                        'set_cookie': str(response_headers['set-cookie']),
                         'function': 'http.HttpResponse.process_response'
                     })
-            # if the checkForCookie is invalid then we don't save it
-            if self.checkForCookie(cookie) is False:
+            # if the check_for_cookie is invalid then we don't save it
+            if self.check_for_cookie(cookie) is False:
                 raise errors.TestError(
                     'An invalid cookie was specified',
                     {
-                        'set_cookie': str(response_headers["set-cookie"]),
+                        'set_cookie': str(response_headers['set-cookie']),
                         'function': 'http.HttpResponse.process_response'
-                    })                
+                    })
             else:
                 self.cookiejar.append((cookie, self.dest_addr))
-                    
-                            
         if data_line is not None and data_line < len(split_response):
             response_data = self.CRLF.join(split_response[data_line:])
 
@@ -188,15 +192,12 @@ class HttpResponse(object):
                 {
                     'response_line': str(response_line),
                     'function': 'http.HttpResponse.process_response'
-                })        
+                })
         self.status_msg = response_line.split(' ', 2)[2]
         self.version = response_line.split(' ', 2)[0]
         self.response_line = response_line
         self.headers = response_headers
         self.data = response_data
-
-
-"""This script will handle all the HTTP requests and responses"""
 
 
 class HttpUA(object):
@@ -220,7 +221,6 @@ class HttpUA(object):
         self.RECEIVE_BYTES = 8192
         self.SOCKET_TIMEOUT = 5
 
-
     def send_request(self, http_request):
         """
         Send a request and get response
@@ -243,7 +243,6 @@ class HttpUA(object):
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.sock.settimeout(self.SOCKET_TIMEOUT)
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            #self.sock.setblocking(0)
             # Check if SSL
             if self.request_object.protocol == 'https':
                 self.sock = ssl.wrap_socket(self.sock, ciphers=self.CIPHERS)
@@ -259,24 +258,28 @@ class HttpUA(object):
                     'message': msg,
                     'function': 'http.HttpUA.build_socket'
                 })
+
     def find_cookie(self):
-        returnCookies = []
-        originDomain = self.request_object.dest_addr
+        """
+        Find a list of all cookies for a given domain
+        """
+        return_cookies = []
+        origin_domain = self.request_object.dest_addr
         for cookie in self.cookiejar:
-            for cookieName, cookieMorsals in cookie[0].iteritems():
-                coverDomain = cookieMorsals['domain']
-                if coverDomain == "":
-                    if originDomain == cookie[1]:
-                        returnCookies.append(cookie[0])
+            for cookie_morsals in cookie[0].values():
+                cover_domain = cookie_morsals['domain']
+                if cover_domain == '':
+                    if origin_domain == cookie[1]:
+                        return_cookies.append(cookie[0])
                 else:
                     # Domain match algorithm
-                    B = coverDomain.lower()
-                    HDN = originDomain.lower()
-                    NEnd = HDN.find(B)
-                    if NEnd is not False:
-                        returnCookies.append(cookie[0])
-        return returnCookies
-        
+                    bvalue = cover_domain.lower()
+                    hdn = origin_domain.lower()
+                    nend = hdn.find(bvalue)
+                    if nend is not False:
+                        return_cookies.append(cookie[0])
+        return return_cookies
+
     def build_request(self):
         request = '#method# #uri##version#%s#headers#%s#data#' % \
                   (self.CRLF, self.CRLF)
@@ -290,42 +293,42 @@ class HttpUA(object):
         available_cookies = self.find_cookie()
         # If the user has requested a tracked cookie and we have one set it
         if available_cookies:
-            cookie_value = ""
+            cookie_value = ''
             if 'cookie' in self.request_object.headers.keys():
                 # Create a SimpleCookie out of our provided cookie
                 try:
-                    cookieX = Cookie.SimpleCookie()
-                    cookieX.load(self.request_object.headers["cookie"])
+                    provided_cookie = Cookie.SimpleCookie()
+                    provided_cookie.load(self.request_object.headers['cookie'])
                 except Cookie.CookieError as err:
                     raise errors.TestError(
                         'Error processing the existing cookie into a SimpleCookie',
                         {
                             'msg': str(err),
-                            'set_cookie': str(self.request_object.headers["cookie"]),
+                            'set_cookie': str(self.request_object.headers['cookie']),
                             'function': 'http.HttpResponse.build_request'
                         })
-                TotalCookie = {}
-                for  cookieKey, cookieMorsal in cookieX.iteritems():
-                    TotalCookie[cookieKey] = cookieX[cookieKey].value
+                result_cookie = {}
+                for cookie_key, cookie_morsal in provided_cookie.iteritems():
+                    result_cookie[cookie_key] = provided_cookie[cookie_key].value
                 for cookie in available_cookies:
-                    for cookieKey, cookieMorsal in cookie.iteritems():  
-                        if cookieKey in TotalCookie.keys():
+                    for cookie_key, cookie_morsal in cookie.iteritems():
+                        if cookie_key in result_cookie.keys():
                             # we don't overwrite a user specified cookie with a saved one
-                            pass                           
+                            pass
                         else:
-                            TotalCookie[cookieKey] = cookie[cookieKey].value                       
-                for key, value in TotalCookie.iteritems():
-                    cookie_value += (str(key) + "=" + str(value) + "; ")
+                            result_cookie[cookie_key] = cookie[cookie_key].value
+                for key, value in result_cookie.iteritems():
+                    cookie_value += (str(key) + '=' + str(value) + '; ')
                     # Remove the trailing semicolon
-                cookie_value = cookie_value[:-2]      
-                self.request_object.headers["cookie"] = cookie_value
+                cookie_value = cookie_value[:-2]
+                self.request_object.headers['cookie'] = cookie_value
             else:
                 for cookie in available_cookies:
-                    for cookieKey, cookieMorsal in cookie.iteritems():
-                        cookie_value += (str(cookieKey) + "=" + str(cookieMorsal.coded_value) + "; ")
+                    for cookie_key, cookie_morsal in cookie.iteritems():
+                        cookie_value += (str(cookie_key) + '=' + str(cookie_morsal.coded_value) + '; ')
                         # Remove the trailing semicolon
-                    cookie_value = cookie_value[:-2]      
-                    self.request_object.headers["cookie"] = cookie_value                 
+                    cookie_value = cookie_value[:-2]
+                    self.request_object.headers['cookie'] = cookie_value
         # Expand out our headers into a string
         headers = ''
         if self.request_object.headers != {}:
@@ -346,14 +349,14 @@ class HttpUA(object):
                     'Cannot specify both raw and encoded modes',
                     {
                         'function': 'http.HttpUA.build_request'
-                    })                
-            request = self.request_object.raw_request           
+                    })
+            request = self.request_object.raw_request
             # Check for newlines (without CR prior)
             request = re.sub(r'(?<!x)\n', self.CRLF, request)
             request = request.decode('string_escape')
-        if self.request_object.encoded_request is not None:     
+        if self.request_object.encoded_request is not None:
             request = base64.b64decode(self.request_object.encoded_request)
-            request = request.decode('string_escape')                   
+            request = request.decode('string_escape')
         # if we have an Encoded request we should use that
         self.request = request
 
@@ -392,14 +395,14 @@ class HttpUA(object):
                 # If we didn't it's an error
                 else:
                     raise errors.TestError(
-                    'Failed to connect to server',
-                    {
-                        'host': self.request_object.dest_addr,
-                        'port': self.request_object.port,
-                        'proto': self.request_object.protocol,
-                        'message': err,
-                        'function': 'http.HttpUA.get_response'
-                    })                    
+                        'Failed to connect to server',
+                        {
+                            'host': self.request_object.dest_addr,
+                            'port': self.request_object.port,
+                            'proto': self.request_object.protocol,
+                            'message': err,
+                            'function': 'http.HttpUA.get_response'
+                        })
         self.response_object = HttpResponse(''.join(our_data), self)
         try:
             self.sock.shutdown(1)
