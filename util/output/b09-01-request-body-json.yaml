@@ -1,0 +1,20 @@
+meta:
+  author: Zack
+  description: Description
+  enabled: true
+  name: EXAMPLE.yaml
+tests:
+- rule_id: 1234
+  stages:
+  - stage:
+      input:
+        data: "{\r\n    \"name\": \"\\u0055NION SE\\u004cECT\"\r\n}\r\n\r\n\r\n"
+        headers:
+          Content-Length: '41'
+          Content-Type: application/json
+          User-Agent: Mozilla
+        method: POST
+        uri: /?b09-1
+        version: HTTP/1.1
+      output:
+        status: 200

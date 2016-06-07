@@ -1,0 +1,24 @@
+meta:
+  author: Zack
+  description: Description
+  enabled: true
+  name: EXAMPLE.yaml
+tests:
+- rule_id: 1234
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-datax; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m11-06
+        version: HTTP/1.0
+      output:
+        status: 200

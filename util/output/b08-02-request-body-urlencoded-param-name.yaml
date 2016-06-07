@@ -1,0 +1,20 @@
+meta:
+  author: Zack
+  description: Description
+  enabled: true
+  name: EXAMPLE.yaml
+tests:
+- rule_id: 1234
+  stages:
+  - stage:
+      input:
+        data: "UNION%20SELECT=value\r\n\r\n\r\n"
+        headers:
+          Content-Length: '20'
+          Content-Type: application/x-www-form-urlencoded
+          User-Agent: Mozilla
+        method: POST
+        uri: /?b08-2
+        version: HTTP/1.1
+      output:
+        status: 200

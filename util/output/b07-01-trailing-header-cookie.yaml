@@ -1,0 +1,22 @@
+meta:
+  author: Zack
+  description: Description
+  enabled: true
+  name: EXAMPLE.yaml
+tests:
+- rule_id: 1234
+  stages:
+  - stage:
+      input:
+        data: "9\r\n012345678\r\n1\r\n9\r\n0\r\nCookie: name=UNION%20SELECT\r\n\r\n\
+          \r\n"
+        headers:
+          Content-Type: application/x-www-form-urlencoded
+          Cookie: name=value
+          Transfer-Encoding: chunked
+          User-Agent: Mozilla
+        method: POST
+        uri: /?b07-1
+        version: HTTP/1.1
+      output:
+        status: 200
