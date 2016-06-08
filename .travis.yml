@@ -6,3 +6,5 @@ script:
     - py.test test/unit/ -s -v
     - py.test test/integration/test_logcontains.py -s -v --rule=test/integration/LOGCONTAINSFIXTURE.yaml
     - py.test test/integration/test_htmlcontains.py -s -v --rule=test/integration/HTMLCONTAINSFIXTURE.yaml
+    - py.test test/integration/test_http.py -s -v
+    - py.test test/integration/test_cookie.py -s -v --rule=test/integration/COOKIEFIXTURE.yaml

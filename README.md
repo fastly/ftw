@@ -16,14 +16,13 @@ Goals / Use cases include:
 * `cd ftw`
 * `pip install -r requirements.txt`
 
-## Running Tests
-* *start your test web server*
+## Running Tests with HTML contains and Status code checks only
 * Create YAML files that point to your webserver with a WAF in front of it
-* `py.test test/test_modsecurityv2.py --ruledir test/yaml`
+* `py.test test/test_default.py --ruledir test/yaml`
 
 ## Running Tests while overriding destination address in the yaml files to custom domain
 * *start your test web server*
-* `py.test test/test_modsecurityv2.py --ruledir=test/yaml --destaddr=domain.com`
+* `py.test test/test_default.py --ruledir=test/yaml --destaddr=domain.com`
 
 ## Run integration test, local webserver, may have to use sudo
 * `py.test test/integration/test_logcontains.py -s --ruledir=test/integration/`
@@ -40,7 +39,7 @@ Goals / Use cases include:
 6. For each stage, the `get_logs()` function is called, so be sure to account for API calls if thats how you retrieve your logs. 
 
 ## Making HTTP requests programmatically
-Although it is preffered to make requests using the YAML format, often automated tests require making many dynamic requests. In such a case it is reccomended to make use of the py.test framework in order to produce test cases that can be run as part of the whole.
+Although it is preferred to make requests using the YAML format, often automated tests require making many dynamic requests. In such a case it is recommended to make use of the py.test framework in order to produce test cases that can be run as part of the whole.
 Generally making an HTTP request is simple:
 1. create an instance of the `HttpUA()` class
 2. create an instance of the `Input()` class providing whatever parameters you don\'t want to be defaulted

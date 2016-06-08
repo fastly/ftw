@@ -52,21 +52,23 @@ class TestRunner(object):
         else:
             assert False
 
-    def run_stage(self, stage, logger_obj=None):
+    def run_stage(self, stage, logger_obj=None, http_ua=None):
         """
         Runs a stage in a test by building an httpua object with the stage
         input, waits for output then compares expected vs actual output
+        http_ua can be passed in to persist cookies
         """
-        http_ua = http.HttpUA(stage.input)
+        if not http_ua:
+            http_ua = http.HttpUA()
         if stage.output.log_contains_str and logger_obj is not None:
             start = datetime.datetime.now()
-            http_ua.send_request()
+            http_ua.send_request(stage.input)
             end = datetime.datetime.now()
             logger_obj.set_times(start, end)
             lines = logger_obj.get_logs()
             self.test_log(lines, stage.output.log_contains_str)
         else:
-            http_ua.send_request()
+            http_ua.send_request(stage.input)
         if stage.output.html_contains_str:
             self.test_response(http_ua.response_object,
                                stage.output.html_contains_str)

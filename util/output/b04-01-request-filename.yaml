@@ -1,0 +1,17 @@
+meta:
+  author: Zack
+  description: Description
+  enabled: true
+  name: EXAMPLE.yaml
+tests:
+- rule_id: 1234
+  stages:
+  - stage:
+      input:
+        data: "\r\n"
+        headers: {}
+        method: GET
+        uri: /UNION%20SELECT?b04-01
+        version: HTTP/1.0
+      output:
+        status: 200

@@ -1,0 +1,18 @@
+meta:
+  author: Zack
+  description: Description
+  enabled: true
+  name: EXAMPLE.yaml
+tests:
+- rule_id: 1234
+  stages:
+  - stage:
+      input:
+        data: "xyz\r\n\r\n"
+        headers:
+          User-Agent: test
+        method: GET
+        uri: /
+        version: HTTP/1.1
+      output:
+        status: 200
