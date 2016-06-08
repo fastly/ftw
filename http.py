@@ -243,7 +243,7 @@ class HttpUA(object):
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.sock.settimeout(self.SOCKET_TIMEOUT)
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            # Check if SSL
+            # Check if TLS
             if self.request_object.protocol == 'https':
                 self.sock = ssl.wrap_socket(self.sock, ciphers=self.CIPHERS)
             self.sock.connect(
