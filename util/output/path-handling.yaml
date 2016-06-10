@@ -1,0 +1,441 @@
+meta:
+  author: '@csanders-git'
+  description: ''
+  enabled: true
+  name: path-handling.yaml
+tests:
+- rule_id: 1049
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/%test.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1050
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/%f0%80%81%b4est.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1051
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: !!binary |
+          L2V04ICvdGVzdC50eHQ=
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1052
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et%f0%80%80%aftest.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1053
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et%e0%80%aftest.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1054
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: !!binary |
+          L2V0L+CBtGVzdC50eHQ=
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1055
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/Risti%c4%87.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1056
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/%u0074est.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1057
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/%01test.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1058
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/te%st.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1059
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/Risti%u0107.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1060
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et%u005ctest.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1061
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et%c0%aftest.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1062
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/test.txt%00.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1063
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/test.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1064
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: !!python/str "/et/\uFF54est.txt"
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1065
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/%c1%b4est.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1066
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/%e0%81%b4est.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1067
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: !!binary |
+          L2V08ICAr3Rlc3QudHh0
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1068
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/%u0064.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1069
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/bogus/%u2025/test.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1070
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et%u002ftest.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1071
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et%5ctest.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1072
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/%c0%01test.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1073
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/%64.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1074
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et\test.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1075
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/%uff54est.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1076
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: !!binary |
+          L2V0L/CAgbRlc3QudHh0
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1077
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: "/et/\x01test.txt"
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1078
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/Risti%c4%87.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1079
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et%2ftest.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1080
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/%2574est.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1081
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: !!binary |
+          L2V0wK90ZXN0LnR4dA==
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1082
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: !!python/str "/et/Risti\u0107.txt"
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1083
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/test.txt
+        version: .txt HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1084
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: !!binary |
+          L2V0L8G0ZXN0LnR4dA==
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1085
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: !!python/str "/et/Risti\u0107.txt"
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1086
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/%74est.txt
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1087
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /et/%ef%bd%94est.txt
+        version: HTTP/1.0
+      output:
+        status: 200

@@ -1,0 +1,299 @@
+meta:
+  author: '@csanders-git'
+  description: ''
+  enabled: true
+  name: baseline-detection.yaml
+tests:
+- rule_id: 1088
+  stages:
+  - stage:
+      input:
+        data: "\r\n"
+        headers: {}
+        method: GET
+        uri: /?b06-01
+        version: UNION%20SELECT/1.0
+      output:
+        status: 200
+- rule_id: 1089
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers:
+          Referer: UNION%20SELECT
+        method: GET
+        uri: /?b03-03
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1090
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers:
+          Cookie: name=UNION%20SELECT
+        method: GET
+        uri: /?b03-04
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1091
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smit\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smit@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"UNION SELECT\"\r\r\nContent-Type:\
+          \ image/jpeg\r\r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '274'
+          Content-Type: multipart/form-data; boundary=0000
+        method: POST
+        uri: /?b10-03
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1092
+  stages:
+  - stage:
+      input:
+        data: "name=UNION%20SELECT\r\n\r\n\r\n"
+        headers:
+          Content-Length: '19'
+          Content-Type: application/x-www-form-urlencoded
+          User-Agent: Mozilla
+        method: POST
+        uri: /?b08-1
+        version: HTTP/1.1
+      output:
+        status: 200
+- rule_id: 1093
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers:
+          User-Agent: UNION%20SELECT
+        method: GET
+        uri: /?b03-02
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1094
+  stages:
+  - stage:
+      input:
+        data: "{\r\n    \"name\": \"\\u0055NION SE\\u004cECT\"\r\n}\r\n\r\n\r\n"
+        headers:
+          Content-Length: '41'
+          Content-Type: application/json
+          User-Agent: Mozilla
+        method: POST
+        uri: /?b09-1
+        version: HTTP/1.1
+      output:
+        status: 200
+- rule_id: 1095
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: http://UNION%20SELECT.com/?b02-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1096
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smit@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nUNION SELECT\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '274'
+          Content-Type: multipart/form-data; boundary=0000
+        method: POST
+        uri: /?b10-04
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1097
+  stages:
+  - stage:
+      input:
+        data: "UNION%20SELECT=value\r\n\r\n\r\n"
+        headers:
+          Content-Length: '20'
+          Content-Type: application/x-www-form-urlencoded
+          User-Agent: Mozilla
+        method: POST
+        uri: /?b08-2
+        version: HTTP/1.1
+      output:
+        status: 200
+- rule_id: 1098
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\nUNION SELECT\r\n\r\n"
+        headers:
+          Content-Length: '287'
+          Content-Type: multipart/form-data; boundary=0000
+        method: POST
+        uri: /?b10-05
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1099
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers:
+          Host: UNION%20SELECT
+        method: GET
+        uri: /?b03-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1100
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /?b00-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1101
+  stages:
+  - stage:
+      input:
+        data: "9\r\n012345678\r\n1\r\n9\r\n0\r\nCookie: name=UNION%20SELECT\r\n\r\n\
+          \r\n"
+        headers:
+          Content-Type: application/x-www-form-urlencoded
+          Cookie: name=value
+          Transfer-Encoding: chunked
+          User-Agent: Mozilla
+        method: POST
+        uri: /?b07-1
+        version: HTTP/1.1
+      output:
+        status: 200
+- rule_id: 1102
+  stages:
+  - stage:
+      input:
+        data: "\r\n"
+        headers: {}
+        method: GET
+        uri: /UNION%20SELECT?b04-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1103
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers:
+          Authorization: Basic VU5JT04gU0VMRUNUOnRlc3Q=
+        method: GET
+        uri: /?b03-05
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1104
+  stages:
+  - stage:
+      input:
+        data: "\r\n"
+        headers: {}
+        method: UNION%20SELECT
+        uri: /?b05-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1105
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"UNION SELECT\"\r\
+          \r\n\r\r\nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"\
+          email\"\r\r\n\r\r\njohn.smit@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n\r\n"
+        headers:
+          Content-Length: '281'
+          Content-Type: multipart/form-data; boundary=0000
+        method: POST
+        uri: /?b10-02
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1106
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers: {}
+        method: GET
+        uri: /?b01-01%20UNION%20SELECT
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1107
+  stages:
+  - stage:
+      input:
+        data: "UNION SELECT\r\n--0000\r\r\nContent-Disposition: form-data; name=\"\
+          name\"\r\r\n\r\r\nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data;\
+          \ name=\"email\"\r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '286'
+          Content-Type: multipart/form-data; boundary=0000
+        method: POST
+        uri: /?b10-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1108
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers:
+          Host: UNION%20SELECT.com
+        method: GET
+        uri: /?b02-02
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1109
+  stages:
+  - stage:
+      input:
+        data: ''
+        headers:
+          Authorization: Basic dGVzdDpVTklPTiBTRUxFQ1Q=
+        method: GET
+        uri: /?b03-06
+        version: HTTP/1.0
+      output:
+        status: 200

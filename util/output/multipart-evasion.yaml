@@ -1,0 +1,891 @@
+meta:
+  author: '@csanders-git'
+  description: ''
+  enabled: true
+  name: multipart-evasion.yaml
+tests:
+- rule_id: 1000
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\nContent-Disposition: form-data; name=\"name\"\r\n\r\nJohn\
+          \ Smith\r\n--0000\r\nContent-Disposition: form-data; name=\"email\"\r\n\r\
+          \njohn.smith@example.com\r\n--0000\r\nContent-Disposition: form-data; name=\"\
+          image\"; filename=\"image.jpg\"\r\nContent-Type: image/jpeg\r\n\r\nBINARYDATA\r\
+          \n--0000--\r\n"
+        headers:
+          Content-Length: '259'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m16
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1001
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/mixed; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m11-02
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1002
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n \r\r\
+          \n\r\r\nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"\
+          email\"\r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '276'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m13-03
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1003
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=x';filename=\"';name=name;\"\
+          \r\r\n\r\r\nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data;\
+          \ name=\"email\"\r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '293'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m14-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1004
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary=0000; boundary=1111
+          Host: localhost
+        method: POST
+        uri: /?m03-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1005
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: application/octet-stream; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m11-07
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1006
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data;\r\r\n\vname=\"name\"\r\r\
+          \n\r\r\nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"\
+          email\"\r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '275'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m13-02
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1007
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/alternative; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m11-03
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1008
+  stages:
+  - stage:
+      input:
+        data: "--abcd\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--abcd\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--abcd\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--abcd--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary=aBcD
+          Host: localhost
+        method: POST
+        uri: /?m10-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1009
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary=0000 1111
+          Host: localhost
+        method: POST
+        uri: /?m07-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1010
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data;\r\r\nname=\"name\"\r\r\n\
+          \r\r\nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"\
+          email\"\r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '274'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m13-05
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1011
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=name\"\r\r\n\r\r\n\
+          John Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '272'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m12-05
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1012
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m00-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1013
+  stages:
+  - stage:
+      input:
+        data: "--00\"00\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\
+          \r\nJohn Smith\r\r\n--00\"00\r\r\nContent-Disposition: form-data; name=\"\
+          email\"\r\r\n\r\r\njohn.smith@example.com\r\r\n--00\"00\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--00\"00--\r\r\n"
+        headers:
+          Content-Length: '277'
+          Content-Type: multipart/form-data; boundary="00""00"
+          Host: localhost
+        method: POST
+        uri: /?m08-05
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1014
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=name\r\r\n\r\r\nJohn\
+          \ Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\r\
+          \r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition: form-data;\
+          \ name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '271'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m12-02
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1015
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\n Content-Type:\
+          \ image/jpeg\r\r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '274'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m13-06
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1016
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; bOundAry=0000
+          Host: localhost
+        method: POST
+        uri: /?m02-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1017
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary=" 0000"
+          Host: localhost
+        method: POST
+        uri: /?m08-02
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1018
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m01-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1019
+  stages:
+  - stage:
+      input:
+        data: "\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\
+          \n\r\r\nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"\
+          email\"\r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '275'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m17-02
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1020
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\r\r\n\r\r\n\
+          John Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '272'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m12-04
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1021
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary= 0000
+          Host: localhost
+        method: POST
+        uri: /?m05-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1022
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary123=0000
+          Host: localhost
+        method: POST
+        uri: /?m02-02
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1023
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n--0000\r\
+          \r\nContent-Disposition: form-data; name=\"name\"; filename=\"dummy\"\r\r\
+          \n\r\r\nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"\
+          email\"\r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '344'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m00-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1024
+  stages:
+  - stage:
+      input:
+        data: "--0000;\r\nContent-Disposition: form-data; name=\"name\"\r\n\r\nJohn\
+          \ Smith\r\n--0000;\r\nContent-Disposition: form-data; name=\"email\"\r\n\
+          \r\njohn.smith@example.com\r\n--0000;\r\nContent-Disposition: form-data;\
+          \ name=\"image\"; filename=\"image.jpg\"\r\nContent-Type: image/jpeg\r\n\
+          \r\nBINARYDATA\r\n--0000;--\r\n"
+        headers:
+          Content-Length: '263'
+          Content-Type: multipart/form-data; boundary=0000; boundary=1111
+          Host: localhost
+        method: POST
+        uri: /?m03-04
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1025
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary="0000
+          Host: localhost
+        method: POST
+        uri: /?m08-06
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1026
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary=0000, boundary=1111
+          Host: localhost
+        method: POST
+        uri: /?m03-03
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1027
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data, boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m01-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1028
+  stages:
+  - stage:
+      input:
+        data: "\r\n--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\
+          \r\r\nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"\
+          email\"\r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '274'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m17-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1029
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data;\r\r\n name=\"name\"\r\r\
+          \n\r\r\nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"\
+          email\"\r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '275'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m13-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1030
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary="0000 "
+          Host: localhost
+        method: POST
+        uri: /?m08-03
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1031
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary =0000
+          Host: localhost
+        method: POST
+        uri: /?m04-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1032
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m00-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1033
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/evasion; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m11-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1034
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name='name'\r\r\n\r\r\n\
+          John Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m12-03
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1035
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '272'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m18
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1036
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m06-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1037
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\nContent-Disposition: form-data; name=\"name\"\r\n\r\nJohn\
+          \ Smith\r\n--0000\r\nContent-Disposition: form-data; name=\"email\"\r\n\r\
+          \njohn.smith@example.com\r\n--0000\r\nContent-Disposition: form-data; name=\"\
+          image\"; filename=\"image.jpg\"\r\nContent-Type: image/jpeg\r\n\r\nBINARYDATA\r\
+          \n--0000--\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary="0000"; boundary=1111
+          Host: localhost
+        method: POST
+        uri: /?m03-02
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1038
+  stages:
+  - stage:
+      input:
+        data: "--00\"00\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\
+          \r\nJohn Smith\r\r\n--00\"00\r\r\nContent-Disposition: form-data; name=\"\
+          email\"\r\r\n\r\r\njohn.smith@example.com\r\r\n--00\"00\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--00\"00--\r\r\n"
+        headers:
+          Content-Length: '277'
+          Content-Type: multipart/form-data; boundary="00\"00"
+          Host: localhost
+        method: POST
+        uri: /?m08-04
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1039
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary=0000,1111
+          Host: localhost
+        method: POST
+        uri: /?m07-02
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1040
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m01-02
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1041
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary=0000"
+          Host: localhost
+        method: POST
+        uri: /?m08-07
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1042
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"XXXX\"; name=\"\
+          name\"\r\r\n\r\r\nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data;\
+          \ name=\"email\"\r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '286'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m12-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1043
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/digest; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m11-04
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1044
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\nContent-Disposition: form-data;\
+          \ name=\"name\"\r\r\n\r\r\nSmith John\r\r\n--0000--\r\r\nSome text here\r\
+          \n"
+        headers:
+          Content-Length: '357'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m09-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1045
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-data; boundary="0000"
+          Host: localhost
+        method: POST
+        uri: /?m08-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1046
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\";\r\r\n filename=\"image.jpg\"\r\r\nContent-Type:\
+          \ image/jpeg\r\r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '275'
+          Content-Type: multipart/form-data; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m13-01
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1047
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: multipart/form-datax; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m11-06
+        version: HTTP/1.0
+      output:
+        status: 200
+- rule_id: 1048
+  stages:
+  - stage:
+      input:
+        data: "--0000\r\r\nContent-Disposition: form-data; name=\"name\"\r\r\n\r\r\
+          \nJohn Smith\r\r\n--0000\r\r\nContent-Disposition: form-data; name=\"email\"\
+          \r\r\n\r\r\njohn.smith@example.com\r\r\n--0000\r\r\nContent-Disposition:\
+          \ form-data; name=\"image\"; filename=\"image.jpg\"\r\r\nContent-Type: image/jpeg\r\
+          \r\n\r\r\nBINARYDATA\r\r\n--0000--\r\r\n"
+        headers:
+          Content-Length: '273'
+          Content-Type: mulTIpart/FORM-dATA; boundary=0000
+          Host: localhost
+        method: POST
+        uri: /?m11-05
+        version: HTTP/1.0
+      output:
+        status: 200
