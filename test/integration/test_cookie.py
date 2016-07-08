@@ -1,4 +1,4 @@
-from ftw import ruleset, testrunner, http, errors
+from ftw.ftw import ruleset, testrunner, http, errors
 import pytest
 
 def test_default(ruleset, test, destaddr):

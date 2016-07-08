@@ -22,3 +22,20 @@
             output: 
               status: 200
               html_contains: "established to be used for" 
+    - 
+      rule_id: 1235
+      stages: 
+        - 
+          stage: 
+            input: 
+              dest_addr: "example.com"
+              method: "GET"
+              port: 80
+              headers: 
+                  User-Agent: "Foo"
+                  Host: "example.com"
+              protocol: "http"
+              uri: "/"
+            output: 
+              status: 200
+              html_contains: "Content-Type: text/html" 

@@ -1,4 +1,4 @@
-from ftw import ruleset, logchecker, testrunner
+from ftw.ftw import ruleset, logchecker, testrunner
 import pytest
 import random
 import threading
