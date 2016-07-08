@@ -11,4 +11,9 @@ setup(name='ftw',
       download_url='https://github.com/fastly/ftw',
       packages=['ftw'],
       keywords=['waf'],
+      install_requires=[
+          'IPy',
+          'pytest',
+          'PyYAML'
+      ],
      )
