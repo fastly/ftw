@@ -6,6 +6,7 @@ import errno
 import time
 import StringIO
 import gzip
+import os
 import sys
 import re
 import base64
@@ -366,7 +367,10 @@ class HttpUA(object):
         Get the response from the socket
         """
         # Make socket non blocking
-        self.sock.setblocking(0)
+        if sys.platform == 'win32':
+            self.sock.setblocking(1)
+        else:
+            self.sock.setblocking(0)
         our_data = []
         # Beginning time
         begin = time.time()
