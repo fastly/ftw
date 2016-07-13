@@ -74,4 +74,4 @@ class TestRunner(object):
                                stage.output.html_contains_str)
         if stage.output.status:
             self.test_status(stage.output.status,
-                             http_ua.request_object.status)
+                             http_ua.response_object.status)

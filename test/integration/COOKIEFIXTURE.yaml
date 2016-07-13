@@ -21,7 +21,7 @@
               protocol: "http"
               uri: "/"
             output: 
-              status: 200
+              status: 302
               html_contains: "Set-Cookie: TS01293935="
           stage: 
             input: 
@@ -35,5 +35,5 @@
               protocol: "http"
               uri: "/"
             output: 
-              status: 200
+              status: 302
               html_contains: "Set-Cookie: TS01293935="

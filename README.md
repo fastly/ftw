@@ -14,6 +14,7 @@ Goals / Use cases include:
 ## Installation
 * `git clone git@github.com:fastly/ftw.git`
 * `cd ftw`
+* Make sure that pip is installed `apt-get install python-pip`
 * `pip install -r requirements.txt`
 
 ## Running Tests with HTML contains and Status code checks only

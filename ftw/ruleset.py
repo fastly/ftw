@@ -62,7 +62,6 @@ class Input(object):
                  version='HTTP/1.1',
                  headers={},
                  data='',
-                 status=200,
                  save_cookie=False
                  ):
         self.raw_request = raw_request
@@ -75,7 +74,6 @@ class Input(object):
         self.version = version
         self.headers = headers
         self.data = data
-        self.status = status
         self.save_cookie = save_cookie
         # Check if there is any data and do defaults
         if self.data != '':
