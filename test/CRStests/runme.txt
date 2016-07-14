@@ -1,0 +1,1 @@
+py.test-2.7.exe -v .\test_default.py --rule=CRSRules\920120.yaml

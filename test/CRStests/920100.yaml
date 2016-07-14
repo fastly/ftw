@@ -1,0 +1,160 @@
+---
+  meta: 
+    author: "csanders-git"
+    enabled: true
+    name: "Tests-920350"
+    description: "Description"
+  tests: 
+    - 
+      rule_id: 920100
+      stages: 
+        - 
+          stage: 
+            input:
+              dest_addr: "127.0.0.1"
+              method: "GET"
+              port: 80
+              headers:
+                  User-Agent: "ModSecurity CRS 3 Tests"              
+                  Host: "localhost"
+              protocol: "http"
+              uri: "/"
+              version: "HTTP/1.1"
+            output: 
+              status: 200
+    - 
+      rule_id: 920100
+      stages: 
+        - 
+          stage: 
+            input:
+              dest_addr: "127.0.0.1"
+              method: "OPTIONS"
+              port: 80
+              headers:
+                  User-Agent: "ModSecurity CRS 3 Tests"              
+                  Host: "localhost"
+              protocol: "http"
+              uri: "*"
+              version: "HTTP/1.1"
+            output: 
+              status: 200
+    - 
+      rule_id: 920100
+      stages: 
+        - 
+          stage: 
+            input:
+              dest_addr: "127.0.0.1"
+              method: "CONNECT"
+              port: 80
+              headers:
+                  User-Agent: "ModSecurity CRS 3 Tests"              
+                  Host: "localhost"
+              protocol: "http"
+              uri: "1.2.3.4:80"
+              version: "HTTP/1.1"
+            output: 
+              status: 405
+    - 
+      rule_id: 920100
+      stages: 
+        - 
+          stage: 
+            input:
+              dest_addr: "127.0.0.1"
+              method: "CONNECT"
+              port: 80
+              headers:
+                  User-Agent: "ModSecurity CRS 3 Tests"              
+                  Host: "localhost"
+              protocol: "http"
+              uri: "www.cnn.com"
+              version: "HTTP/1.1"
+            output: 
+              status: 400
+    - 
+      rule_id: 920100
+      stages: 
+        - 
+          stage: 
+            input:
+              dest_addr: "127.0.0.1"
+              method: "CONNECT"
+              port: 80
+              headers:
+                  User-Agent: "ModSecurity CRS 3 Tests # Catches Wrong Rule Update to Log View"              
+                  Host: "localhost"
+              protocol: "http"
+              uri: "www.cnn.com:80"
+              version: "HTTP/1.1"
+            output: 
+              status: 403              
+    - 
+      rule_id: 920100
+      stages: 
+        - 
+          stage: 
+            input:
+              dest_addr: "127.0.0.1"
+              method: "GET"
+              port: 80
+              headers:
+                  User-Agent: "ModSecurity CRS 3 Tests"              
+                  Host: "localhost"
+              protocol: "http"
+              uri: "/index.html?I=Like&Apples=Today#tag"
+              version: "HTTP/1.1"
+            output: 
+              status: 200           
+    - 
+      rule_id: 920100
+      stages: 
+        - 
+          stage: 
+            input:
+              dest_addr: "127.0.0.1"
+              method: "GET"
+              port: 80
+              headers:
+                  User-Agent: "ModSecurity CRS 3 Tests"              
+                  Host: "localhost"
+              protocol: "http"
+              uri: "/index.html:80?I=Like&Apples=Today#tag"
+              version: "HTTP/1.1"
+            output: 
+              status: 403
+    - 
+      rule_id: 920100
+      stages: 
+        - 
+          stage: 
+            input:
+              dest_addr: "127.0.0.1"
+              method: "OPTIONS"
+              port: 80
+              headers:
+                  User-Agent: "ModSecurity CRS 3 Tests"              
+                  Host: "localhost"
+              protocol: "http"
+              uri: "/"
+              version: "HTTP/1.1"
+            output: 
+              status: 200   
+    - 
+      rule_id: 920100
+      stages: 
+        - 
+          stage: 
+            input:
+              dest_addr: "127.0.0.1"
+              method: "REALLYLONGUNREALMETHOD"
+              port: 80
+              headers:
+                  User-Agent: "ModSecurity CRS 3 Tests # Doesn't trigger our rule"              
+                  Host: "localhost"
+              protocol: "http"
+              uri: "/"
+              version: "HTTP/1.1"
+            output: 
+              status: 403                 
