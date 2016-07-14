@@ -2,54 +2,43 @@
   meta: 
     author: "csanders-git"
     enabled: true
-    name: "Tests-920350"
+    name: "Tests-920180"
     description: "Description"
   tests: 
     - 
-      rule_id: 920350
+      rule_id: 920180
       stages: 
         - 
           stage: 
             input:
               dest_addr: "127.0.0.1"
-              method: "GET"
-              port: 80
-              headers:
-                  User-Agent: "ModSecurity CRS 3 Tests"              
-                  Host: "127.0.0.1"
-              protocol: "http"
-              uri: "/"
-            output: 
-              status: 403
-    - 
-      rule_id: 920350
-      stages: 
-        - 
-          stage: 
-            input:
-              dest_addr: "localhost"
-              method: "GET"
+              method: "POST"
               port: 80
               headers:
                   User-Agent: "ModSecurity CRS 3 Tests"              
                   Host: "localhost"
+                  Content-Type: "application/x-www-form-urlencoded"
+              data: "hi=test"
               protocol: "http"
+              stop_magic: True
               uri: "/"
             output: 
-              status: 200
+              status: 403
     - 
-      rule_id: 920350
+      rule_id: 920180
       stages: 
         - 
           stage: 
             input:
-              dest_addr: "localhost"
-              method: "GET"
+              dest_addr: "127.0.0.1"
+              method: "POST"
               port: 80
-              headers: 
-                  User-Agent: "ModSecurity CRS 3 Tests"
-                  Host: "1.2.3.4"
+              headers:
+                  User-Agent: "ModSecurity CRS 3 Tests"              
+                  Host: "localhost"
+                  Content-Type: "application/x-www-form-urlencoded"
+              data: "hi=test"
               protocol: "http"
               uri: "/"
             output: 
-              status: 403              
+              status: 200              

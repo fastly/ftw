@@ -334,13 +334,13 @@ class HttpUA(object):
         headers = ''
         if self.request_object.headers != {}:
             for hname, hvalue in self.request_object.headers.iteritems():
-                headers += str(hname) + ': ' + str(hvalue) + str(self.CRLF)
+                headers += unicode(hname) + ': ' + unicode(hvalue) + str(self.CRLF)
         request = string.replace(request, '#headers#', headers)
 
         # If we have data append it
         if self.request_object.data != '':
             data = str(self.request_object.data)
-            request = string.replace(request, '#data#', data)
+            request = string.replace(request, '#data#', data + self.CRLF)
         else:
             request = string.replace(request, '#data#', '')
         # If we have a Raw Request we should use that instead
@@ -360,6 +360,7 @@ class HttpUA(object):
             request = request.decode('string_escape')
         # if we have an Encoded request we should use that
         self.request = request
+        print self.request
 
     def get_response(self):
         """

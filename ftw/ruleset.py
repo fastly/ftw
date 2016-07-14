@@ -62,7 +62,8 @@ class Input(object):
                  version='HTTP/1.1',
                  headers={},
                  data='',
-                 save_cookie=False
+                 save_cookie=False,
+                 stop_magic=False
                  ):
         self.raw_request = raw_request
         self.encoded_request = encoded_request
@@ -75,6 +76,7 @@ class Input(object):
         self.headers = headers
         self.data = data
         self.save_cookie = save_cookie
+        self.stop_magic = stop_magic
         # Check if there is any data and do defaults
         if self.data != '':
             # Default values for content length and header
@@ -84,9 +86,10 @@ class Input(object):
             if headers['Content-Type'] == 'application/x-www-form-urlencoded':
                 if urllib.unquote(self.data).decode('utf8') == self.data:
                     query_string = urlparse.parse_qsl(self.data)
-                    encoded_args = urllib.urlencode(query_string)
-                    self.data = encoded_args
-            if 'Content-Length' not in headers.keys():
+                    if len(query_string) != 0:
+                        encoded_args = urllib.urlencode(query_string)
+                        self.data = encoded_args
+            if 'Content-Length' not in headers.keys() and stop_magic is False:
                 headers['Content-Length'] = len(self.data)
 
 
