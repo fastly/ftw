@@ -371,7 +371,7 @@ class HttpUA(object):
         if sys.platform == 'win32':
             self.sock.setblocking(1)		
         else:		
-        self.sock.setblocking(0)
+            self.sock.setblocking(0)
         our_data = []
         # Beginning time
         begin = time.time()
