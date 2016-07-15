@@ -389,8 +389,7 @@ class HttpUA(object):
                     time.sleep(self.HTTP_TIMEOUT)
             except socket.error as err:
                 # Check if we got a timeout
-                if err.errno == errno.EAGAIN or \
-                err.errno == errno.WSAEWOULDBLOCK:
+                if err.errno == errno.EAGAIN or err.errno == errno.WSAEWOULDBLOCK:
                         pass
                 # SSL will return SSLWantRead instead of EAGAIN
                 elif (self.request_object.protocol == 'https' and
