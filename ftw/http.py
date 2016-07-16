@@ -361,7 +361,6 @@ class HttpUA(object):
             request = request.decode('string_escape')
         # if we have an Encoded request we should use that
         self.request = request
-        print self.request
 
     def get_response(self):
         """
