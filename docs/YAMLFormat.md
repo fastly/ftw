@@ -253,7 +253,28 @@ Uri
 
 **Version:** 0.1
 
+Output Parameters
+==================
+Items within the output represent actions that should be taken as a result of the HTTP request being made.
 
+Status
+-----------
+**Description**: Checks the response code of the response to see if it matches the provided value
+
+**Syntax:** ```status: <integer>```
+
+**Example Usage:** ```status: 200```
+
+**Default Value:** None
+
+**Scope:** Tests
+
+**Version:** 0.1
+
+
+========
+Old Text
+========
 Our YAML files support quite a few parameters that may seem slightly odd at first, if you expected it to simply act as a lone request. 
 
 Each file can contain multiple seperators at the top level. These are meant to be used as metadata to delimiate where certain test types begin and end, they are not used by our tool.
