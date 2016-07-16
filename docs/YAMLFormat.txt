@@ -1,3 +1,22 @@
+===============
+The YAML Format
+===============
+
+Welcome to the the FTW YAMLFormat docuemntation. In this document we will explain all the possible options that can be used 
+
+
+== SecDebugLog ==
+'''Description''': Path to the ModSecurity debug log file. 
+
+'''Syntax:''' <code>SecDebugLog /path/to/modsec-debug.log </code>
+
+'''Example Usage:''' <code>SecDebugLog /usr/local/apache/logs/modsec-debug.log </code>
+
+'''Scope:''' Any 
+
+'''Version:''' 2.0.0
+
+
 Our YAML files support quite a few parameters that may seem slightly odd at first, if you expected it to simply act as a lone request. 
 
 Each file can contain multiple seperators at the top level. These are meant to be used as metadata to delimiate where certain test types begin and end, they are not used by our tool.
