@@ -116,7 +116,7 @@ There can be multiple stages per test. Each stage represents a single request/re
 
 Input
 -----------
-**Description**: Information about the test being performed, this will be included as the test name when run.
+**Description**: A container for the parameters that will be used to construct an HTTP request
 
 **Syntax:** ```input: <input information>```
 
@@ -136,7 +136,7 @@ stage:
 
 Output
 -----------
-**Description**: Information about the test being performed, this will be included as the test name when run.
+**Description**: A container for parameters that will describe what do after the HTTP request is sent.
 
 **Syntax:** ```output: <output information>```
 
@@ -149,6 +149,107 @@ stage:
 **Default Value:** ""
 
 **Scope:** Stage
+
+**Version:** 0.1
+
+Input Parameters
+==================
+Items within input represent parameters that affect the construction and processing of the resulting HTTP packet.
+
+dest_addr
+-----------
+**Description**: What address the packet should be sent to at the IP level
+
+**Syntax:** ```input: <IP or DNS name>```
+
+**Example Usage:** ```dest_addr: "129.21.3.17"```
+
+**Default Value:** "127.0.0.1"
+
+**Scope:** Input
+
+**Version:** 0.1
+
+port
+-----------
+**Description**: What port the packet should be sent to at the IP level
+
+**Syntax:** ```input: <Integer>```
+
+**Example Usage:** ```dest_addr: 8080```
+
+**Default Value:** 80
+
+**Scope:** Input
+
+**Version:** 0.1
+
+method
+------
+**Description**: What HTTP method should be used within the HTTP portion of the packet
+
+**Syntax:** ```input: <string>```
+
+**Example Usage:** ```dest_addr: "GET"```
+
+**Default Value:** "GET"
+
+**Scope:** Input
+
+**Version:** 0.1
+
+headers
+-----------
+**Description**: A collection that will be used to fill the header portion of the HTTP request
+
+**Syntax:** 
+```
+headers: 
+  header1_name: "HeaderValue"
+  header2_name: "HeaderValue"
+  headerN_name: "HeaderValue"
+```
+
+**Example Usage:** 
+```
+headers:
+    User-Agent: "ModSecurity CRS 3 Tests"              
+    Host: "localhost"
+```
+
+**Default Value:** ""
+
+**Scope:** Input
+
+**Version:** 0.1
+
+*note in the future if stop_magic is enabled this will prevent automatic header values TODO*
+
+protocol
+-----------
+**Description**: Specifies if the request should be using SSL/TLS or not
+
+**Syntax:** ```protocol: (http|https)
+
+**Example Usage:** ```protocol: http```
+
+**Default Value:** "http"
+
+**Scope:** Input
+
+**Version:** 0.1
+
+Uri
+-----------
+**Description**: The URI value that should be placed into the request-line of the HTTP request
+
+**Syntax:** ```uri: <string>```
+
+**Example Usage:** ```uri: /test.php?param=value```
+
+**Default Value:** "/"
+
+**Scope:** Input
 
 **Version:** 0.1
 
