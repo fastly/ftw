@@ -253,6 +253,96 @@ Uri
 
 **Version:** 0.1
 
+Version
+-----------
+**Description**: The version value that will be provided in the request-line of the HTTP request
+
+**Syntax:** ```version: "<string>"```
+
+**Example Usage:** ```version: "HTTP/0.9"```
+
+**Default Value:** "HTTP/1.1"
+
+**Scope:** Input
+
+**Version:** 0.1
+
+Data
+-----------
+**Description**: The optional data porition of the HTTP request. Typically these are provided with the content-type header.
+
+**Syntax:** ```data: "<string>"```
+
+**Example Usage:** ```data: "xyz=123"```
+
+**Default Value:** "HTTP/1.1"
+
+**Scope:** Input
+
+**Version:** 0.1
+
+*Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on.*
+*Note: if urlencoded content-type header is provided and parameters aren't in name=value form, data will be made empty, unless stop_magic is on.*
+
+Save_cookie
+-----------
+**Description**: If there are multiple stages and save cookie is set, it will automaticlly be provided in the next stage if the site in question provides the Set-Cookie response header.
+
+**Syntax:** ```save_cookie: (true|false)```
+
+**Example Usage:** ```save_cookie: true```
+
+**Default Value:** false
+
+**Scope:** Input
+
+**Version:** 0.1
+
+Stop_magic
+-----------
+**Description**: The framework will take care of certain things automaticlly like setting content-length, encoding, etc. When stop_magic is on, the framework will not do anything automagically. 
+
+**Syntax:** ```stop_magic: (true|false)```
+
+**Example Usage:** ```stop_magic: true```
+
+**Default Value:** false
+
+**Scope:** Input
+
+**Version:** 0.1
+
+Encoded_request
+-----------
+**Description**: This argument will take a base64 encoded string that will be decoded and sent through as the request. It will override all other settings  
+
+**Syntax:** ```encoded_request: <Base64 string>```
+
+**Example Usage:** ```encoded_request: "R0VUIFwgSFRUUFwxLjFcclxuClxyXG4="```
+
+**Default Value:** None
+
+**Scope:** Input
+
+**Version:** 0.1
+
+*Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on. (TODO)*
+
+Raw_request
+-----------
+**Description**: This argument will take a unencoded string that will be sent through as the request. It will override all other settings  
+
+**Syntax:** ```raw_request: <string>```
+
+**Example Usage:** ```raw_request: "GET \ HTTP\r\n\r\n"```
+
+**Default Value:** None
+
+**Scope:** Input
+
+**Version:** 0.1
+
+*Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on. (TODO)*
 Output Parameters
 ==================
 Items within the output represent actions that should be taken as a result of the HTTP request being made.
@@ -267,7 +357,35 @@ Status
 
 **Default Value:** None
 
-**Scope:** Tests
+**Scope:** Output
+
+**Version:** 0.1
+
+html_contains
+-----------
+**Description**: Checks the entire response against the regular expression provided.
+
+**Syntax:** ```html_contains: "<regex string>"```
+
+**Example Usage:** ```html_contains: "hello-[a-z]orld"```
+
+**Default Value:** None
+
+**Scope:** Output
+
+**Version:** 0.1
+
+log_contains
+-----------
+**Description**: Will use the provided LogChecker (must be supplied) and run the provided regex against each one of the logs provided by LogChecker.get_logs() looking for a match.
+
+**Syntax:** ```log_contains: "<regex string>"```
+
+**Example Usage:** ```log_contains: "id:1234"```
+
+**Default Value:** None
+
+**Scope:** Output
 
 **Version:** 0.1
 
