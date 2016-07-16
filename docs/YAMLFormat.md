@@ -2,19 +2,63 @@
 The YAML Format
 ===============
 
-Welcome to the the FTW YAMLFormat docuemntation. In this document we will explain all the possible options that can be used 
+Welcome to the the FTW YAMLFormat docuemntation. In this document we will explain all the possible options that can be used within the YAML format. Generally this is the prefereed format for writing tests in as they don't require any programming skills in order to understand and change. If you find a bug in this format please open an issue.
 
+Metadata Parameters
+==================
+Metadata parameters are present once per test file and are located by convention right after the start of the file. In general, this data should give a general overview of the following tests and what they apply to. An example usage is as follows:
 
-== SecDebugLog ==
-'''Description''': Path to the ModSecurity debug log file. 
+```
+---
+  meta: 
+    author: "csanders-git"
+    enabled: true
+    name: "Tests for 920350"
+    description: "This file contains tests for the ModSecurity CRS v3 rule with the ID 920350"
+  ...
+```  
+What follows are all the possible Metadata parameters that are current suported
 
-'''Syntax:''' <code>SecDebugLog /path/to/modsec-debug.log </code>
+Author
+-----------
+**Description**: Lists the author(s).
+**Syntax:** ```author: "<string>"```
+**Example Usage:** ```author: "csanders-git"```
+**Default Value:** ""
+**Scope:** Metadata
+**Version:** 0.1
 
-'''Example Usage:''' <code>SecDebugLog /usr/local/apache/logs/modsec-debug.log </code>
+Description
+-----------
+**Description**: A breif description of what the following tests are meant to accomplish
+**Syntax:** ```description: "<string>"```
+**Example Usage:** ```description: "The following is a description"```
+**Default Value:** ""
+**Scope:** Metadata
+**Version:** 0.1
 
-'''Scope:''' Any 
+Enabled
+-----------
+**Description**: Determines if the tests in the file will be run 
+**Syntax:** ```enabled: (true|false)```
+**Example Usage:** ```enabled: false```
+**Default Value:** true
+**Scope:** Metadata
+**Version:** 0.1
 
-'''Version:''' 2.0.0
+Name
+-----------
+**Description**: A name for the test file
+**Syntax:** ```enabled: (true|false)```
+**Example Usage:** ```enabled: false```
+**Default Value:** ""
+**Scope:** Metadata
+**Version:** 0.1
+*note: The filename not the name specified in this parameter is used during test execution. 
+
+Metadata Parameters
+==================
+Metadata parameters are present once per test file and are located by convention right after the start of the file. In general, this data should give a general overview of the following tests and what they apply to. An example usage is as follows:
 
 
 Our YAML files support quite a few parameters that may seem slightly odd at first, if you expected it to simply act as a lone request. 
