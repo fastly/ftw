@@ -20,7 +20,7 @@ Metadata parameters are present once per test file and are located by convention
 What follows are all the possible Metadata parameters that are current suported
 
 Author
------------
+------
 **Description**: Lists the author(s).
 
 **Syntax:** ```author: "<string>"```
@@ -77,9 +77,80 @@ Name
 
 *note: The filename not the name specified in this parameter is used during test execution. 
 
-Metadata Parameters
+Tests Parameters
 ==================
-Metadata parameters are present once per test file and are located by convention right after the start of the file. In general, this data should give a general overview of the following tests and what they apply to. An example usage is as follows:
+The tests area is made up of multiple tests. Each test contains Stages and an optional rule_id. Within the Stage there is additional information that is outlined in Stage Paramaters
+
+Rule_id
+-----------
+**Description**: Information about the test being performed, this will be included as the test name when run.
+
+**Syntax:** ```rule_id: <integer>```
+
+**Example Usage:** ```rule_id: 1234```
+
+**Default Value:** TODO
+
+**Scope:** Tests
+
+**Version:** 0.1
+
+Stages
+-----------
+**Description**: A parameter to encapsalate all the different stages of a give test
+
+**Syntax:** ```stages: n*<individual stages>```
+
+**Example Usage:** ```stages:```
+
+**Default Value:** TODO
+
+**Scope:** Tests
+
+**Version:** 0.1
+
+
+Stage Parameters
+==================
+There can be multiple stages per test. Each stage represents a single request/response. Each stage paramater encapsalates an input and output parameters.
+
+Input
+-----------
+**Description**: Information about the test being performed, this will be included as the test name when run.
+
+**Syntax:** ```input: <input information>```
+
+**Example Usage:** 
+```
+stage: 
+  input:
+    dest_addr: "localhost"
+    port: 80
+```
+
+**Default Value:** No Default, Required with each Stage (TODO)
+
+**Scope:** Stage
+
+**Version:** 0.1
+
+Output
+-----------
+**Description**: Information about the test being performed, this will be included as the test name when run.
+
+**Syntax:** ```output: <output information>```
+
+**Example Usage:** 
+```
+stage: 
+  output: 
+    status: 403
+```
+**Default Value:** ""
+
+**Scope:** Stage
+
+**Version:** 0.1
 
 
 Our YAML files support quite a few parameters that may seem slightly odd at first, if you expected it to simply act as a lone request. 
