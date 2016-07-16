@@ -22,38 +22,59 @@ What follows are all the possible Metadata parameters that are current suported
 Author
 -----------
 **Description**: Lists the author(s).
+
 **Syntax:** ```author: "<string>"```
+
 **Example Usage:** ```author: "csanders-git"```
+
 **Default Value:** ""
+
 **Scope:** Metadata
+
 **Version:** 0.1
 
 Description
 -----------
 **Description**: A breif description of what the following tests are meant to accomplish
+
 **Syntax:** ```description: "<string>"```
+
 **Example Usage:** ```description: "The following is a description"```
+
 **Default Value:** ""
+
 **Scope:** Metadata
+
 **Version:** 0.1
 
 Enabled
 -----------
 **Description**: Determines if the tests in the file will be run 
+
 **Syntax:** ```enabled: (true|false)```
+
 **Example Usage:** ```enabled: false```
+
 **Default Value:** true
+
 **Scope:** Metadata
+
 **Version:** 0.1
 
 Name
 -----------
 **Description**: A name for the test file
+
 **Syntax:** ```enabled: (true|false)```
+
 **Example Usage:** ```enabled: false```
+
 **Default Value:** ""
+
 **Scope:** Metadata
+
 **Version:** 0.1
+
 *note: The filename not the name specified in this parameter is used during test execution. 
 
 Metadata Parameters
