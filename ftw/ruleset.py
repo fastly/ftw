@@ -80,10 +80,10 @@ class Input(object):
         # Check if there is any data and do defaults
         if self.data != '':
             # Default values for content length and header
-            if 'Content-Type' not in headers.keys():
+            if 'Content-Type' not in headers.keys() and stop_magic is False:
                 headers['Content-Type'] = 'application/x-www-form-urlencoded'
             # check if encoded and encode if it should be
-            if headers['Content-Type'] == 'application/x-www-form-urlencoded':
+            if headers['Content-Type'] == 'application/x-www-form-urlencoded' and stop_magic is False:
                 if urllib.unquote(self.data).decode('utf8') == self.data:
                     query_string = urlparse.parse_qsl(self.data)
                     if len(query_string) != 0:
