@@ -410,7 +410,7 @@ class HttpUA(object):
                         })
         if ''.join(our_data) == '':
             raise errors.TestError(
-                'No response from server. Request likly timed out.',
+                'No response from server. Request likely timed out.',
                 {
                     'host': self.request_object.dest_addr,
                     'port': self.request_object.port,
