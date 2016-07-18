@@ -21,7 +21,7 @@ class TestRunner(object):
         """
         assert expected_status == actual_status
 
-    def test_log(self, lines, log_contains):
+    def test_log(self, lines, log_contains, negate):
         """
         Checks if a series of log lines contains a regex specified in the
         output stage. It will flag true on the first log_contains regex match
@@ -32,7 +32,10 @@ class TestRunner(object):
             if log_contains.search(line):
                 found = True
                 break
-        assert found
+        if negate:
+            assert not found
+        else:
+            assert found
 
     def test_response(self, response_object, regex):
         """
@@ -65,8 +68,17 @@ class TestRunner(object):
             http_ua.send_request(stage.input)
             end = datetime.datetime.now()
             logger_obj.set_times(start, end)
+            lines = logger_obj.get_logs()           
+            self.test_log(lines, stage.output.log_contains_str, False)
+        # This could be condensed but its more understandable this way
+        elif stage.output.no_log_contains_str and logger_obj is not None:
+            start = datetime.datetime.now()
+            http_ua.send_request(stage.input)
+            end = datetime.datetime.now()
+            logger_obj.set_times(start, end)
             lines = logger_obj.get_logs()
-            self.test_log(lines, stage.output.log_contains_str)
+            # The last argument means that we should negate the resp
+            self.test_log(lines, stage.output.no_log_contains_str, True)        
         else:
             http_ua.send_request(stage.input)
         if stage.output.html_contains_str:
