@@ -9,4 +9,4 @@ script:
     - py.test test/integration/test_htmlcontains.py -v --rule=test/integration/HTMLCONTAINSFIXTURE.yaml
     - py.test test/integration/test_http.py -v
     - py.test test/integration/test_cookie.py -v --rule=test/integration/COOKIEFIXTURE.yaml
-    - py.test test/integreation/test_multipart.py -v --rule=test/integration/MULTIPART.yaml
+    - py.test test/integration/test_multipart.py -v --rule=test/integration/MULTIPART.yaml
