@@ -223,7 +223,8 @@ headers:
 
 **Version:** 0.1
 
-*note in the future if stop_magic is enabled this will prevent automatic header values TODO*
+*Note: in the future if stop_magic is enabled this will prevent automatic header values TODO*
+*Note: If a Content-Type is passed and a charset attribute is set, FTW will try to encode the data with that codec. It must be a valid Python codec and the default is UTF-8.*
 
 protocol
 -----------
