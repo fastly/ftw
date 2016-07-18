@@ -2,11 +2,11 @@
   meta: 
     author: "Chaim"
     enabled: true
-    name: "COOKIEFIXTURE.yaml"
+    name: "Regression-test"
     description: "Tests cookie saving functionality"
   tests: 
     - 
-      rule_id: 1234
+      test_title: "Multi-Stage w\\ Cookie"
       stages: 
         - 
           stage: 

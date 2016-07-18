@@ -35,7 +35,12 @@ def test_id(val):
     of tests
     """
     if isinstance(val, (dict,ruleset.Test,)):
-        return '%s_ruleid_%s' % (val.ruleset_meta['name'], val.rule_id)
+        # We must be carful here because errors are swallowed and defaults returned
+        if 'name' in val.ruleset_meta.keys():
+            return '%s -- %s' % (val.ruleset_meta['name'], val.test_title)
+        else:
+            return '%s -- %s' % ("Unnamed_Test", val.test_title)
+
 
 @pytest.fixture
 def destaddr(request):

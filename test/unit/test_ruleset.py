@@ -27,8 +27,8 @@ def test_input():
 def test_testobj():
     with pytest.raises(KeyError) as excinfo:
         test = ruleset.Test({},{})
-    assert(excinfo.value.message == 'rule_id')
-    stages_dict = {'rule_id': 1, 'stages':[{'stage': {'output':{'log_contains':'foo'}, 'input': {}}}]}
+    assert(excinfo.value.message == 'test_title')
+    stages_dict = {'test_title': 1, 'stages':[{'stage': {'output':{'log_contains':'foo'}, 'input': {}}}]}
     test = ruleset.Test(stages_dict, {})
 
 def test_ruleset():
