@@ -13,8 +13,8 @@ Metadata parameters are present once per test file and are located by convention
   meta: 
     author: "csanders-git"
     enabled: true
-    name: "Tests for 920350"
-    description: "This file contains tests for the ModSecurity CRS v3 rule with the ID 920350"
+    name: "Example_Tests"
+    description: "This file contains example tests."
   ...
 ```  
 What follows are all the possible Metadata parameters that are current suported
@@ -63,7 +63,7 @@ Enabled
 
 Name
 -----------
-**Description**: A name for the test file
+**Description**: A name for the test file 
 
 **Syntax:** ```enabled: (true|false)```
 
@@ -75,7 +75,7 @@ Name
 
 **Version:** 0.1
 
-*note: The filename not the name specified in this parameter is used during test execution. 
+*Note: The name specified here is used as part of the test execution name, in conjunction with the test_title.
 
 Tests Parameters
 ==================
@@ -223,7 +223,8 @@ headers:
 
 **Version:** 0.1
 
-*note in the future if stop_magic is enabled this will prevent automatic header values TODO*
+*Note: in the future if stop_magic is enabled this will prevent automatic header values TODO*
+*Note: If a Content-Type is passed and a charset attribute is set, FTW will try to encode the data with that codec. It must be a valid Python codec and the default is UTF-8.*
 
 protocol
 -----------
@@ -269,11 +270,27 @@ Version
 
 Data
 -----------
-**Description**: The optional data porition of the HTTP request. Typically these are provided with the content-type header.
+**Description**: The optional data porition of the HTTP request. Typically these are provided with the content-type header. Data can be provided as a string or as a YAML list.
 
-**Syntax:** ```data: "<string>"```
+**Syntax:** ```data: "<string|YAML list>"```
 
-**Example Usage:** ```data: "xyz=123"```
+**Example Usage (string):** ```data: "xyz=123"``
+
+**Example Usage (list):**
+```
+  data:
+    - "----------397236876"
+    - "Content-Disposition: form-data; name=\"text\";"
+    - ""
+    - "test default"
+    - "----------397236876"
+    - "Content-Disposition: form-data; name=\"file1\"; filename=\"a.txt\""
+    - "Content-Type: text/plain"
+    - ""
+    - "Content of a.txt."
+    - ""
+    - "----------397236876--"
+```
 
 **Default Value:** "HTTP/1.1"
 
@@ -283,6 +300,7 @@ Data
 
 *Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on.*
 *Note: if urlencoded content-type header is provided and parameters aren't in name=value form, data will be made empty, unless stop_magic is on.*
+
 
 Save_cookie
 -----------
