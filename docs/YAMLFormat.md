@@ -269,11 +269,27 @@ Version
 
 Data
 -----------
-**Description**: The optional data porition of the HTTP request. Typically these are provided with the content-type header.
+**Description**: The optional data porition of the HTTP request. Typically these are provided with the content-type header. Data can be provided as a string or as a YAML list.
 
-**Syntax:** ```data: "<string>"```
+**Syntax:** ```data: "<string|YAML list>"```
 
-**Example Usage:** ```data: "xyz=123"```
+**Example Usage (string):** ```data: "xyz=123"``
+
+**Example Usage (list):**
+```
+  data:
+    - "----------397236876"
+    - "Content-Disposition: form-data; name=\"text\";"
+    - ""
+    - "test default"
+    - "----------397236876"
+    - "Content-Disposition: form-data; name=\"file1\"; filename=\"a.txt\""
+    - "Content-Type: text/plain"
+    - ""
+    - "Content of a.txt."
+    - ""
+    - "----------397236876--"
+```
 
 **Default Value:** "HTTP/1.1"
 
@@ -283,6 +299,7 @@ Data
 
 *Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on.*
 *Note: if urlencoded content-type header is provided and parameters aren't in name=value form, data will be made empty, unless stop_magic is on.*
+
 
 Save_cookie
 -----------
