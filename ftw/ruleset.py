@@ -8,11 +8,12 @@ class Output(object):
     """
     This class holds the expected output from a corresponding FTW HTTP Input
     We are stricter in this definition by requiring at least one of status,
-    html_contains or log_contains
+    html_contains,no_log_contains, or log_contains
     """
     def __init__(self, output_dict):
         self.STATUS = 'status'
         self.LOG = 'log_contains'
+        self.NOTLOG = 'no_log_contains' 
         self.HTML = 'html_contains'
         if output_dict is None:
             raise errors.TestError(
@@ -25,17 +26,20 @@ class Output(object):
         self.status = int(output_dict[self.STATUS]) \
             if self.STATUS in output_dict else None
         self.html_contains_str = self.process_regex(self.HTML)
-
+        
+        self.no_log_contains_str = self.process_regex(self.NOTLOG)
         self.log_contains_str = self.process_regex(self.LOG)
         if self.status is None and self.html_contains_str is None \
-                and self.log_contains_str is None:
+                and self.log_contains_str is None \
+                and self.no_log_contains_str is None:
             raise errors.TestError(
                 'Need at least one status, html_contains_str ' +
-                'or log_contains_str',
+                ', no_log_contains, or log_contains_str',
                 {
                     'status': self.status,
                     'html_contains_str': self.html_contains_str,
                     'log_contains_str': self.log_contains_str,
+                    'no_log_contains_str': self.no_log_contains_str,
                     'function': 'ruleset.Output.__init__'
                 })
 
@@ -62,7 +66,8 @@ class Input(object):
                  version='HTTP/1.1',
                  headers={},
                  data='',
-                 save_cookie=False
+                 save_cookie=False,
+                 stop_magic=False
                  ):
         self.raw_request = raw_request
         self.encoded_request = encoded_request
@@ -75,18 +80,21 @@ class Input(object):
         self.headers = headers
         self.data = data
         self.save_cookie = save_cookie
+        self.stop_magic = stop_magic
         # Check if there is any data and do defaults
         if self.data != '':
             # Default values for content length and header
-            if 'Content-Type' not in headers.keys():
+            if 'Content-Type' not in headers.keys() and stop_magic is False:
                 headers['Content-Type'] = 'application/x-www-form-urlencoded'
             # check if encoded and encode if it should be
-            if headers['Content-Type'] == 'application/x-www-form-urlencoded':
-                if urllib.unquote(self.data).decode('utf8') == self.data:
-                    query_string = urlparse.parse_qsl(self.data)
-                    encoded_args = urllib.urlencode(query_string)
-                    self.data = encoded_args
-            if 'Content-Length' not in headers.keys():
+            if 'Content-Type' in headers.keys():
+                if headers['Content-Type'] == 'application/x-www-form-urlencoded' and stop_magic is False:
+                    if urllib.unquote(self.data).decode('utf8') == self.data:
+                        query_string = urlparse.parse_qsl(self.data)
+                        if len(query_string) != 0:
+                            encoded_args = urllib.urlencode(query_string)
+                            self.data = encoded_args
+            if 'Content-Length' not in headers.keys() and stop_magic is False:
                 headers['Content-Length'] = len(self.data)
 
 

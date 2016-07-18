@@ -6,6 +6,7 @@ import errno
 import time
 import StringIO
 import gzip
+import os
 import sys
 import re
 import base64
@@ -334,13 +335,13 @@ class HttpUA(object):
         headers = ''
         if self.request_object.headers != {}:
             for hname, hvalue in self.request_object.headers.iteritems():
-                headers += str(hname) + ': ' + str(hvalue) + str(self.CRLF)
+                headers += unicode(hname) + ': ' + unicode(hvalue) + str(self.CRLF)
         request = string.replace(request, '#headers#', headers)
 
         # If we have data append it
         if self.request_object.data != '':
             data = str(self.request_object.data)
-            request = string.replace(request, '#data#', data)
+            request = string.replace(request, '#data#', data + self.CRLF)
         else:
             request = string.replace(request, '#data#', '')
         # If we have a Raw Request we should use that instead
@@ -365,7 +366,6 @@ class HttpUA(object):
         """
         Get the response from the socket
         """
-        # Make socket non blocking
         self.sock.setblocking(0)
         our_data = []
         # Beginning time
@@ -391,6 +391,9 @@ class HttpUA(object):
                 if err.errno == errno.EAGAIN:
                     pass
                 # SSL will return SSLWantRead instead of EAGAIN
+                elif sys.platform == 'win32' and \
+                err.errno == errno.WSAEWOULDBLOCK:
+                        pass
                 elif (self.request_object.protocol == 'https' and
                       sys.exc_info()[0].__name__ == 'SSLWantReadError'):
                     pass
@@ -405,6 +408,16 @@ class HttpUA(object):
                             'message': err,
                             'function': 'http.HttpUA.get_response'
                         })
+        if ''.join(our_data) == '':
+            raise errors.TestError(
+                'No response from server. Request likely timed out.',
+                {
+                    'host': self.request_object.dest_addr,
+                    'port': self.request_object.port,
+                    'proto': self.request_object.protocol,
+                    'msg': 'Please send the request and check Wireshark',
+                    'function': 'http.HttpUA.get_response'
+                })                                    
         self.response_object = HttpResponse(''.join(our_data), self)
         try:
             self.sock.shutdown(1)
