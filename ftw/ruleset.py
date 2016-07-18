@@ -79,6 +79,9 @@ class Input(object):
         self.version = version
         self.headers = headers
         self.data = data
+        # Support data in list format and join on CRLF
+        if isinstance(self.data, list):
+            self.data = '\r\n'.join(self.data)
         self.save_cookie = save_cookie
         self.stop_magic = stop_magic
         # Check if there is any data and do defaults

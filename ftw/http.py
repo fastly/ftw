@@ -12,6 +12,7 @@ import re
 import base64
 import zlib
 import Cookie
+import encodings
 from IPy import IP
 import errors
 
@@ -319,14 +320,14 @@ class HttpUA(object):
                         else:
                             result_cookie[cookie_key] = cookie[cookie_key].value
                 for key, value in result_cookie.iteritems():
-                    cookie_value += (str(key) + '=' + str(value) + '; ')
+                    cookie_value += (unicode(key) + '=' + unicode(value) + '; ')
                     # Remove the trailing semicolon
                 cookie_value = cookie_value[:-2]
                 self.request_object.headers['cookie'] = cookie_value
             else:
                 for cookie in available_cookies:
                     for cookie_key, cookie_morsal in cookie.iteritems():
-                        cookie_value += (str(cookie_key) + '=' + str(cookie_morsal.coded_value) + '; ')
+                        cookie_value += (unicode(cookie_key) + '=' + unicode(cookie_morsal.coded_value) + '; ')
                         # Remove the trailing semicolon
                     cookie_value = cookie_value[:-2]
                     self.request_object.headers['cookie'] = cookie_value
@@ -335,12 +336,36 @@ class HttpUA(object):
         headers = ''
         if self.request_object.headers != {}:
             for hname, hvalue in self.request_object.headers.iteritems():
-                headers += unicode(hname) + ': ' + unicode(hvalue) + str(self.CRLF)
+                headers += unicode(hname) + ': ' + unicode(hvalue) + self.CRLF
         request = string.replace(request, '#headers#', headers)
 
         # If we have data append it
         if self.request_object.data != '':
-            data = str(self.request_object.data)
+            # Before we do that see if that is a charset
+            encoding = "utf-8"
+            # Check to see if we have a content type and magic is off (otherwise UTF-8)
+            if 'Content-Type' in self.request_object.headers.keys() and self.request_object.stop_magic is False:
+                pattern = re.compile(r'\;\s{0,1}?charset\=(.*?)(?:$|\;|\s)')
+                m = re.search(pattern, self.request_object.headers['Content-Type'])
+                if m:
+                    possible_choices = list(set(encodings.aliases.aliases.keys())) + list(set(encodings.aliases.aliases.values()))
+                    choice = m.group(1)
+                    # Python will allow these aliases but doesn't list them
+                    choice = choice.replace('-','_')
+                    choice = choice.lower()
+                    if choice in possible_choices:
+                        encoding = choice
+            try:
+                data = self.request_object.data.encode(encoding)
+            except UnicodeEncodeError as err:
+                raise errors.TestError(
+                    'Error encoding the data with the charset specified',
+                    {
+                        'msg': str(err),
+                        'Content-Type': str(self.request_object.headers['Content-Type']),
+                        'data': unicode(self.request_object.data),
+                        'function': 'http.HttpResponse.build_request'
+                    })                
             request = string.replace(request, '#data#', data + self.CRLF)
         else:
             request = string.replace(request, '#data#', '')
