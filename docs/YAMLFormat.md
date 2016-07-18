@@ -377,11 +377,25 @@ html_contains
 
 log_contains
 -----------
-**Description**: Will use the provided LogChecker (must be supplied) and run the provided regex against each one of the logs provided by LogChecker.get_logs() looking for a match.
+**Description**: Will use the provided LogChecker (must be supplied) and run the provided regex against each one of the logs provided by LogChecker.get_logs() looking for a match. If it doesn't find a match it will raise an assertion
 
 **Syntax:** ```log_contains: "<regex string>"```
 
 **Example Usage:** ```log_contains: "id:1234"```
+
+**Default Value:** None
+
+**Scope:** Output
+
+**Version:** 0.1
+
+no_log_contains
+-----------
+**Description**: Will use the provided LogChecker (must be supplied) and run the provided regex against each one of the logs provided by LogChecker.get_logs() looking for a match. However, if it finds a match it will raise an assertion.
+
+**Syntax:** ```no_log_contains: "<regex string>"```
+
+**Example Usage:** ```no_log_contains: "id:1234"```
 
 **Default Value:** None
 
