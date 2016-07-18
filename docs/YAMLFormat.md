@@ -63,7 +63,7 @@ Enabled
 
 Name
 -----------
-**Description**: A name for the test file
+**Description**: A name for the test file 
 
 **Syntax:** ```enabled: (true|false)```
 
@@ -75,7 +75,7 @@ Name
 
 **Version:** 0.1
 
-*note: The filename not the name specified in this parameter is used during test execution. 
+*Note: The name specified here is used as part of the test execution name, in conjunction with the test_title.
 
 Tests Parameters
 ==================
