@@ -13,8 +13,8 @@ Metadata parameters are present once per test file and are located by convention
   meta: 
     author: "csanders-git"
     enabled: true
-    name: "Tests for 920350"
-    description: "This file contains tests for the ModSecurity CRS v3 rule with the ID 920350"
+    name: "Example_Tests"
+    description: "This file contains example tests."
   ...
 ```  
 What follows are all the possible Metadata parameters that are current suported
