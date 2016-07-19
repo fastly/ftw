@@ -6,7 +6,7 @@
     description: "Tests html contains functionality with an integration object"
   tests: 
     - 
-      rule_id: 1234
+      test_title: "html_contains(1)"
       stages: 
         - 
           stage: 
@@ -23,7 +23,7 @@
               status: 200
               html_contains: "established to be used for" 
     - 
-      rule_id: 1235
+      test_title: "html_contains(2)"
       stages: 
         - 
           stage: 

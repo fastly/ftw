@@ -6,7 +6,7 @@
     description: "Tests the no log contains functionality with an integration object"
   tests: 
     - 
-      rule_id: 1234
+      test_title: 1234
       stages: 
         - 
           stage: 

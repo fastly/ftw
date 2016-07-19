@@ -13,8 +13,8 @@ Metadata parameters are present once per test file and are located by convention
   meta: 
     author: "csanders-git"
     enabled: true
-    name: "Tests for 920350"
-    description: "This file contains tests for the ModSecurity CRS v3 rule with the ID 920350"
+    name: "Example_Tests"
+    description: "This file contains example tests."
   ...
 ```  
 What follows are all the possible Metadata parameters that are current suported
@@ -31,7 +31,7 @@ Author
 
 **Scope:** Metadata
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Description
 -----------
@@ -45,7 +45,7 @@ Description
 
 **Scope:** Metadata
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Enabled
 -----------
@@ -59,11 +59,11 @@ Enabled
 
 **Scope:** Metadata
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Name
 -----------
-**Description**: A name for the test file
+**Description**: A name for the test file 
 
 **Syntax:** ```enabled: (true|false)```
 
@@ -73,27 +73,27 @@ Name
 
 **Scope:** Metadata
 
-**Version:** 0.1
+**Added Version:** 0.1
 
-*note: The filename not the name specified in this parameter is used during test execution. 
+*Note: The name specified here is used as part of the test execution name, in conjunction with the test_title.
 
 Tests Parameters
 ==================
 The tests area is made up of multiple tests. Each test contains Stages and an optional rule_id. Within the Stage there is additional information that is outlined in Stage Paramaters
 
-Rule_id
+Test_title
 -----------
 **Description**: Information about the test being performed, this will be included as the test name when run.
 
-**Syntax:** ```rule_id: <integer>```
+**Syntax:** ```test_title: "<string>"```
 
-**Example Usage:** ```rule_id: 1234```
+**Example Usage:** ```test_title: "Rule:1234/Test:1```
 
-**Default Value:** TODO
+**Default Value:** None (Required)
 
 **Scope:** Tests
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Stages
 -----------
@@ -107,7 +107,7 @@ Stages
 
 **Scope:** Tests
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 
 Stage Parameters
@@ -132,7 +132,7 @@ stage:
 
 **Scope:** Stage
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Output
 -----------
@@ -150,7 +150,7 @@ stage:
 
 **Scope:** Stage
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Input Parameters
 ==================
@@ -168,7 +168,7 @@ dest_addr
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 port
 -----------
@@ -182,7 +182,7 @@ port
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 method
 ------
@@ -196,7 +196,7 @@ method
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 headers
 -----------
@@ -221,9 +221,10 @@ headers:
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
-*note in the future if stop_magic is enabled this will prevent automatic header values TODO*
+*Note: in the future if stop_magic is enabled this will prevent automatic header values TODO*
+*Note: If a Content-Type is passed and a charset attribute is set, FTW will try to encode the data with that codec. It must be a valid Python codec and the default is UTF-8.*
 
 protocol
 -----------
@@ -237,7 +238,7 @@ protocol
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Uri
 -----------
@@ -251,7 +252,7 @@ Uri
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Version
 -----------
@@ -265,24 +266,41 @@ Version
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Data
 -----------
-**Description**: The optional data porition of the HTTP request. Typically these are provided with the content-type header.
+**Description**: The optional data porition of the HTTP request. Typically these are provided with the content-type header. Data can be provided as a string or as a YAML list.
 
-**Syntax:** ```data: "<string>"```
+**Syntax:** ```data: "<string|YAML list>"```
 
-**Example Usage:** ```data: "xyz=123"```
+**Example Usage (string):** ```data: "xyz=123"``
+
+**Example Usage (list):**
+```
+  data:
+    - "----------397236876"
+    - "Content-Disposition: form-data; name=\"text\";"
+    - ""
+    - "test default"
+    - "----------397236876"
+    - "Content-Disposition: form-data; name=\"file1\"; filename=\"a.txt\""
+    - "Content-Type: text/plain"
+    - ""
+    - "Content of a.txt."
+    - ""
+    - "----------397236876--"
+```
 
 **Default Value:** "HTTP/1.1"
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 *Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on.*
 *Note: if urlencoded content-type header is provided and parameters aren't in name=value form, data will be made empty, unless stop_magic is on.*
+
 
 Save_cookie
 -----------
@@ -296,7 +314,7 @@ Save_cookie
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Stop_magic
 -----------
@@ -310,7 +328,7 @@ Stop_magic
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Encoded_request
 -----------
@@ -324,7 +342,7 @@ Encoded_request
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 *Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on. (TODO)*
 
@@ -340,7 +358,7 @@ Raw_request
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 *Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on. (TODO)*
 Output Parameters
@@ -359,7 +377,7 @@ Status
 
 **Scope:** Output
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 html_contains
 -----------
@@ -373,7 +391,7 @@ html_contains
 
 **Scope:** Output
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 log_contains
 -----------
@@ -387,7 +405,7 @@ log_contains
 
 **Scope:** Output
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 no_log_contains
 -----------
@@ -401,6 +419,6 @@ no_log_contains
 
 **Scope:** Output
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 

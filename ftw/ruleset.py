@@ -79,6 +79,9 @@ class Input(object):
         self.version = version
         self.headers = headers
         self.data = data
+        # Support data in list format and join on CRLF
+        if isinstance(self.data, list):
+            self.data = '\r\n'.join(self.data)
         self.save_cookie = save_cookie
         self.stop_magic = stop_magic
         # Check if there is any data and do defaults
@@ -116,7 +119,7 @@ class Test(object):
     def __init__(self, test_dict, ruleset_meta):
         self.test_dict = test_dict
         self.ruleset_meta = ruleset_meta
-        self.rule_id = test_dict['rule_id']
+        self.test_title = test_dict['test_title']
         self.stages = self.build_stages()
 
     def build_stages(self):

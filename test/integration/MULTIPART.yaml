@@ -1,0 +1,39 @@
+---
+  meta: 
+    author: "csanders-git"
+    enabled: true
+    name: "MULTIPART.yaml"
+    description: "This is meant to test the data parameter with its list format on a multipart request"
+  tests: 
+    - 
+      test_title: "Data(list)"
+      stages: 
+        - 
+          stage: 
+            input:
+              dest_addr: "www.example.com"
+              method: "POST"
+              port: 80
+              headers:
+                  User-Agent: "ModSecurity CRS 3 Tests"              
+                  Host: "example.com"
+                  Accept: "*/*"
+                  Accept-Language: "en"
+                  Connection: "close"
+                  Referer: "http://localhost/"
+                  Content-Type: "multipart/form-data; boundary=--------397236876"
+              data:
+                - "----------397236876"
+                - "Content-Disposition: form-data; name=\"text\";"
+                - ""
+                - "test default"
+                - "----------397236876"
+                - "Content-Disposition: form-data; name=\"file1\"; filename=\"a.txt\""
+                - "Content-Type: text/plain"
+                - ""
+                - "Content of a.txt."
+                - ""
+                - "----------397236876--"
+              protocol: "http"
+            output: 
+              status: 200
