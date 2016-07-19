@@ -31,7 +31,7 @@ Author
 
 **Scope:** Metadata
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Description
 -----------
@@ -45,7 +45,7 @@ Description
 
 **Scope:** Metadata
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Enabled
 -----------
@@ -59,7 +59,7 @@ Enabled
 
 **Scope:** Metadata
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Name
 -----------
@@ -73,7 +73,7 @@ Name
 
 **Scope:** Metadata
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 *Note: The name specified here is used as part of the test execution name, in conjunction with the test_title.
 
@@ -81,19 +81,19 @@ Tests Parameters
 ==================
 The tests area is made up of multiple tests. Each test contains Stages and an optional rule_id. Within the Stage there is additional information that is outlined in Stage Paramaters
 
-Rule_id
+Test_title
 -----------
 **Description**: Information about the test being performed, this will be included as the test name when run.
 
-**Syntax:** ```rule_id: <integer>```
+**Syntax:** ```test_title: "<string>"```
 
-**Example Usage:** ```rule_id: 1234```
+**Example Usage:** ```test_title: "Rule:1234/Test:1```
 
-**Default Value:** TODO
+**Default Value:** None (Required)
 
 **Scope:** Tests
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Stages
 -----------
@@ -107,7 +107,7 @@ Stages
 
 **Scope:** Tests
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 
 Stage Parameters
@@ -132,7 +132,7 @@ stage:
 
 **Scope:** Stage
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Output
 -----------
@@ -150,7 +150,7 @@ stage:
 
 **Scope:** Stage
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Input Parameters
 ==================
@@ -168,7 +168,7 @@ dest_addr
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 port
 -----------
@@ -182,7 +182,7 @@ port
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 method
 ------
@@ -196,7 +196,7 @@ method
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 headers
 -----------
@@ -221,7 +221,7 @@ headers:
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 *Note: in the future if stop_magic is enabled this will prevent automatic header values TODO*
 *Note: If a Content-Type is passed and a charset attribute is set, FTW will try to encode the data with that codec. It must be a valid Python codec and the default is UTF-8.*
@@ -238,7 +238,7 @@ protocol
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Uri
 -----------
@@ -252,7 +252,7 @@ Uri
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Version
 -----------
@@ -266,7 +266,7 @@ Version
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Data
 -----------
@@ -296,7 +296,7 @@ Data
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 *Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on.*
 *Note: if urlencoded content-type header is provided and parameters aren't in name=value form, data will be made empty, unless stop_magic is on.*
@@ -314,7 +314,7 @@ Save_cookie
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Stop_magic
 -----------
@@ -328,7 +328,7 @@ Stop_magic
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 Encoded_request
 -----------
@@ -342,7 +342,7 @@ Encoded_request
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 *Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on. (TODO)*
 
@@ -358,7 +358,7 @@ Raw_request
 
 **Scope:** Input
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 *Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on. (TODO)*
 Output Parameters
@@ -377,7 +377,7 @@ Status
 
 **Scope:** Output
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 html_contains
 -----------
@@ -391,7 +391,7 @@ html_contains
 
 **Scope:** Output
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 log_contains
 -----------
@@ -405,7 +405,7 @@ log_contains
 
 **Scope:** Output
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 no_log_contains
 -----------
@@ -419,6 +419,6 @@ no_log_contains
 
 **Scope:** Output
 
-**Version:** 0.1
+**Added Version:** 0.1
 
 
