@@ -2,7 +2,7 @@
   meta: 
     author: "Zack"
     enabled: true
-    name: "Regression-test"
+    name: "LOGCONTAINSFIXTURE.yaml"
     description: "Tests log contains functionality with an integration object"
   tests: 
     - 

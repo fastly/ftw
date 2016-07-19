@@ -2,7 +2,7 @@
   meta: 
     author: "Chaim"
     enabled: true
-    name: "Regression-test"
+    name:"HTMLCONTAINSFIXTURE.yaml"
     description: "Tests html contains functionality with an integration object"
   tests: 
     - 

@@ -2,7 +2,7 @@
   meta: 
     author: "Chaim"
     enabled: true
-    name: "Regression-test"
+    name: "COOKIEFIXTURE.yaml"
     description: "Tests cookie saving functionality"
   tests: 
     - 

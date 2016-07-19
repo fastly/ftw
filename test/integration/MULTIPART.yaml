@@ -2,7 +2,7 @@
   meta: 
     author: "csanders-git"
     enabled: true
-    name: "Regression-test"
+    name: "MULTIPART.yaml"
     description: "This is meant to test the data parameter with its list format on a multipart request"
   tests: 
     - 
