@@ -200,8 +200,6 @@ class HttpResponse(object):
         self.response_line = response_line
         self.headers = response_headers
         self.data = response_data
-        print self.data
-
 
 class HttpUA(object):
     """
@@ -387,8 +385,6 @@ class HttpUA(object):
             request = request.decode('string_escape')
         # if we have an Encoded request we should use that
         self.request = request
-        print self.request
-        print 
 
     def get_response(self):
         """
