@@ -84,8 +84,20 @@ class HttpResponse(object):
                         break
                 cover_domain = cover_domain[first_non_dot:]
                 # We must parse the coverDomain to make sure its not in the suffix list
+                psl_path = os.path.dirname(__file__) + os.path.sep + \
+                'util' + os.path.sep + 'public_suffix_list.dat'
+                # Check if the public suffix list is present in the ftw dir
+                if os.path.exists(psl_path):
+                    pass
+                else:
+                    raise errors.TestError(
+                        'unable to find the needed publix suffix list',
+                        {
+                            'Search_Dir': os.path.dirname(__file__),
+                            'function': 'http.HttpResponse.check_for_cookie'
+                        })
                 try:
-                    with open('util/public_suffix_list.dat', 'r') as public_suffixs:
+                    with open(psl_path, 'r') as public_suffixs:
                         for line in public_suffixs:
                             if line[:2] == '//' or line[0] == ' ' or line[0].strip() == '':
                                 continue
@@ -95,7 +107,7 @@ class HttpResponse(object):
                     raise errors.TestError(
                         'unable to open the needed publix suffix list',
                         {
-                            'path': 'util/public_suffix_list.dat',
+                            'path': psl_path,
                             'function': 'http.HttpResponse.check_for_cookie'
                         })
                 # Generate Origin Domain TLD
@@ -367,7 +379,7 @@ class HttpUA(object):
                         'data': unicode(self.request_object.data),
                         'function': 'http.HttpResponse.build_request'
                     })                
-            request = string.replace(request, '#data#', data + self.CRLF)
+            request = string.replace(request, '#data#', data)
         else:
             request = string.replace(request, '#data#', '')
         # If we have a Raw Request we should use that instead
@@ -379,8 +391,8 @@ class HttpUA(object):
                         'function': 'http.HttpUA.build_request'
                     })
             request = self.request_object.raw_request
-            # Check for newlines (without CR prior)
-            request = re.sub(r'(?<!x)\n', self.CRLF, request)
+            # We do this regaurdless of magic if you want to send a literal 
+            # '\' 'r' or 'n' use encoded request.
             request = request.decode('string_escape')
         if self.request_object.encoded_request is not None:
             request = base64.b64decode(self.request_object.encoded_request)

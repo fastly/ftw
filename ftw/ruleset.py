@@ -98,6 +98,7 @@ class Input(object):
                             encoded_args = urllib.urlencode(query_string)
                             self.data = encoded_args
             if 'Content-Length' not in headers.keys() and stop_magic is False:
+                # The two is for the trailing CRLF and the one after
                 headers['Content-Length'] = len(self.data)
 
 
