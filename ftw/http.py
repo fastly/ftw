@@ -192,6 +192,8 @@ class HttpResponse(object):
             raise errors.TestError(
                 'The status num of the response line isn\'t convertable',
                 {
+                    'msg': 'This may be an HTTP 1.0 \'Simple Req\\Res\', it \
+                    doesn\'t have HTTP headers and FTW will not parse these'
                     'response_line': str(response_line),
                     'function': 'http.HttpResponse.process_response'
                 })
