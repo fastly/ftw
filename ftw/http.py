@@ -68,7 +68,7 @@ class HttpResponse(object):
             origin_is_ip = False
         for cookie_morsals in cookie.values():
             # If the coverdomain is blank or the domain is an IP set the domain to be the origin
-            if cookie_morsals['domain'] == '' or origin_is_ip is True:
+            if cookie_morsals['domain'] == '' or origin_is_ip:
                 # We want to always add a domain so it's easy to parse later
                 return (cookie, self.dest_addr)
             # If the coverdomain is set it can be any subdomain
