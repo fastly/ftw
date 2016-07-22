@@ -2,11 +2,18 @@ import pytest
 from ftw.ftw import ruleset, util
 import os
 
-def get_rulesets(ruledir):
+def get_rulesets(ruledir, recurse):
     """
     List of ruleset objects extracted from the yaml directory
     """
-    if os.path.isdir(ruledir):
+    if os.path.isdir(ruledir) and recurse:
+        yaml_files = []
+        for root, dirs, files in os.walk(ruledir):
+            for name in files:
+                filename, file_extension = os.path.splitext(name)
+                if file_extension == '.yaml':
+                    yaml_files.append(os.path.join(root, name))
+    if os.path.isdir(ruledir) and not recurse:
         yaml_files = util.get_files(ruledir, 'yaml')
     elif os.path.isfile(ruledir):
         yaml_files = [ruledir]
@@ -66,16 +73,23 @@ def pytest_addoption(parser):
         help='destination address to direct tests towards')
     parser.addoption('--rule', action='store', default=None,
         help='fully qualified path to one rule')
+    parser.addoption('--ruledir_recurse', action='store', default=None,
+        help='walk the directory structure finding YAML files')        
 
 def pytest_generate_tests(metafunc):
     """
     Pre-test configurations, mostly used for parametrization
     """
-    if metafunc.config.option.ruledir or metafunc.config.option.rule:
+    options = ['ruledir','ruledir_recurse','rule']
+    args = metafunc.config.option.__dict__
+    # Check if we have any arguments by creating a list of supplied args we want
+    if [i for i in options if i in args and args[i] != None] :
         if metafunc.config.option.ruledir:
-            rulesets = get_rulesets(metafunc.config.option.ruledir)
+            rulesets = get_rulesets(metafunc.config.option.ruledir, False)
+        if metafunc.config.option.ruledir_recurse:
+            rulesets = get_rulesets(metafunc.config.option.ruledir_recurse, True)            
         if metafunc.config.option.rule:
-            rulesets = get_rulesets(metafunc.config.option.rule)
+            rulesets = get_rulesets(metafunc.config.option.rule, False)
         if 'ruleset' in metafunc.fixturenames and 'test' in metafunc.fixturenames:
             metafunc.parametrize('ruleset,test', get_testdata(rulesets),
                 ids=test_id)

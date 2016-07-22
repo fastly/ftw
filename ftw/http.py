@@ -68,7 +68,7 @@ class HttpResponse(object):
             origin_is_ip = False
         for cookie_morsals in cookie.values():
             # If the coverdomain is blank or the domain is an IP set the domain to be the origin
-            if cookie_morsals['domain'] == '' or origin_is_ip is True:
+            if cookie_morsals['domain'] == '' or origin_is_ip:
                 # We want to always add a domain so it's easy to parse later
                 return (cookie, self.dest_addr)
             # If the coverdomain is set it can be any subdomain
@@ -84,8 +84,20 @@ class HttpResponse(object):
                         break
                 cover_domain = cover_domain[first_non_dot:]
                 # We must parse the coverDomain to make sure its not in the suffix list
+                psl_path = os.path.dirname(__file__) + os.path.sep + \
+                'util' + os.path.sep + 'public_suffix_list.dat'
+                # Check if the public suffix list is present in the ftw dir
+                if os.path.exists(psl_path):
+                    pass
+                else:
+                    raise errors.TestError(
+                        'unable to find the needed public suffix list',
+                        {
+                            'Search_Dir': os.path.dirname(__file__),
+                            'function': 'http.HttpResponse.check_for_cookie'
+                        })
                 try:
-                    with open('util/public_suffix_list.dat', 'r') as public_suffixs:
+                    with open(psl_path, 'r') as public_suffixs:
                         for line in public_suffixs:
                             if line[:2] == '//' or line[0] == ' ' or line[0].strip() == '':
                                 continue
@@ -95,7 +107,7 @@ class HttpResponse(object):
                     raise errors.TestError(
                         'unable to open the needed publix suffix list',
                         {
-                            'path': 'util/public_suffix_list.dat',
+                            'path': psl_path,
                             'function': 'http.HttpResponse.check_for_cookie'
                         })
                 # Generate Origin Domain TLD
@@ -192,6 +204,8 @@ class HttpResponse(object):
             raise errors.TestError(
                 'The status num of the response line isn\'t convertable',
                 {
+                    'msg': 'This may be an HTTP 1.0 \'Simple Req\\Res\', it \
+                    doesn\'t have HTTP headers and FTW will not parse these',
                     'response_line': str(response_line),
                     'function': 'http.HttpResponse.process_response'
                 })
@@ -365,7 +379,7 @@ class HttpUA(object):
                         'data': unicode(self.request_object.data),
                         'function': 'http.HttpResponse.build_request'
                     })                
-            request = string.replace(request, '#data#', data + self.CRLF)
+            request = string.replace(request, '#data#', data)
         else:
             request = string.replace(request, '#data#', '')
         # If we have a Raw Request we should use that instead
@@ -377,8 +391,8 @@ class HttpUA(object):
                         'function': 'http.HttpUA.build_request'
                     })
             request = self.request_object.raw_request
-            # Check for newlines (without CR prior)
-            request = re.sub(r'(?<!x)\n', self.CRLF, request)
+            # We do this regardless of magic if you want to send a literal 
+            # '\' 'r' or 'n' use encoded request.
             request = request.decode('string_escape')
         if self.request_object.encoded_request is not None:
             request = base64.b64decode(self.request_object.encoded_request)
