@@ -91,7 +91,7 @@ class HttpResponse(object):
                     pass
                 else:
                     raise errors.TestError(
-                        'unable to find the needed publix suffix list',
+                        'unable to find the needed public suffix list',
                         {
                             'Search_Dir': os.path.dirname(__file__),
                             'function': 'http.HttpResponse.check_for_cookie'
@@ -391,7 +391,7 @@ class HttpUA(object):
                         'function': 'http.HttpUA.build_request'
                     })
             request = self.request_object.raw_request
-            # We do this regaurdless of magic if you want to send a literal 
+            # We do this regardless of magic if you want to send a literal 
             # '\' 'r' or 'n' use encoded request.
             request = request.decode('string_escape')
         if self.request_object.encoded_request is not None:
