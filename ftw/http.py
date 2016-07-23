@@ -429,7 +429,6 @@ class HttpUA(object):
                 if err.errno == errno.EAGAIN:
                     pass
                 # SSL will return SSLWantRead instead of EAGAIN
-                # NB-cperon: pass or continue in the win32 case?
                 elif sys.platform == 'win32' and \
                 err.errno == errno.WSAEWOULDBLOCK:
                         pass
