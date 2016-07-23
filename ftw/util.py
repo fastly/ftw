@@ -23,10 +23,10 @@ def extract_yaml(yaml_files):
             with open(yaml_file, 'r') as fd:
                 loaded_yaml.append(yaml.safe_load(fd))
         except IOError as e:
-            print('Error reading file %s' % yaml_file)
+            print('Error reading file', yaml_file)
             raise e
         except yaml.YAMLError as e:
-            print('Error parsing file %s' % yaml_file)
+            print('Error parsing file', yaml_file)
             raise e
         except Exception as e:
             print('General error')
