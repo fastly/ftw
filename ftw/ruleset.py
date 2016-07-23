@@ -8,7 +8,7 @@ class Output(object):
     """
     This class holds the expected output from a corresponding FTW HTTP Input
     We are stricter in this definition by requiring at least one of status,
-    response_contains ,no_log_contains, or log_contains
+    response_contains, no_log_contains, expect_error, or log_contains
     """
     def __init__(self, output_dict):
         self.STATUS = 'status'
@@ -28,18 +28,19 @@ class Output(object):
             if self.STATUS in output_dict else None
         self.response_contains_str = self.process_regex(self.RESPONSE)
         self.no_log_contains_str = self.process_regex(self.NOTLOG)
-        self.log_contains_str = self.process_regex(self.LOG)
-        self.expect_error = output_dict[self.ERROR]
-        if isinstance(output_dict[self.ERROR], bool):
-            self.expect_error = bool(output_dict[self.ERROR])
-        elif output_dict[self.ERROR] != "":
+        self.log_contains_str = self.process_regex(self.LOG)           
+        if self.ERROR in output_dict and isinstance(output_dict[self.ERROR], bool):
+            self.expect_error = bool(self.expect_error)
+        elif self.ERROR in output_dict:
             raise errors.TestError(
                 'expect_error must be either True or False (bool)',
                 {
                     'expect_error value': self.expect_error,
                     'expect_error type': type(self.expect_error),
                     'function': 'ruleset.Output.__init__'
-                })            
+                })
+        else:
+            self.expect_error = None 
         if self.status is None and self.response_contains_str is None \
                 and self.log_contains_str is None \
                 and self.no_log_contains_str is None \
