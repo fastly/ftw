@@ -25,22 +25,13 @@ class Output(object):
             )
         self.output_dict = output_dict
         self.status = int(output_dict[self.STATUS]) \
-            if self.STATUS in output_dict else None
+            if self.STATUS in self.output_dict else None
         self.response_contains_str = self.process_regex(self.RESPONSE)
         self.no_log_contains_str = self.process_regex(self.NOTLOG)
-        self.log_contains_str = self.process_regex(self.LOG)           
-        if self.ERROR in output_dict and isinstance(output_dict[self.ERROR], bool):
-            self.expect_error = bool(self.expect_error)
-        elif self.ERROR in output_dict:
-            raise errors.TestError(
-                'expect_error must be either True or False (bool)',
-                {
-                    'expect_error value': self.expect_error,
-                    'expect_error type': type(self.expect_error),
-                    'function': 'ruleset.Output.__init__'
-                })
-        else:
-            self.expect_error = None 
+        self.log_contains_str = self.process_regex(self.LOG)
+        self.expect_error = bool(self.output_dict[self.ERROR]) if \
+            self.ERROR in self.output_dict and \
+            isinstance(self.output_dict[self.ERROR], bool) else None
         if self.status is None and self.response_contains_str is None \
                 and self.log_contains_str is None \
                 and self.no_log_contains_str is None \

@@ -3,7 +3,7 @@
     author: "csanders-git"
     enabled: true
     name: "EXPECTERRORFIXTURE.yaml"
-    description: "Tests expect_erro functionality within a test"
+    description: "Tests expect_error functionality within a test"
   tests: 
     - 
       test_title: "expect_error(1)"
