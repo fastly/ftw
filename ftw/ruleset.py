@@ -8,13 +8,13 @@ class Output(object):
     """
     This class holds the expected output from a corresponding FTW HTTP Input
     We are stricter in this definition by requiring at least one of status,
-    html_contains,no_log_contains, or log_contains
+    response_contains ,no_log_contains, or log_contains
     """
     def __init__(self, output_dict):
         self.STATUS = 'status'
         self.LOG = 'log_contains'
         self.NOTLOG = 'no_log_contains' 
-        self.HTML = 'html_contains'
+        self.RESPONSE = 'response_contains'
         if output_dict is None:
             raise errors.TestError(
                 'No output dictionary found',
@@ -25,21 +25,21 @@ class Output(object):
         self.output_dict = output_dict
         self.status = int(output_dict[self.STATUS]) \
             if self.STATUS in output_dict else None
-        self.html_contains_str = self.process_regex(self.HTML)
+        self.response_contains_str = self.process_regex(self.RESPONSE)
         
         self.no_log_contains_str = self.process_regex(self.NOTLOG)
         self.log_contains_str = self.process_regex(self.LOG)
-        if self.status is None and self.html_contains_str is None \
+        if self.status is None and self.response_contains_str is None \
                 and self.log_contains_str is None \
                 and self.no_log_contains_str is None:
             raise errors.TestError(
-                'Need at least one status, html_contains_str ' +
-                ', no_log_contains, or log_contains_str',
+                'Need at least one status, response_contains ' +
+                ', no_log_contains, or log_contains',
                 {
                     'status': self.status,
-                    'html_contains_str': self.html_contains_str,
-                    'log_contains_str': self.log_contains_str,
-                    'no_log_contains_str': self.no_log_contains_str,
+                    'response_contains value': self.response_contains_str,
+                    'log_contains value': self.log_contains_str,
+                    'no_log_contains value': self.no_log_contains_str,
                     'function': 'ruleset.Output.__init__'
                 })
 

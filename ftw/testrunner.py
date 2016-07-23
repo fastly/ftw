@@ -81,9 +81,9 @@ class TestRunner(object):
             self.test_log(lines, stage.output.no_log_contains_str, True)        
         else:
             http_ua.send_request(stage.input)
-        if stage.output.html_contains_str:
+        if stage.output.response_contains_str:
             self.test_response(http_ua.response_object,
-                               stage.output.html_contains_str)
+                               stage.output.response_contains_str)
         if stage.output.status:
             self.test_status(stage.output.status,
                              http_ua.response_object.status)
