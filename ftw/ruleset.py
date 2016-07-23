@@ -15,6 +15,7 @@ class Output(object):
         self.LOG = 'log_contains'
         self.NOTLOG = 'no_log_contains' 
         self.RESPONSE = 'response_contains'
+        self.ERROR = 'expect_error'
         if output_dict is None:
             raise errors.TestError(
                 'No output dictionary found',
@@ -26,12 +27,23 @@ class Output(object):
         self.status = int(output_dict[self.STATUS]) \
             if self.STATUS in output_dict else None
         self.response_contains_str = self.process_regex(self.RESPONSE)
-        
         self.no_log_contains_str = self.process_regex(self.NOTLOG)
         self.log_contains_str = self.process_regex(self.LOG)
+        self.expect_error = output_dict[self.ERROR]
+        if isinstance(output_dict[self.ERROR], bool):
+            self.expect_error = bool(output_dict[self.ERROR])
+        elif output_dict[self.ERROR] != "":
+            raise errors.TestError(
+                'expect_error must be either True or False (bool)',
+                {
+                    'expect_error value': self.expect_error,
+                    'expect_error type': type(self.expect_error),
+                    'function': 'ruleset.Output.__init__'
+                })            
         if self.status is None and self.response_contains_str is None \
                 and self.log_contains_str is None \
-                and self.no_log_contains_str is None:
+                and self.no_log_contains_str is None \
+                and self.expect_error is None:
             raise errors.TestError(
                 'Need at least one status, response_contains ' +
                 ', no_log_contains, or log_contains',
@@ -40,6 +52,7 @@ class Output(object):
                     'response_contains value': self.response_contains_str,
                     'log_contains value': self.log_contains_str,
                     'no_log_contains value': self.no_log_contains_str,
+                    'expect_error value': self.expect_error,
                     'function': 'ruleset.Output.__init__'
                 })
 

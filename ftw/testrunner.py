@@ -39,7 +39,7 @@ class TestRunner(object):
 
     def test_response(self, response_object, regex):
         """
-        Checks if the HTML response contains a regex specified in the
+        Checks if the response response contains a regex specified in the
         output stage. It will assert that the regex is present.
         """
         if response_object is None:
@@ -61,26 +61,32 @@ class TestRunner(object):
         input, waits for output then compares expected vs actual output
         http_ua can be passed in to persist cookies
         """
-        if not http_ua:
-            http_ua = http.HttpUA()
-        if stage.output.log_contains_str and logger_obj is not None:
-            start = datetime.datetime.now()
-            http_ua.send_request(stage.input)
-            end = datetime.datetime.now()
-            logger_obj.set_times(start, end)
-            lines = logger_obj.get_logs()           
-            self.test_log(lines, stage.output.log_contains_str, False)
-        # This could be condensed but its more understandable this way
-        elif stage.output.no_log_contains_str and logger_obj is not None:
-            start = datetime.datetime.now()
-            http_ua.send_request(stage.input)
-            end = datetime.datetime.now()
-            logger_obj.set_times(start, end)
-            lines = logger_obj.get_logs()
-            # The last argument means that we should negate the resp
-            self.test_log(lines, stage.output.no_log_contains_str, True)        
+       
+        # Send our request (exceptions caught as needed)
+        if stage.output.expect_error:
+            try:
+                if not http_ua:
+                    http_ua = http.HttpUA()
+                start = datetime.datetime.now()
+                http_ua.send_request(stage.input)
+                end = datetime.datetime.now()
+            except errors.TestError as err:
+                pass
         else:
+            if not http_ua:
+                http_ua = http.HttpUA()
+            start = datetime.datetime.now()
             http_ua.send_request(stage.input)
+            end = datetime.datetime.now()                
+        if (stage.output.log_contains_str or stage.output.no_log_contains_str) \
+        and logger_obj is not None:
+            logger_obj.set_times(start, end)
+            lines = logger_obj.get_logs() 
+            if stage.output.log_contains_str:
+                self.test_log(lines, stage.output.log_contains_str, False)
+            if stage.output.no_log_contains_str:
+                # The last argument means that we should negate the resp
+                self.test_log(lines, stage.output.no_log_contains_str, True)
         if stage.output.response_contains_str:
             self.test_response(http_ua.response_object,
                                stage.output.response_contains_str)

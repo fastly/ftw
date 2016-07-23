@@ -1,0 +1,23 @@
+---
+  meta: 
+    author: "csanders-git"
+    enabled: true
+    name: "EXPECTERRORFIXTURE.yaml"
+    description: "Tests expect_erro functionality within a test"
+  tests: 
+    - 
+      test_title: "expect_error(1)"
+      stages: 
+        - 
+          stage: 
+            input: 
+              dest_addr: "example.com"
+              method: "GET"
+              port: 80
+              headers: 
+                  User-Agent: "Foo"
+                  Host: "example.com"
+                  Content-Length: "100"
+              uri: "/"
+            output: 
+              expect_error: True
