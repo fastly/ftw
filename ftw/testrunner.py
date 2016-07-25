@@ -70,7 +70,7 @@ class TestRunner(object):
                 start = datetime.datetime.now()
                 http_ua.send_request(stage.input)
                 end = datetime.datetime.now()
-            print '\nExpected Error Caught: %s' % str(excinfo)
+            print '\nExpected Error: %s' % str(excinfo)
         else:
             if not http_ua:
                 http_ua = http.HttpUA()
