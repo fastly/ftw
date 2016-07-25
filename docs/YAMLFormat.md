@@ -421,4 +421,18 @@ no_log_contains
 
 **Added Version:** 0.1
 
+Expect_error
+-----------
+**Description**: Sometimes it will happen that FTW cannot receive a response and will throw an error (i.e simple requests or 408s). As a result sometimes there are requests that can be sent that will always error back and are not expected to change. You can catch these 'TestErrors using Expect_error 
 
+**Syntax:** ```expect_error: <True|False>```
+
+**Example Usage:** ```expect_error: True```
+
+**Default Value:** False
+
+**Scope:** Output
+
+**Added Version:** 0.1
+
+*Note: Setting this to false is only available for completeness it isn't ever really needed *
