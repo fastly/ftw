@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from __future__ import print_function
+
 import socket
 import ssl
 import string
@@ -245,8 +247,13 @@ class HttpUA(object):
         self.build_request()
         try:
             self.sock.send(self.request)
-        except socket.error as exc:
-            print exc
+        except socket.error as err:
+            raise errors.TestError(
+                'We were unable to send the request to the socket',
+                {
+                    'msg': err,
+                    'function': 'http.HttpUA.send_request'
+                })  			
         finally:
             self.get_response()
 
@@ -461,4 +468,9 @@ class HttpUA(object):
             self.sock.shutdown(1)
             self.sock.close()
         except socket.error as err:
-            print err
+            raise errors.TestError(
+                'We were unable to close the socket as expected.',
+                {
+                    'msg': err,
+                    'function': 'http.HttpUA.get_response'
+                })  
