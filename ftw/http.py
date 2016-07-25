@@ -440,8 +440,8 @@ class HttpUA(object):
                 err.errno == errno.WSAEWOULDBLOCK:
                         pass
                 elif (self.request_object.protocol == 'https' and
-                      sys.exc_info()[0].__name__ == 'SSLWantReadError'):
-                    pass
+                    err[0] == ssl.SSL_ERROR_WANT_READ):
+                        continue
                 # If we didn't it's an error
                 else:
                     raise errors.TestError(
