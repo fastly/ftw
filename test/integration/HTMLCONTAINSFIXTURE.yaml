@@ -6,7 +6,7 @@
     description: "Tests html contains functionality with an integration object"
   tests: 
     - 
-      test_title: "html_contains(1)"
+      test_title: "response_contains(1)"
       stages: 
         - 
           stage: 
@@ -21,9 +21,9 @@
               uri: "/"
             output: 
               status: 200
-              html_contains: "established to be used for" 
+              response_contains: "established to be used for" 
     - 
-      test_title: "html_contains(2)"
+      test_title: "response_contains(2)"
       stages: 
         - 
           stage: 
@@ -38,4 +38,4 @@
               uri: "/"
             output: 
               status: 200
-              html_contains: "Content-Type: text/html" 
+              response_contains: "Content-Type: text/html" 
