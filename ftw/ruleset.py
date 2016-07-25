@@ -31,7 +31,7 @@ class Output(object):
         self.log_contains_str = self.process_regex(self.LOG)
         self.expect_error = bool(self.output_dict[self.ERROR]) if \
             self.ERROR in self.output_dict and \
-            isinstance(self.output_dict[self.ERROR], bool) else None
+            self.output_dict[self.ERROR] else None
         if self.status is None and self.response_contains_str is None \
                 and self.log_contains_str is None \
                 and self.no_log_contains_str is None \

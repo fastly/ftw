@@ -64,14 +64,13 @@ class TestRunner(object):
        
         # Send our request (exceptions caught as needed)
         if stage.output.expect_error:
-            try:
+            with pytest.raises(errors.TestError) as excinfo:
                 if not http_ua:
                     http_ua = http.HttpUA()
                 start = datetime.datetime.now()
                 http_ua.send_request(stage.input)
                 end = datetime.datetime.now()
-            except errors.TestError as err:
-                pass
+            print '\nExpected Error Caught: %s' % str(excinfo)
         else:
             if not http_ua:
                 http_ua = http.HttpUA()
