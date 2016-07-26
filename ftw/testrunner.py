@@ -81,7 +81,7 @@ class TestRunner(object):
         if (stage.output.log_contains_str or stage.output.no_log_contains_str) \
         and logger_obj is not None:
             logger_obj.set_times(start, end)
-            lines = logger_obj.get_logs() 
+            lines = logger_obj.get_logs()
             if stage.output.log_contains_str:
                 self.test_log(lines, stage.output.log_contains_str, False)
             if stage.output.no_log_contains_str:

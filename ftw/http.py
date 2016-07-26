@@ -214,6 +214,8 @@ class HttpResponse(object):
         self.status_msg = response_line.split(' ', 2)[2]
         self.version = response_line.split(' ', 2)[0]
         self.response_line = response_line
+        print("")
+        print(self.response_line)
         self.headers = response_headers
         self.data = response_data
 
@@ -406,6 +408,7 @@ class HttpUA(object):
             request = request.decode('string_escape')
         # if we have an Encoded request we should use that
         self.request = request
+        print(self.request)
 
     def get_response(self):
         """
