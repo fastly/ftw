@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from __future__ import print_function
-
 import socket
 import ssl
 import string
@@ -18,7 +17,8 @@ import encodings
 from IPy import IP
 import errors
 
-
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 class HttpResponse(object):
     def __init__(self, http_response, user_agent):
