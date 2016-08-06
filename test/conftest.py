@@ -32,7 +32,8 @@ def get_testdata(rulesets):
     testdata = []
     for ruleset in rulesets:
         for test in ruleset.tests:
-            testdata.append((ruleset, test))
+            if test.enabled:
+                testdata.append((ruleset, test))
 
     return testdata
 
