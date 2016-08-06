@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='ftw',
-      version='0.1',
+      version='1.0',
       description='Framework for Testing WAFs',
       author='Chaim Sanders, Zack Allen',
       author_email='zallen@fastly.com, chaim.sanders@gmail.com',
