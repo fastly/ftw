@@ -30,3 +30,7 @@ FTW contributors (sorted alphabeticaly)
   * Framework refactoring
   * Error handling
 
+* **[Christian Peron](https://github.com/csjperon)**
+
+  * HTTP Library
+  * Test environment

@@ -21,6 +21,12 @@ Goals / Use cases include:
 * Create YAML files that point to your webserver with a WAF in front of it
 * `py.test test/test_default.py --ruledir test/yaml`
 
+## Provisioning Apache+Modsecurity+OWASP CRS
+If you require an environment for testing WAF rules, there has been one created with Apache, Modsecurity and version 3.0.0 of the OWASP core ruleset. This can be deployed by:
+
+* Checking out the repository: ``git clone https://github.com/fastly/waf_testbed.git```
+* Typeing ```vagrant up```
+
 ## Running Tests while overriding destination address in the yaml files to custom domain
 * *start your test web server*
 * `py.test test/test_default.py --ruledir=test/yaml --destaddr=domain.com`
