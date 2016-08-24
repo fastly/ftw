@@ -7,7 +7,7 @@ How to contribute
 4. +1 required by @csanders-git or @zmallen for merge
 5. CI (eventually) required for merge 
 
-FTW contributors (sorted alphabeticaly)
+FTW contributors (sorted alphabetically)
 ============================================
 
 * **[Chaim Sanders](https://github.com/csanders-git)**
