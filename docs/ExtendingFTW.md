@@ -24,7 +24,7 @@ Done!
 
 
 A note on py.test testing environment
-===
+---
 
 `ftw` uses `py.test` as a way to do regression testing for WAFs. `py.test` is a powerful tool that helps make testing easier through a powerful command line tool interface, test parameterization and a rich API to help customize testing frameworks. You can read more about it [here](http://docs.pytest.org/en/latest/). 
 
