@@ -8,7 +8,7 @@ setup(name='ftw',
       author='Chaim Sanders, Zack Allen',
       author_email='zallen@fastly.com, chaim.sanders@gmail.com',
       url='https://www.github.com/fastly/ftw',
-      download_url='https://github.com/fastly/ftw/tarball/1.0.1',
+      download_url='https://github.com/fastly/ftw/tarball/1.0.2',
       entry_points = {
         'pytest11': [
             'ftw = ftw.pytest_plugin'
