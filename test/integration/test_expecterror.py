@@ -1,4 +1,4 @@
-from ftw.ftw import ruleset, testrunner, http, errors
+from ftw import ruleset, testrunner, http, errors
 import pytest
 import re
 import random

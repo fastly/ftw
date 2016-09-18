@@ -1,5 +1,5 @@
 import pytest
-from ftw.ftw import testrunner, errors
+from ftw import testrunner, errors
 
 @pytest.fixture
 def modsec_logger_obj():
