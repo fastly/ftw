@@ -16,17 +16,21 @@ Step 1 - Virtualenvironment, requirements.txt
 
 Next, initiate a python virtual environment using `virtualenv env`, then drop into that environment `. env/bin/activate`.
 
-Add `ftw` to `requirements.txt` by typing 
-`echo  "-e git+https://github.com/fastly/ftw#egg=ftw" >> requirements.txt`. Next, install `ftw` as an egg `pip install -r requirements.txt`.
+Add `ftw` to `requirements.txt`
 
-Step 2 - Test environment configuration
-==
+`pip install -r requirements.txt`
 
-`ftw` uses `py.test` as a way to do regression testing for WAFs. `py.test` is a powerful tool that helps make testing easier through a powerful command line tool interface, test parameterization and a rich API to help customize testing frameworks. You can read more about it [here](http://docs.pytest.org/en/latest/). In order to use `ftw` out of the box with default customizations, copy the `conftest.py` file from ftw located [here](https://github.com/fastly/ftw/blob/master/test/conftest.py) into your current working directory.
+Done!
 
-Sadly, there is no programmatic way to import `conftest.py` into your project (that we've found). So the best option here is to pin your version of FTW to the version of the `conftest.py` that you pulled to avoid any regressions. 
 
-Step 3 - Writing a test file
+A note on py.test testing environment
+===
+
+`ftw` uses `py.test` as a way to do regression testing for WAFs. `py.test` is a powerful tool that helps make testing easier through a powerful command line tool interface, test parameterization and a rich API to help customize testing frameworks. You can read more about it [here](http://docs.pytest.org/en/latest/). 
+
+`ftw` ships with a plugin to configure your `py.test` environment. This includes setting up informative test names in the console, command line arguments and helper functions. You can extend this further by writing your own [conftest.py](http://pytest.org/2.2.4/plugins.html) or submitting a P/R to `ftw` and change our `ftw/pytest_plugin.py`.  
+
+Step 2 - Writing a test file
 ==
 
 `touch test_foo.py`. `py.test` will be passed this file, and it will know to run any functions that start with `test_` within the file. So, for example, `def test_bar():` will be ran when the command `py.test test_foo.py` is issued. 
@@ -90,7 +94,7 @@ Spawn a local webserver on port 80 using `sudo pythom -m SimpleHTTPServer 80`. T
 
 This YAML file has 2 tests with 1 stage each. The first test does a GET request to localhost on port 80 to the "/" URI, and expects a status 200. The second test does a GET request to localhost on port 80 to "/fail.html", and expects a 404 status. Each also set headers. You'll notice there is no `destaddr` directive, where you can put `localhost`, because there is a default to `localhost` in `ftw`. If you wish to go to another destination, add a `destaddr` directive under `input`. For examples, check out the integrations in `ftw`.
 
-Step 4 - Run your test!
+Step 3 - Run your test!
 ==
 After you configured your `test_foo.py`, `conftest.py`, `yaml/foo.yaml` and you run your local webserver, run `py.test test_foo.py -s -v --rule=yaml/foo.yaml`.
 
@@ -116,7 +120,7 @@ test_foo.py::test_bar[ruleset1-foo.yaml_ruleid_1235] PASSED
 
 These passed because the `output` directive in both rules specified an expected `status` directive. The webserver returned 200 and 404, respectively, and made the whole test suite passed. You can also pass in `html_contains: "^regex$"` to have FTW check for a pattern within the html_response.
 
-Step 5 - Log integration
+Step 4 - Log integration
 ==
 
 Although `status` and `html_contains` may be useful, it could give attackers information on how your WAF interacts with certain payloads. Because of this, you might want to be more stealthy in how you respond to certain payloads, but you still need to verify that the rules are firing. This is where the `log_contains` directive can be used to check your WAF logs.
