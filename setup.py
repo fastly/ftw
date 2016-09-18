@@ -18,7 +18,7 @@ setup(name='ftw',
       keywords=['waf'],
       install_requires=[
           'IPy',
-          'pytest=2.9.1',
+          'pytest==2.9.1',
           'PyYAML'
       ],
      )
