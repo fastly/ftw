@@ -6,7 +6,6 @@ import ruleset
 import util
 import re
 
-
 class TestRunner(object):
     """
     Runner that accepts stages of a test and verifies expected and actual
