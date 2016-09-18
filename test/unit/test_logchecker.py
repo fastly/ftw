@@ -1,4 +1,4 @@
-from ftw.ftw import logchecker
+from ftw import logchecker
 import pytest
 
 def test_logchecker():

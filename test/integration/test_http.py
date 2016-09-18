@@ -1,4 +1,4 @@
-from ftw.ftw import ruleset, http, errors
+from ftw import ruleset, http, errors
 import pytest
 import sys
 

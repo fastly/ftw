@@ -1,5 +1,5 @@
 import pytest
-from ftw.ftw import testrunner, errors
+from ftw import testrunner, errors
 
 def test_default(ruleset, test, destaddr):
     """
