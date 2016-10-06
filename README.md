@@ -1,4 +1,4 @@
-## Framework for Testing WAFs (FTW)
+NOTHING ## Framework for Testing WAFs (FTW)
 [![Build Status](https://travis-ci.org/fastly/ftw.svg?branch=master)](https://travis-ci.org/fastly/ftw)
 
 ##### Purpose 
