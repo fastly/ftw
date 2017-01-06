@@ -5,13 +5,16 @@ import sys
 def test_cookies1():
     """Tests accessing a site that sets a cookie and then wants to resend the cookie"""
     http_ua = http.HttpUA()
-    x = ruleset.Input(dest_addr="ieee.org",headers={"Host":"ieee.org"})    
+    x = ruleset.Input(dest_addr="ieee.org",headers={"Host":"ieee.org"})
     http_ua.send_request(x)
     with pytest.raises(KeyError):
         print http_ua.request_object.headers["cookie"]
-    x = ruleset.Input(dest_addr="ieee.org",headers={"Host":"ieee.org"})    
+    assert("set-cookie" in http_ua.response_object.headers.keys())
+    cookie_data = http_ua.response_object.headers["set-cookie"]
+    cookie_var = cookie_data.split("=")[0]
+    x = ruleset.Input(dest_addr="ieee.org",headers={"Host":"ieee.org"})
     http_ua.send_request(x)
-    assert(http_ua.request_object.headers["cookie"].split('=')[0] == "TS01293935")
+    assert(http_ua.request_object.headers["cookie"].split('=')[0] == cookie_var)
 
 def test_cookies2():
     """Test to make sure that we don't override user specified cookies"""
