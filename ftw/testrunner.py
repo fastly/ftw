@@ -54,6 +54,25 @@ class TestRunner(object):
         else:
             assert False
 
+    def run_stage_with_journal(self, stage, logger_obj=None, journal=None):
+        pass
+
+    def run_test_build_journal(self, rule_id, test, cur, table_name):
+        """
+        Build journal entries from a test within a specified rule_id
+        Pass in the rule_id, test object, cursor to SQL and table_name
+        """
+        for stage in test.stages:
+            http_ua = http.HttpUA()
+            start = datetime.datetime.now()
+            http_ua.send_request(stage.input)
+            end = datetime.datetime.now()
+            response = http_ua.response_object.response
+            status = http_ua.response.status
+            ins_q = util.get_insert_statement(table_name) 
+            cur.execute(ins_q, (rule_id, test.test_title, start, end, response, status))
+            cur.commit()
+
     def run_stage(self, stage, logger_obj=None, http_ua=None):
         """
         Runs a stage in a test by building an httpua object with the stage

@@ -3,27 +3,6 @@ import ruleset
 import util
 import os
 
-def get_rulesets(ruledir, recurse):
-    """
-    List of ruleset objects extracted from the yaml directory
-    """
-    if os.path.isdir(ruledir) and recurse:
-        yaml_files = []
-        for root, dirs, files in os.walk(ruledir):
-            for name in files:
-                filename, file_extension = os.path.splitext(name)
-                if file_extension == '.yaml':
-                    yaml_files.append(os.path.join(root, name))
-    if os.path.isdir(ruledir) and not recurse:
-        yaml_files = util.get_files(ruledir, 'yaml')
-    elif os.path.isfile(ruledir):
-        yaml_files = [ruledir]
-    extracted_files = util.extract_yaml(yaml_files)
-    rulesets = []
-    for extracted_yaml in extracted_files:
-        rulesets.append(ruleset.Ruleset(extracted_yaml))
-    return rulesets
-
 def get_testdata(rulesets):
     """
     In order to do test-level parametrization (is this a word?), we have to
@@ -65,6 +44,26 @@ def http_serv_obj():
     """
     return HTTPServer(('localhost', 80), SimpleHTTPRequestHandler)
 
+@pytest.fixture
+def build_journal():
+    """
+    Build a testing journal
+    """
+    return request.config.getoption('--build-journal')
+
+@pytest.fixture
+def with_journal():
+    """
+    Return full path of the testing journal
+    """
+    return request.config.getoption('--with-journal')
+
+@pytest.fixture
+def rulesets():
+    """
+    Get rulesets
+    """
+
 def pytest_addoption(parser):
     """
     Adds command line options to py.test
@@ -77,6 +76,10 @@ def pytest_addoption(parser):
         help='fully qualified path to one rule')
     parser.addoption('--ruledir_recurse', action='store', default=None,
         help='walk the directory structure finding YAML files')        
+    parser.addoption('--build-journal', action='store_true',
+        help='build a journal file that stores response objects in a database for testing')
+    parser.addoption('--with-journal', action='store', default=None,
+        help='pass in a journal database file to test')
 
 def pytest_generate_tests(metafunc):
     """
@@ -87,11 +90,11 @@ def pytest_generate_tests(metafunc):
     # Check if we have any arguments by creating a list of supplied args we want
     if [i for i in options if i in args and args[i] != None] :
         if metafunc.config.option.ruledir:
-            rulesets = get_rulesets(metafunc.config.option.ruledir, False)
+            rulesets = util.get_rulesets(metafunc.config.option.ruledir, False)
         if metafunc.config.option.ruledir_recurse:
-            rulesets = get_rulesets(metafunc.config.option.ruledir_recurse, True)            
+            rulesets = util.get_rulesets(metafunc.config.option.ruledir_recurse, True)            
         if metafunc.config.option.rule:
-            rulesets = get_rulesets(metafunc.config.option.rule, False)
+            rulesets = util.get_rulesets(metafunc.config.option.rule, False)
         if 'ruleset' in metafunc.fixturenames and 'test' in metafunc.fixturenames:
             metafunc.parametrize('ruleset,test', get_testdata(rulesets),
                 ids=test_id)
