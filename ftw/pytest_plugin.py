@@ -45,24 +45,11 @@ def http_serv_obj():
     return HTTPServer(('localhost', 80), SimpleHTTPRequestHandler)
 
 @pytest.fixture
-def build_journal():
-    """
-    Build a testing journal
-    """
-    return request.config.getoption('--build-journal')
-
-@pytest.fixture
 def with_journal():
     """
     Return full path of the testing journal
     """
     return request.config.getoption('--with-journal')
-
-@pytest.fixture
-def rulesets():
-    """
-    Get rulesets
-    """
 
 def pytest_addoption(parser):
     """
@@ -76,8 +63,6 @@ def pytest_addoption(parser):
         help='fully qualified path to one rule')
     parser.addoption('--ruledir_recurse', action='store', default=None,
         help='walk the directory structure finding YAML files')        
-    parser.addoption('--build-journal', action='store_true',
-        help='build a journal file that stores response objects in a database for testing')
     parser.addoption('--with-journal', action='store', default=None,
         help='pass in a journal database file to test')
 
