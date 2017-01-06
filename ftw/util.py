@@ -4,6 +4,7 @@ import glob
 import yaml
 import os
 import sqlite3
+import ruleset
 from glob import glob
 
 def get_insert_statement(table_name):
