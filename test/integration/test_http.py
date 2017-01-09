@@ -156,11 +156,11 @@ def test5():
     assert http_ua.response_object.status == 505
     
 def test6():
-    """Basic GET without Host with invalid version (request line) - Expect 400 invalid"""
+    """Basic GET without Host with invalid version (request line) - Expect 505 not supported"""
     x = ruleset.Input(dest_addr="example.com",version="HTTP/1.0 x",headers={})
     http_ua = http.HttpUA()
     http_ua.send_request(x)
-    assert http_ua.response_object.status == 400
+    assert http_ua.response_object.status == 505
 
 def test7():
     """TEST method which doesn't exist - Expect 501"""
