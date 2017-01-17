@@ -57,11 +57,14 @@ class TestRunner(object):
     def run_stage_with_journal(self, stage, logger_obj=None, journal=None):
         pass
 
-    def run_test_build_journal(self, rule_id, test, cur, table_name):
+    def run_test_build_journal(self, rule_id, test, journal_file, tablename):
         """
         Build journal entries from a test within a specified rule_id
-        Pass in the rule_id, test object, cursor to SQL and table_name
+        Pass in the rule_id, test object, and path to journal_file 
+        DB MUST already be instantiated from util.instantiate_database()
         """
+        conn = sqlite3.connect(journal_file)
+        cur = conn.cursor()
         for stage in test.stages:
             http_ua = http.HttpUA()
             start = datetime.datetime.now()
@@ -69,9 +72,9 @@ class TestRunner(object):
             end = datetime.datetime.now()
             response = http_ua.response_object.response
             status = http_ua.response.status
-            ins_q = util.get_insert_statement(table_name) 
+            ins_q = util.get_insert_statement(tablename) 
             cur.execute(ins_q, (rule_id, test.test_title, start, end, response, status))
-            cur.commit()
+            conn.commit()
 
     def run_stage(self, stage, logger_obj=None, http_ua=None):
         """
