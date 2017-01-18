@@ -75,6 +75,8 @@ class TestRunner(object):
         conn = sqlite3.connect(journal_file)
         cur = conn.cursor()
         for stage in test.stages:
+            response = None
+            status = None
             try:
                 print 'Running test %s from rule file %s' % (test.test_title, rule_id)
                 http_ua = http.HttpUA()
