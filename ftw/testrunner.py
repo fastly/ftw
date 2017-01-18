@@ -5,6 +5,7 @@ import pytest
 import ruleset
 import util
 import re
+import sqlite3
 
 class TestRunner(object):
     """
@@ -54,7 +55,15 @@ class TestRunner(object):
         else:
             assert False
 
-    def run_stage_with_journal(self, stage, logger_obj=None, journal=None):
+    def run_stage_with_journal(self, test, journal_file, tablename, logger_obj):
+        """
+        Compare entries and responses in a journal file with a logger object
+        This will follow similar logic as run_stage, where a logger_obj.get_logs()
+        MUST be implemented by the user so times can be retrieved and compared
+        against the responses logged in the journal db
+        """
+        conn = sqlite3.connect(journal_file)
+        cur = conn.cursor()
         pass
 
     def run_test_build_journal(self, rule_id, test, journal_file, tablename):
@@ -66,15 +75,22 @@ class TestRunner(object):
         conn = sqlite3.connect(journal_file)
         cur = conn.cursor()
         for stage in test.stages:
-            http_ua = http.HttpUA()
-            start = datetime.datetime.now()
-            http_ua.send_request(stage.input)
-            end = datetime.datetime.now()
-            response = http_ua.response_object.response
-            status = http_ua.response.status
-            ins_q = util.get_insert_statement(tablename) 
-            cur.execute(ins_q, (rule_id, test.test_title, start, end, response, status))
-            conn.commit()
+            try:
+                print 'Running test %s from rule file %s' % (test.test_title, rule_id)
+                http_ua = http.HttpUA()
+                start = datetime.datetime.now()
+                http_ua.send_request(stage.input)
+                end = datetime.datetime.now()
+                response = http_ua.response_object.response
+                status = http_ua.response_object.status
+            except ftw.errors.TestError as e:
+                print '%s got error. %s' % (test.test_title, str(e))
+                response = e.args
+                status = -1
+            finally:
+                ins_q = util.get_insert_statement(tablename)
+                cur.execute(ins_q, (rule_id, test.test_title, start, end, response, status))
+                conn.commit()
 
     def run_stage(self, stage, logger_obj=None, http_ua=None):
         """
