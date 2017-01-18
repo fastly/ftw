@@ -1,6 +1,5 @@
 from __future__ import print_function
 
-import glob
 import yaml
 import os
 import sqlite3
@@ -69,7 +68,7 @@ def get_files(directory, extension):
     Take a directory and an extension and return the files
     that match the extension
     """
-    return glob.glob('%s/*.%s' % (directory, extension))
+    return glob('%s/*.%s' % (directory, extension))
 
 
 def extract_yaml(yaml_files):

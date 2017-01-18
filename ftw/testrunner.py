@@ -73,6 +73,7 @@ class TestRunner(object):
         DB MUST already be instantiated from util.instantiate_database()
         """
         conn = sqlite3.connect(journal_file)
+        conn.text_factory = str
         cur = conn.cursor()
         for stage in test.stages:
             response = None
@@ -84,9 +85,9 @@ class TestRunner(object):
                 http_ua.send_request(stage.input)
                 response = http_ua.response_object.response
                 status = http_ua.response_object.status
-            except ftw.errors.TestError as e:
+            except errors.TestError as e:
                 print '%s got error. %s' % (test.test_title, str(e))
-                response = e.args
+                response = str(e)
                 status = -1
             finally:
                 end = datetime.datetime.now()
