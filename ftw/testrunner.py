@@ -80,7 +80,6 @@ class TestRunner(object):
                 http_ua = http.HttpUA()
                 start = datetime.datetime.now()
                 http_ua.send_request(stage.input)
-                end = datetime.datetime.now()
                 response = http_ua.response_object.response
                 status = http_ua.response_object.status
             except ftw.errors.TestError as e:
@@ -88,6 +87,7 @@ class TestRunner(object):
                 response = e.args
                 status = -1
             finally:
+                end = datetime.datetime.now()
                 ins_q = util.get_insert_statement(tablename)
                 cur.execute(ins_q, (rule_id, test.test_title, start, end, response, status))
                 conn.commit()
