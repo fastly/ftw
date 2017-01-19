@@ -1,4 +1,5 @@
 import datetime
+from dateutil import parser
 import errors
 import http
 import pytest
@@ -37,20 +38,12 @@ class TestRunner(object):
         else:
             assert found
 
-    def test_response(self, response_object, regex):
+    def test_response(self, response, regex):
         """
         Checks if the response response contains a regex specified in the
         output stage. It will assert that the regex is present.
         """
-        if response_object is None:
-            raise errors.TestError(
-                'Searching before response received',
-                {
-                    'regex': regex,
-                    'response_object': response_object,
-                    'function': 'testrunner.TestRunner.test_response'
-                })
-        if regex.search(response_object.response):
+        if regex.search(response):
             assert True
         else:
             assert False
@@ -61,7 +54,7 @@ class TestRunner(object):
         Possible SQL injection here, but since its sqlite and if someone had control of the python script
         and the sqlite database, they can just open the database/modify it without using our program
         """
-        q = 'SELECT * FROM %s WHERE stage = ? AND test_title = ?' % tablename
+        q = 'SELECT * FROM %s WHERE stage = ? AND test_id = ?' % tablename
         return q
 
     def run_stage_with_journal(self, rule_id, test, journal_file, tablename, logger_obj):
@@ -81,7 +74,7 @@ class TestRunner(object):
             Compare against logger_obj
             '''
             q = self.query_for_stage_results(tablename)
-            results = cur.execute(q, [test.test_title, i]).fetchall()
+            results = cur.execute(q, [i, test.test_title]).fetchall()
             if len(results) == 0:
                 raise errors.TestError(
                     'SQL Query did not return results for test',
@@ -92,7 +85,11 @@ class TestRunner(object):
                         'stage_num': i,
                         'function': 'testrunner.TestRunner.run_stage_with_journal'
                     })
-            import pdb; pdb.set_trace()
+            result = results[0]
+            start = parser.parse(result[2])
+            end = parser.parse(result[3])
+            response = result[4]
+            status = result[5]
             if (stage.output.log_contains_str or stage.output.no_log_contains_str):
                 logger_obj.set_times(start, end)
                 lines = logger_obj.get_logs() 
@@ -102,11 +99,10 @@ class TestRunner(object):
                     # The last argument means that we should negate the resp
                     self.test_log(lines, stage.output.no_log_contains_str, True)
             if stage.output.response_contains_str:
-                self.test_response(http_ua.response_object,
+                self.test_response(response,
                                    stage.output.response_contains_str)
             if stage.output.status:
-                self.test_status(stage.output.status,
-                                 http_ua.response_object.status)
+                self.test_status(stage.output.status, status)
 
     def run_test_build_journal(self, rule_id, test, journal_file, tablename):
         """

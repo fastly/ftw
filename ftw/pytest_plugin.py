@@ -45,11 +45,18 @@ def http_serv_obj():
     return HTTPServer(('localhost', 80), SimpleHTTPRequestHandler)
 
 @pytest.fixture
-def with_journal():
+def with_journal(request):
     """
     Return full path of the testing journal
     """
     return request.config.getoption('--with-journal')
+
+@pytest.fixture
+def tablename(request):
+    """
+    Set table name for journaling
+    """
+    return request.config.getoption('--tablename')
 
 def pytest_addoption(parser):
     """
@@ -65,6 +72,8 @@ def pytest_addoption(parser):
         help='walk the directory structure finding YAML files')        
     parser.addoption('--with-journal', action='store', default=None,
         help='pass in a journal database file to test')
+    parser.addoption('--tablename', action='store', default=None,
+        help='pass in a tablename to parse journal results')
 
 def pytest_generate_tests(metafunc):
     """
