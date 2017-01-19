@@ -38,7 +38,25 @@ class TestRunner(object):
         else:
             assert found
 
-    def test_response(self, response, regex):
+    def test_response(self, response_object, regex):
+        """
+        Checks if the response response contains a regex specified in the
+        output stage. It will assert that the regex is present.
+        """
+        if response_object is None:
+            raise errors.TestError(
+                'Searching before response received',
+                {
+                    'regex': regex,
+                    'response_object': response_object,
+                    'function': 'testrunner.TestRunner.test_response'
+                })
+        if regex.search(response_object.response):
+            assert True
+        else:
+            assert False
+
+    def test_response_str(self, response, regex):
         """
         Checks if the response response contains a regex specified in the
         output stage. It will assert that the regex is present.
@@ -99,7 +117,7 @@ class TestRunner(object):
                     # The last argument means that we should negate the resp
                     self.test_log(lines, stage.output.no_log_contains_str, True)
             if stage.output.response_contains_str:
-                self.test_response(response,
+                self.test_response_str(response,
                                    stage.output.response_contains_str)
             if stage.output.status:
                 self.test_status(stage.output.status, status)
