@@ -10,7 +10,7 @@ def get_insert_statement(table_name):
     """
     Prepare SQL statement to be inserted into the FTW journal
     """
-    q = 'INSERT INTO {tn} (rule_id, test_id, time_start, time_end, response_blob, status_code) VALUES(?, ?, ?, ?, ?, ?)'.format(
+    q = 'INSERT INTO {tn} (rule_id, test_id, time_start, time_end, response_blob, status_code, stage) VALUES(?, ?, ?, ?, ?, ?, ?)'.format(
         tn=table_name)
     return q
     
@@ -32,17 +32,20 @@ def instantiate_database(sqlite_file='ftwj.sqlite'):
     col5_t = 'TEXT'
     col6 = 'status_code'
     col6_t = 'INTEGER'
+    col7 = 'stage'
+    col7_t = 'INTEGER'
     conn = sqlite3.connect(sqlite_file)
     cur = conn.cursor()
 
-    q = 'CREATE TABLE {tn}({col1} {col1_t},{col2} {col2_t},{col3} {col3_t},{col4} {col4_t},{col5} {col5_t},{col6} {col6_t})'.format(
+    q = 'CREATE TABLE {tn}({col1} {col1_t},{col2} {col2_t},{col3} {col3_t},{col4} {col4_t},{col5} {col5_t},{col6} {col6_t},{col7} {col7_t})'.format(
         tn=table_name,
         col1=col1, col1_t=col1_t,
         col2=col2, col2_t=col2_t,
         col3=col3, col3_t=col3_t,
         col4=col4, col4_t=col4_t,
         col5=col5, col5_t=col5_t,
-        col6=col6, col6_t=col6_t)
+        col6=col6, col6_t=col6_t,
+        col7=col7, col7_t=col7_t)
     cur.execute(q)
     conn.commit()
     conn.close()

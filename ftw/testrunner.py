@@ -55,7 +55,7 @@ class TestRunner(object):
         else:
             assert False
 
-    def run_stage_with_journal(self, test, journal_file, tablename, logger_obj):
+    def run_stage_with_journal(self, rule_id, test, journal_file, tablename, logger_obj):
         """
         Compare entries and responses in a journal file with a logger object
         This will follow similar logic as run_stage, where a logger_obj.get_logs()
@@ -63,8 +63,28 @@ class TestRunner(object):
         against the responses logged in the journal db
         """
         conn = sqlite3.connect(journal_file)
+        conn.text_factory = str
         cur = conn.cursor()
-        pass
+        for stage in test.stages:
+            '''
+            Query DB here for rule_id & test_title
+            Compare against logger_obj
+            '''
+            if (stage.output.log_contains_str or stage.output.no_log_contains_str) \
+            and logger_obj is not None:
+                logger_obj.set_times(start, end)
+                lines = logger_obj.get_logs() 
+                if stage.output.log_contains_str:
+                    self.test_log(lines, stage.output.log_contains_str, False)
+                if stage.output.no_log_contains_str:
+                    # The last argument means that we should negate the resp
+                    self.test_log(lines, stage.output.no_log_contains_str, True)
+            if stage.output.response_contains_str:
+                self.test_response(http_ua.response_object,
+                                   stage.output.response_contains_str)
+            if stage.output.status:
+                self.test_status(stage.output.status,
+                                 http_ua.response_object.status)
 
     def run_test_build_journal(self, rule_id, test, journal_file, tablename):
         """
@@ -75,7 +95,7 @@ class TestRunner(object):
         conn = sqlite3.connect(journal_file)
         conn.text_factory = str
         cur = conn.cursor()
-        for stage in test.stages:
+        for i, stage in enumerate(test.stages):
             response = None
             status = None
             try:
@@ -92,7 +112,7 @@ class TestRunner(object):
             finally:
                 end = datetime.datetime.now()
                 ins_q = util.get_insert_statement(tablename)
-                cur.execute(ins_q, (rule_id, test.test_title, start, end, response, status))
+                cur.execute(ins_q, (rule_id, test.test_title, start, end, response, status, i))
                 conn.commit()
 
     def run_stage(self, stage, logger_obj=None, http_ua=None):
