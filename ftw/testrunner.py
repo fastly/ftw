@@ -55,6 +55,15 @@ class TestRunner(object):
         else:
             assert False
 
+    def query_for_stage_results(self, tablename):
+        """
+        Construct query for sqlite database for a specific stage run from a journal
+        Possible SQL injection here, but since its sqlite and if someone had control of the python script
+        and the sqlite database, they can just open the database/modify it without using our program
+        """
+        q = 'SELECT * FROM %s WHERE stage = ? AND test_title = ?' % tablename
+        return q
+
     def run_stage_with_journal(self, rule_id, test, journal_file, tablename, logger_obj):
         """
         Compare entries and responses in a journal file with a logger object
@@ -62,16 +71,29 @@ class TestRunner(object):
         MUST be implemented by the user so times can be retrieved and compared
         against the responses logged in the journal db
         """
+        assert logger_obj is not None
         conn = sqlite3.connect(journal_file)
         conn.text_factory = str
         cur = conn.cursor()
-        for stage in test.stages:
+        for i, stage in enumerate(test.stages):
             '''
             Query DB here for rule_id & test_title
             Compare against logger_obj
             '''
-            if (stage.output.log_contains_str or stage.output.no_log_contains_str) \
-            and logger_obj is not None:
+            q = self.query_for_stage_results(tablename)
+            results = cur.execute(q, [test.test_title, i]).fetchall()
+            if len(results) == 0:
+                raise errors.TestError(
+                    'SQL Query did not return results for test',
+                    {
+                        'rule_id': rule_id,
+                        'test': test.test_title,
+                        'query': q,
+                        'stage_num': i,
+                        'function': 'testrunner.TestRunner.run_stage_with_journal'
+                    })
+            import pdb; pdb.set_trace()
+            if (stage.output.log_contains_str or stage.output.no_log_contains_str):
                 logger_obj.set_times(start, end)
                 lines = logger_obj.get_logs() 
                 if stage.output.log_contains_str:
