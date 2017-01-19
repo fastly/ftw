@@ -15,7 +15,7 @@ def test_search1():
     x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
     http_ua = http.HttpUA() 
     with pytest.raises(errors.TestError):    
-        runner.test_response(http_ua.response_object,re.compile('dog'))
+        runner.test_response(http_ua.response_object.response,re.compile('dog'))
 
 # Should return a failure because it is searching for a word not there
 def test_search2():   
@@ -24,7 +24,7 @@ def test_search2():
     http_ua = http.HttpUA()
     http_ua.send_request(x)    
     with pytest.raises(AssertionError):   
-        runner.test_response(http_ua.response_object,re.compile('dog'))
+        runner.test_response(http_ua.response_object.response,re.compile('dog'))
 
 # Should return a success because it is searching for a word not there
 def test_search3():
@@ -32,7 +32,7 @@ def test_search3():
     x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
     http_ua = http.HttpUA()
     http_ua.send_request(x)    
-    runner.test_response(http_ua.response_object,re.compile('established to be used for'))
+    runner.test_response(http_ua.response_object.response,re.compile('established to be used for'))
 
 # Should return a success because we found our regex
 def test_search4():   
@@ -40,5 +40,5 @@ def test_search4():
     x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
     http_ua = http.HttpUA()
     http_ua.send_request(x)      
-    runner.test_response(http_ua.response_object,re.compile('.*'))       
+    runner.test_response(http_ua.response_object.response,re.compile('.*'))       
  
