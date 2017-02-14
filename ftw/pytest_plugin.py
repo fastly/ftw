@@ -6,7 +6,7 @@ import os
 def get_testdata(rulesets):
     """
     In order to do test-level parametrization (is this a word?), we have to
-    bundle the test data from rulesets into tuples so py.test can understand 
+    bundle the test data from rulesets into tuples so py.test can understand
     how to run tests across the whole suite of rulesets
     """
     testdata = []
@@ -36,6 +36,22 @@ def destaddr(request):
     Destination address override for tests
     """
     return request.config.getoption('--destaddr')
+
+@pytest.fixture
+def port(request):
+    """
+    Destination port override for tests
+    """
+
+    return request.config.getoption('--port')
+
+@pytest.fixture
+def protocol(request):
+    """
+    Destination protocol override for tests
+    """
+
+    return request.config.getoption('--protocol')
 
 @pytest.fixture
 def http_serv_obj():
@@ -69,11 +85,16 @@ def pytest_addoption(parser):
     parser.addoption('--rule', action='store', default=None,
         help='fully qualified path to one rule')
     parser.addoption('--ruledir_recurse', action='store', default=None,
-        help='walk the directory structure finding YAML files')        
+        help='walk the directory structure finding YAML files')
     parser.addoption('--with-journal', action='store', default=None,
         help='pass in a journal database file to test')
     parser.addoption('--tablename', action='store', default=None,
         help='pass in a tablename to parse journal results')
+    parser.addoption('--port', action='store', default=None,
+        help='destination port to direct tests towards', choices=range(1,65536),
+        type=int)
+    parser.addoption('--protocol', action='store',default=None,
+        help='destination protocol to direct tests towards', choices=['http','https'])
 
 def pytest_generate_tests(metafunc):
     """
@@ -86,7 +107,7 @@ def pytest_generate_tests(metafunc):
         if metafunc.config.option.ruledir:
             rulesets = util.get_rulesets(metafunc.config.option.ruledir, False)
         if metafunc.config.option.ruledir_recurse:
-            rulesets = util.get_rulesets(metafunc.config.option.ruledir_recurse, True)            
+            rulesets = util.get_rulesets(metafunc.config.option.ruledir_recurse, True)
         if metafunc.config.option.rule:
             rulesets = util.get_rulesets(metafunc.config.option.rule, False)
         if 'ruleset' in metafunc.fixturenames and 'test' in metafunc.fixturenames:
