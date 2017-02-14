@@ -24,8 +24,8 @@ Goals / Use cases include:
 ## Provisioning Apache+Modsecurity+OWASP CRS
 If you require an environment for testing WAF rules, there has been one created with Apache, Modsecurity and version 3.0.0 of the OWASP core ruleset. This can be deployed by:
 
-* Checking out the repository: ``git clone https://github.com/fastly/waf_testbed.git```
-* Typeing ```vagrant up```
+* Checking out the repository: ``git clone https://github.com/fastly/waf_testbed.git``
+* Typing ```vagrant up```
 
 ## Running Tests while overriding destination address in the yaml files to custom domain
 * *start your test web server*

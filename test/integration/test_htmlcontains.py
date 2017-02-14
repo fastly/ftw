@@ -40,5 +40,5 @@ def test_search4():
     x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
     http_ua = http.HttpUA()
     http_ua.send_request(x)      
-    runner.test_response(http_ua.response_object,re.compile('.*'))       
+    runner.test_response(http_ua.response_object,re.compile('.*'))
  
