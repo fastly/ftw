@@ -14,16 +14,15 @@ script:
 - py.test test/integration/test_cookie.py -s -v --rule=test/integration/COOKIEFIXTURE.yaml
 - py.test test/integration/test_multipart.py -s -v --rule=test/integration/MULTIPART.yaml
 - py.test test/integration/test_expecterror.py -s -v --rule=test/integration/EXPECTERRORFIXTURE.yaml
-
 after_success:
-  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-  - export REPO=zma4580/ftw
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-  - docker build -f Dockerfile -t $REPO:$COMMIT .
-  - docker tag $REPO:$COMMIT $REPO:$TAG
-  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
-  - docker push $REPO
-
+- docker login -e $DOCKER_EMAIL -u zma4580 -p $DOCKER_PASS
+- export REPO=zma4580/ftw
+- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH
+  ; fi`
+- docker build -f Dockerfile -t $REPO:$COMMIT .
+- docker tag $REPO:$COMMIT $REPO:$TAG
+- docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+- docker push $REPO
 deploy:
 - provider: pypi
   distributions: sdist
@@ -34,16 +33,14 @@ deploy:
     branch: master
     tags: true
     condition: $TRAVIS_PYTHON_VERSION = "2.7"
-env:
-  global:
-  - secure: B42C72tTennCEM+JZGGqmnZzMeH/vfqmlKv+xixMQ/I0EqdiYFfYh27I6rIlcNiiN9GO+PTiotnZLkSTGdlJ7ZJcvgbgftFeIkBZ046VI/3DCwbdKfNwDmA0rKJVjk26Pxw8tApqZ/Tr6dro/qFU2T09DFr7vIWzXqWs9clKu2QCxVocJW9pGvWOIyyVp2teUQav4hbu+1+vF5IWF4sW67+gakvI0GfcUvKYdPsgwnnOQ/dd+D6eiTsFLxWtj0ve2JEuMfF96EQLP/36D/BETjpjkYIWINceuFOPrtjDh7Kga6DEAB1lPm4oKsbACmDD+PL4ISrMrAM+4cFs6zXgwH2Qb67RJmiWFNqC9Mw4Z+IWu8HcU6Dw72JWBGFBANBsiEL5/UV0N6Nm0UjTBxGAdHTA6o4H0pvfoFpDKMuV45m+YzVdR3O2kxwz+9qVpZWHkhfdSqpU69VNOQS25d73ZsnO0rR6WqoB3D37LSD3JCwACtRL1e0AvpdBkPkWRqmgb+q1e8vYvynKcRJY/+2zsxlIQFIaBWOL5G085th3XymMAZqjD/NG97yKPf4BZ7C/rqD0cCyfxKF3zqx+3eToIbT+CdfjAcFR2Y+RA2hS0Q9vLdx/vm7P23Hf2Ra2BCrMUsbMar6m4APVbs+f13s0im+XVUwgq7Mqv12HVPkF8yI=
-  - secure: hfSLYIlj2ML1bKMTR67x9nGJHtCV07aWGPMi87sW55fWX/+1BZ/WsD1Ly7B6EvxdvfVLJ29tMe5yKF53n27Y8e0I6T6C1Nbmc2QQi0B2077g3lS5eG80SE/JWsHocwEbXh70WdjIiKkW1Y2msfPBvIfa433NrovsA5rpT58fn+VafBc2ruuvPDr0zhRHsWPk2t0kJPh5Xpjw4zBDP3w+e9LMcOBtnhianfOGISP1YDHOWrm7v6JkLEtbCMwBIYRlupd5NIMZnKDuHE/xh67XWOWuZnNCxLbC2X0yNGTNuQ6DJkrrmGtS4U7J+EHn6+2F4io7hNyydkTCiLbI1JymYQI4tBuU4B6W68EkMok+zi+iGJ9LhjL5xm9cvLw1sfJipv6UEpbaYX2Aa232Y4kge/h+nLB/YM8PSGr9gU1a6gjgGqrIDkWc462Mmxaoc9mIbK2WExx5YmHmrzmsHk2hkwVv0WR3d6YTrj1CecnVQGYL8vFJy278jB38rlkU6fml8ZLfTmAaFJudqPCo7sKlZeqd/wuoRkvdbL73Iy5Q3FDtueQfchx5hUNxJJaLTJVTHXgP9DI5Qrb+AyGYZW4lKk3AhANNYVqkQ2TZhwC48fQ9FurbowchmFICV9VQoHmuCXzSMUyO+pDVWHAUaufa0+SW48P0IX34zLOObvp481s=
-  - secure: Rmkcj7JkIycLiAmO7C5bXnFu/jVufw8ds4oXX9XcxztDALhk0HyUjyh3CUhI5Op52V2xXS0GV4m9rynmK8FTocnmp4A+y9NpLCabaOOCBY3/VEzcRcecv3lvNSWxF9Rn1CpxDF2X0HaqBqBeGkvjt7P5vrVY+Z86lkEvXAFHvpwJrTp4/7LgDP0H1o3pFSSa0v+LZACiS78cdwdPFmK1mEZDxvkYWuLcMxVUEzfQZtUDFdYMPWr7pNAPPGeA5eTRxevTq8bNXo6gJmW8JNKyqE+rHisdgH8vxOcXY7IgszucA9RWXO0x+qS1K+Iz1pG/qW+rMeWX1+PI5hl2OQ8++UV08eYzjd3qD/hD17hwoDI4ullzMmUBBNG7rDFrS4zw+P/8d5NCXyhqq5rXDvX4vqbrXUQjhMeIGWTmPsUD6Lt2BFT/ciJPzHNsqgqSUYb83HFVLWzrVUYblOcB09k0XwFOOuBVmfoC0t9hykiX8vuzgdsukFSnskBI8zJ/TKwzOI/MJSIStzyMZ2A/V0hosF0Acjheth0MEjm3vw9fXC9pDjZHBzfQeYhqkxZ3cPLLMkDdboE579s9QAl6QEF5AfWI8rmZ/mMkAPh78cxSrNNbfQ1fHrlARNJ5AdPIuKfQ5je2E+d77sW+5tMtkJKLG445mb6j4PH/WqzSKrDyCvs=
-
 notifications:
   irc:
     channels:
-      - secure: "rUnggkHw6hYbjV8BHTebWCZxsblCMQtjPMYTe0aFUmjpsoziPXGfWMu3kxISgmMrog6vLcpomCcW68ysY3xcEHoY47U0tGEwtxwcHECht56cvqlT9TbUdhX7p+5RqNviHsAnuYBSxR42HXy535TWW8G6BmlkPcUfQKEdb8EgzUOJBvX8Z40FkBz6sMWzIluPdwBYcl3XthSpuVS8+891jvhHgtQTA2e8aXCeDXPPyrv9LSFKhT5/aNGvC6w8e+M74JFq5jeSGVI23i8OAhMyAKCzrCy2KoNd+azqTHwbpb9D/6tj9B0pGlaa2/ieefr8+fPm9JOPCLtG9BcnuCRpJ/nLgpnCy9pFoZsoECk4UwtQv4VwbEjiV9LK7xvjLBlE8r723tDtuopHgH+ob+dlMgGhEVUfl7T5Htxte2klMndNyaE6OFk6qcfnSnMPSWxtkUg/Dd23aGPxCI/sHikPiQQHKgT2Fz9ICafSzFC0cynpSZgG1c7TLugfS+RanMGnZLSjnL7xptYyuAI45XZpvV0LRd6L6gDBb9Mq+D9sZ11UrO+3zQqsDm6O2x6tPJuPs5oQIflevfovqKvpOZ5bWL4rZXWcnvIbxvfPuPKyslPY/ljkdGDCtXuAKPuE8k0e2DTF9LmJ+FRSWaPnsXyc/eyst2JYLzelZnoHXy8RTnw=" 
+    - secure: rUnggkHw6hYbjV8BHTebWCZxsblCMQtjPMYTe0aFUmjpsoziPXGfWMu3kxISgmMrog6vLcpomCcW68ysY3xcEHoY47U0tGEwtxwcHECht56cvqlT9TbUdhX7p+5RqNviHsAnuYBSxR42HXy535TWW8G6BmlkPcUfQKEdb8EgzUOJBvX8Z40FkBz6sMWzIluPdwBYcl3XthSpuVS8+891jvhHgtQTA2e8aXCeDXPPyrv9LSFKhT5/aNGvC6w8e+M74JFq5jeSGVI23i8OAhMyAKCzrCy2KoNd+azqTHwbpb9D/6tj9B0pGlaa2/ieefr8+fPm9JOPCLtG9BcnuCRpJ/nLgpnCy9pFoZsoECk4UwtQv4VwbEjiV9LK7xvjLBlE8r723tDtuopHgH+ob+dlMgGhEVUfl7T5Htxte2klMndNyaE6OFk6qcfnSnMPSWxtkUg/Dd23aGPxCI/sHikPiQQHKgT2Fz9ICafSzFC0cynpSZgG1c7TLugfS+RanMGnZLSjnL7xptYyuAI45XZpvV0LRd6L6gDBb9Mq+D9sZ11UrO+3zQqsDm6O2x6tPJuPs5oQIflevfovqKvpOZ5bWL4rZXWcnvIbxvfPuPKyslPY/ljkdGDCtXuAKPuE8k0e2DTF9LmJ+FRSWaPnsXyc/eyst2JYLzelZnoHXy8RTnw=
     template:
-      - "%{repository} (%{commit}) : %{message} %{foo} "
-      - "Build details: %{build_url}"
+    - "%{repository} (%{commit}) : %{message} %{foo} "
+    - 'Build details: %{build_url}'
+env:
+  global:
+  - secure: d0nccFfy8Jqys5K/ya4pxr6lKfTd8fgFwB8UvxHYLqQqy4WO/I2CN/pJF9EVkXdpQq9JqBT6CVBntHlFhJgXjkwT6DfBlTEYZRRBimOfi8bVI7rL+R3JWnv5J4zJvGKFT7Pq3h18IeR5+6cDPIuV7TJt5DUlveqUVhrHIl32RxOJlUmgqlFWJZ0Qw9ngYbiQf9Q6ypojhpviCR4AlUMlG4gV0Q9hypW94Qq3FXnnQyYMyH/xZ+UcdDjZU/rMnz1djIToTZgHarzR7PH5OuNRSVIAXT3Ei8KdgGsn1tzIAL1tba9wa2tca72KHIJhMldC5FpHIIgeJoka569sbLMEtEDCkDQjPi4o2lbmnD8Az+9aRZiCnTl6inD8Ih7keS9S+iPF+8aOLhEXwRG9kjCjW6nX3gUAVQS5vzEp4AfzzWEcqJPeTU0htXOUV9yGVXpZLYuOSifGzMfmfMbcEBElVQzyIs/TkGtVtrG6r6NMdhM6tSHHMo7rjyKhSdDdXszNT2ZTd5kNQH1FFsn0S7RFQe+z8v3lzga3H5aBA3sEnuS1URsx38VNE0hgX3/XufLWuWI7hIt4374Q3NkdE427WugHfsKfeE7uLe2DHDQJikHqCqB2tpdKHNWvJ25Oiihrnb/VYZq2ZRoSKRVka52fTbcIqJju0hMnEjTuRn/x4LU=
+  - secure: pjlL5RvSmSsLTCd7/GlGuoDAq9zdK3d+YH/BlPLmLOZuBKVEdwlxKNrEIEpL7yvOz0mPITTzP7jLvPz3smHIzArygmmHomVIv6bAVrJyli0eJNF2ZFQmcXFF2tECXMeocC/cGetXDjcRKr+s30IMwkmQhPCYs/Sftic0VMxcs9peo4qadB8U+onUV9YGYEn8IVbOHBuskp14xQqWvozy/cgrI9hbC+zuOdNMKZaoGzW5bO4Ai9oBqqPOOje6v8XDw6x2Yeqj5h4dnpoe2fW48pT8vax5UUKI8uW2fEyZDu6AMIlG5mxvlLK6gCSTZ/jSTRPF+w+tM907t8cCZe4j/Sr0eXHHCsjrGSYroD570nSjju88c92pNzM5qoHr3rF/L/29GF5Yp4AGhtJxaLUv3Tsc6WApA27IQa8QwmJYVgMBpybYfPiQM/6uk8eNHJoKlIrzBKjMefT0TVyucNxVcQPGclTFUnKpj58DYcyCFpzpoMyf44dghJOqaOfu6Q6Khvh080hooWUJuVZ3OeX4GL/cBDrZST09sxU5OaPJVm9ZcqCMrf0FPPLM8TPPEZn8fyr6F9kKizISWwMrG/EOBN+aADwcnYRqHezWKjQxfmv0YkS5bmk/wRPYqxKhK3ta9E4HSt7AEH3qT5WXSUc9ljb1JwQyUbqtx2AEexbArO8=
