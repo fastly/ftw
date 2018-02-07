@@ -105,7 +105,7 @@ You can change the target web using using `--destaddr` for example:
 An example with output:
 
 ```
-vagrant@ubuntu-xenial:~$ py.test test_ftw_rule.py --rule=942340.yaml --destaddr=ion.sqrt.ca
+vagrant@ubuntu-xenial:~$ py.test test_ftw_rule.py --rule=942340.yaml --destaddr=www.whatever.com
 ====================================== test session starts =======================================
 platform linux2 -- Python 2.7.12, pytest-2.9.1, py-1.5.2, pluggy-0.3.1
 rootdir: /home/vagrant, inifile: 
