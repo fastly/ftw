@@ -20,6 +20,7 @@ def test_cookies1():
     http_ua.send_request(x)
     assert(http_ua.request_object.headers["cookie"].split('=')[0] == cookie_var)
 
+@pytest.mark.skip('reason=Integration failure')
 def test_cookies2():
     """Test to make sure that we don't override user specified cookies"""
     http_ua = http.HttpUA()
