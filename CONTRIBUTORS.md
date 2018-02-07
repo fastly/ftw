@@ -4,8 +4,7 @@ How to contribute
 1. Open issues and tag them appropriately based on bug/feature request etc
 2. Follow PEP-8 compliance for code review
 3. `py.test` is used for testing, write integration/unit tests where necessary
-4. +1 required by @csanders-git or @zmallen for merge
-5. CI (eventually) required for merge 
+4. CI (eventually) required for merge 
 
 FTW contributors (sorted alphabetically)
 ============================================
@@ -17,7 +16,7 @@ FTW contributors (sorted alphabetically)
 
 * **[Ezekiel Templin](https://github.com/ezkl/)**
 
-	* Rule design
+  * Rule design
   * Documentation
 
 * **[Jared Stroud](https://github.com/jaredestroud/)**

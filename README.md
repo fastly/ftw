@@ -1,6 +1,5 @@
 ## Framework for Testing WAFs (FTW)
 [![Build Status](https://travis-ci.org/fastly/ftw.svg?branch=master)](https://travis-ci.org/fastly/ftw)
-[![PyPI version](https://badge.fury.io/py/ftw.svg)](https://badge.fury.io/py/ftw)
 
 ##### Purpose
 This project was created by researchers from ModSecurity and Fastly to help provide rigorous tests for WAF rules. It uses the OWASP Core Ruleset V3 as a baseline to test rules on a WAF. Each rule from the ruleset is loaded into a YAML file that issues HTTP requests that will trigger these rules.
