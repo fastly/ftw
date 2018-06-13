@@ -2,7 +2,7 @@ from ftw import ruleset, http, errors
 import pytest
 import sys
 
-=======
+
 '''
     NB: FIX ME
 '''
