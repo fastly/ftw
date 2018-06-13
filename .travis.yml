@@ -14,15 +14,7 @@ script:
 - py.test test/integration/test_cookie.py -s -v --rule=test/integration/COOKIEFIXTURE.yaml
 - py.test test/integration/test_multipart.py -s -v --rule=test/integration/MULTIPART.yaml
 - py.test test/integration/test_expecterror.py -s -v --rule=test/integration/EXPECTERRORFIXTURE.yaml
-after_success:
-- docker login -e $DOCKER_EMAIL -u zma4580 -p $DOCKER_PASS || exit 1
-- export REPO=zma4580/ftw
-- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH
-  ; fi`
-- docker build -f Dockerfile -t $REPO:$COMMIT . || exit 1
-- docker tag $REPO:$COMMIT $REPO:$TAG || exit 1
-- docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER || exit 1
-- docker push $REPO || exit 1
+
 deploy:
 - provider: pypi
   distributions: sdist
