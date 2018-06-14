@@ -1,13 +1,16 @@
 import argparse
 from ftw import util, testrunner
 
+def diag_print(test, rule_id):
+    print 'Running test %s from rule file %s' % (test.test_title, rule_id)
+
 def build_journal(journal_file, ruledir, ruledir_recurse, tablename, destaddr):
     util.instantiate_database(journal_file)
     rulesets = util.get_rulesets(ruledir, ruledir_recurse)
     for rule in rulesets:
         for test in rule.tests:
             runner = testrunner.TestRunner() 
-            runner.run_test_build_journal(test.ruleset_meta['name'], test, journal_file, tablename, destaddr)
+            runner.run_test_build_journal(test.ruleset_meta['name'], test, journal_file, tablename, destaddr, diag_print)
 
 def main():
     parser = argparse.ArgumentParser(description='Build FTW Journal database')
