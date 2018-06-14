@@ -12,7 +12,7 @@ while getopts "d:" opt; do
 done
 
 export PYTHONUNBUFFERED=1
-python /build_journal.py --ruledir_recurse --ruledir /CRS/tests --destaddr $destaddr
+python /opt/ftw/tools/build_journal.py --ruledir_recurse --ruledir /CRS/tests --destaddr $destaddr
 if [ $? -ne 0 ]; then
     echo "[errors] execution of the test fixture(s) failed"
     exit 1
