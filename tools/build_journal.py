@@ -22,6 +22,7 @@ def main():
     parser.add_argument('--destaddr', default=None,
         help='Destination host for the payloads')
     args = parser.parse_args()
+    destaddr = args.destaddr
     journal_file = args.journal
     ruledir = args.ruledir
     ruledir_recurse = args.ruledir_recurse
