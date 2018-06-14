@@ -23,8 +23,9 @@ def main():
     parser.add_argument('--tablename', default='ftw',
         help='Table name in journal sqlite database')
     parser.add_argument('--destaddr', default=None,
-        help='destaddr stuff')
+        help='Destination host for the payloads')
     args = parser.parse_args()
+    destaddr = args.destaddr
     journal_file = args.journal
     destaddr = args.destaddr
     ruledir = args.ruledir

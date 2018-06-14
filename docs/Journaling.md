@@ -19,7 +19,7 @@ Usage - Build the Journal
 2. `virtualenv ftwenv`
 3. `./ftwenv/bin/activate`
 4. `pip install -r requirements.txt`
-5. `./tools/build_journal.py --ruledir=dir`   
+5. `./tools/build_journal.py --ruledir dir`   
   * This will produce `journal.sqlite`
   * Check out the options in `build_journal.py` for specifying journal files, table names
 
