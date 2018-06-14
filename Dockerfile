@@ -1,5 +1,4 @@
 FROM python:2.7
-ADD OWASP-CRS-regressions/CRS_Tests.py /
 ADD docker/docker_entry.sh /
 ADD tools/build_journal.py /
 RUN chmod 0655 /build_journal.py
