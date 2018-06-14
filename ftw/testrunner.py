@@ -122,7 +122,7 @@ class TestRunner(object):
             if stage.output.status:
                 self.test_status(stage.output.status, status)
 
-    def run_test_build_journal(self, rule_id, test, journal_file, tablename, destaddr):
+    def run_test_build_journal(self, rule_id, test, journal_file, tablename, destaddr, callback):
         """
         Build journal entries from a test within a specified rule_id
         Pass in the rule_id, test object, and path to journal_file 
@@ -135,7 +135,8 @@ class TestRunner(object):
             response = None
             status = None
             try:
-                print 'Running test %s from rule file %s' % (test.test_title, rule_id)
+                if callback is not None:
+                    callback(test, rule_id)
                 if destaddr is not None:
                     stage.input.dest_addr = destaddr
                 http_ua = http.HttpUA()
