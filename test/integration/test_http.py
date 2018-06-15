@@ -2,6 +2,7 @@ from ftw import ruleset, http, errors
 import pytest
 import sys
 
+
 '''
     NB: FIX ME
 '''
@@ -29,6 +30,7 @@ def test_cookies2():
     x = ruleset.Input(dest_addr="ieee.org",headers={"Host":"ieee.org","cookie":"TS01293935=012f3506234413e6c5cb14e8c0d5bf890fdd02481614b01cd6cd30911c6733e3e6f79e72aa"})    
     http_ua.send_request(x)
     assert('TS01293935=012f3506234413e6c5cb14e8c0d5bf890fdd02481614b01cd6cd30911c6733e3e6f79e72aa' in http_ua.request_object.headers["cookie"])
+
 
 '''
     NB: FIX ME
