@@ -3,12 +3,12 @@
 from setuptools import setup
 
 setup(name='ftw',
-      version='1.1.0',
+      version='1.2.0',
       description='Framework for Testing WAFs',
       author='Chaim Sanders, Zack Allen',
       author_email='zma4580@gmail.com, chaim.sanders@gmail.com',
       url='https://www.github.com/fastly/ftw',
-      download_url='https://github.com/fastly/ftw/tarball/1.1.0',
+      download_url='https://github.com/fastly/ftw/tarball/1.2.0',
       entry_points = {
         'pytest11': [
             'ftw = ftw.pytest_plugin'
