@@ -18,10 +18,11 @@ FTW contributors (sorted alphabetically)
 
   * Rule design
   * Documentation
+  * Docker
 
 * **[Jared Stroud](https://github.com/jaredestroud/)**
   * HTTP Library
-  * Docker Adviser
+  * Docker Adviser (earlier revisions)
 
 * **[Zack Allen](https://github.com/zmallen/)**
 
