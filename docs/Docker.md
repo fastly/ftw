@@ -11,7 +11,7 @@ all the CRS tests with FTW.
 
 ## Running the image
 
-Run through the entire CRS v3 test corpus with <hostname> as the target. *NOTE:* the `-i` is required to attach stdin to the docker container.
+Run through the entire CRS v3 test corpus with `<hostname>` as the target. *NOTE:* the `-i` is required to attach stdin to the docker container.
 
 ```
 	% docker run -i ftw-test -d <hostname>
