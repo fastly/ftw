@@ -27,7 +27,6 @@ def main():
     args = parser.parse_args()
     destaddr = args.destaddr
     journal_file = args.journal
-    destaddr = args.destaddr
     ruledir = args.ruledir
     ruledir_recurse = args.ruledir_recurse
     tablename = args.tablename
