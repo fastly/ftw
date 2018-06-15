@@ -21,6 +21,7 @@ FTW contributors (sorted alphabetically)
 
 * **[Jared Stroud](https://github.com/jaredestroud/)**
   * HTTP Library
+  * Docker Adviser
 
 * **[Zack Allen](https://github.com/zmallen/)**
 
