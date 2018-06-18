@@ -26,5 +26,5 @@ Test individual rule files:
 If you are testing through the CDN, you can use `-F` to use the target specification has the host header.
 
 ```
-        % docker run -i ftw-test -F -d <hostname> -f - < mytest.yaml
+	% docker run -i ftw-test -F -d <hostname> -f - < mytest.yaml
 ```
