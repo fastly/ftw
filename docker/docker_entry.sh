@@ -3,9 +3,13 @@
 
 destaddr="127.0.0.1"
 ruledir=/CRS/tests
+cmd_args="--ruledir_recurse "
 
-while getopts "Dd:f:" opt; do
+while getopts "Dd:f:F" opt; do
     case $opt in
+        F)
+            cmd_args="$cmd_args --destaddr_as_host "
+            ;;
         f)
             if [ "$OPTARG" != "-" ]; then
                 ruledir=$OPTARG
@@ -16,18 +20,24 @@ while getopts "Dd:f:" opt; do
                 done
                 ruledir=$T
             fi
+            cmd_args="$cmd_args  --ruledir $ruledir "
             ;;
         D)
             set -x
             ;;
         d)
             destaddr=$OPTARG
+            cmd_args="$cmd_args --destaddr $destaddr "
             ;;
     esac
 done
 
+if [ "$ruledir" = "/CRS/tests" ]; then
+    cmd_args="$cmd_args --ruledir $ruledir "
+fi
+
 export PYTHONUNBUFFERED=1
-python /opt/ftw/tools/build_journal.py --ruledir_recurse --ruledir $ruledir  --destaddr $destaddr
+python /opt/ftw/tools/build_journal.py $cmd_args
 if [ $? -ne 0 ]; then
     echo "[errors] execution of the test fixture(s) failed"
     exit 1
