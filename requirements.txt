@@ -6,7 +6,7 @@ py==1.4.31
 pylint==1.5.5
 pytest==2.9.1
 PyYAML==3.11
-requests==2.9.1
+requests==2.20.0
 six==1.10.0
 wrapt==1.10.8
 python-dateutil==2.6.0
