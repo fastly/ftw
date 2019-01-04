@@ -1,6 +1,5 @@
-===============
-Journaling
-===============
+# Journaling
+
 
 FTW supports the process of creating journal entries for your HTTP tests. The idea behind this stems from the need to decouple the sending of attacks with testing the responses. This might be better explained with the following use cases:
 
