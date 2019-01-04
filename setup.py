@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='ftw',
-      version='1.2.0',
+      version='1.2.1',
       description='Framework for Testing WAFs',
       author='Chaim Sanders, Zack Allen',
       author_email='zma4580@gmail.com, chaim.sanders@gmail.com',
