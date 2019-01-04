@@ -5,7 +5,7 @@ lazy-object-proxy==1.2.2
 py==1.4.31
 pylint==1.5.5
 pytest==2.9.1
-PyYAML==3.11
+PyYAML==4.2b1
 requests==2.20.0
 six==1.10.0
 wrapt==1.10.8
