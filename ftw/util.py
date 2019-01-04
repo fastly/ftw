@@ -83,7 +83,7 @@ def extract_yaml(yaml_files):
     for yaml_file in yaml_files:
         try:
             with open(yaml_file, 'r') as fd:
-                loaded_yaml.append(yaml.load(fd))
+                loaded_yaml.append(yaml.safe_load(fd))
         except IOError as e:
             print('Error reading file', yaml_file)
             raise e
