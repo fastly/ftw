@@ -1,6 +1,4 @@
-===============
-The YAML Format
-===============
+# The YAML Format
 
 Welcome to the the FTW YAMLFormat documentation. In this document we will explain all the possible options that can be used within the YAML format. Generally this is the preferred format for writing tests in as they don't require any programming skills in order to understand and change. If you find a bug in this format please open an issue.
 
