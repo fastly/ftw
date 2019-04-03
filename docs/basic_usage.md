@@ -14,7 +14,7 @@ Vagrant.configure(2) do |config|
   end
 end
 ```
-Once your vargant envronment is up and running, you should update it and install python et al:
+Once your vargant environment is up and running, you should update it and install python et al:
 
 ```
 	% sudo apt-get update && sudo apt-get upgrade

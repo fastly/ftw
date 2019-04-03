@@ -15,7 +15,7 @@ Metadata parameters are present once per test file and are located by convention
     description: "This file contains example tests."
   ...
 ```  
-What follows are all the possible Metadata parameters that are current suported
+What follows are all the possible Metadata parameters that are current supported
 
 Author
 ------
@@ -33,7 +33,7 @@ Author
 
 Description
 -----------
-**Description**: A breif description of what the following tests are meant to accomplish
+**Description**: A brief description of what the following tests are meant to accomplish
 
 **Syntax:** ```description: "<string>"```
 
@@ -77,7 +77,7 @@ Name
 
 Tests Parameters
 ==================
-The tests area is made up of multiple tests. Each test contains Stages and an optional rule_id. Within the Stage there is additional information that is outlined in Stage Paramaters
+The tests area is made up of multiple tests. Each test contains Stages and an optional rule_id. Within the Stage there is additional information that is outlined in Stage Parameters
 
 Test_title
 -----------
@@ -95,7 +95,7 @@ Test_title
 
 Stages
 -----------
-**Description**: A parameter to encapsalate all the different stages of a give test
+**Description**: A parameter to encapsulate all the different stages of a give test
 
 **Syntax:** ```stages: n*<individual stages>```
 
@@ -110,7 +110,7 @@ Stages
 
 Stage Parameters
 ==================
-There can be multiple stages per test. Each stage represents a single request/response. Each stage paramater encapsalates an input and output parameters.
+There can be multiple stages per test. Each stage represents a single request/response. Each stage parameter encapsulates an input and output parameters.
 
 Input
 -----------
@@ -302,7 +302,7 @@ Data
 
 Save_cookie
 -----------
-**Description**: If there are multiple stages and save cookie is set, it will automaticlly be provided in the next stage if the site in question provides the Set-Cookie response header.
+**Description**: If there are multiple stages and save cookie is set, it will automatically be provided in the next stage if the site in question provides the Set-Cookie response header.
 
 **Syntax:** ```save_cookie: (true|false)```
 
@@ -316,7 +316,7 @@ Save_cookie
 
 Stop_magic
 -----------
-**Description**: The framework will take care of certain things automaticlly like setting content-length, encoding, etc. When stop_magic is on, the framework will not do anything automagically. 
+**Description**: The framework will take care of certain things automatically like setting content-length, encoding, etc. When stop_magic is on, the framework will not do anything automagically. 
 
 **Syntax:** ```stop_magic: (true|false)```
 

@@ -125,7 +125,7 @@ Step 4 - Log integration
 
 Although `status` and `html_contains` may be useful, it could give attackers information on how your WAF interacts with certain payloads. Because of this, you might want to be more stealthy in how you respond to certain payloads, but you still need to verify that the rules are firing. This is where the `log_contains` directive can be used to check your WAF logs.
 
-If you add a `log_contains: "^regex$"` directive to the `output` field in yaml file, `ftw` will use that regex on a list of log lines to see if that pattern is present. The issue here is that you have to write the integration and send `ftw` the loglines for it to run the regex on. This makes `ftw` extendible because it can integrate with virtually any log system (API, filesystem) as long as you have programmatic access to it.
+If you add a `log_contains: "^regex$"` directive to the `output` field in yaml file, `ftw` will use that regex on a list of log lines to see if that pattern is present. The issue here is that you have to write the integration and send `ftw` the loglines for it to run the regex on. This makes `ftw` extensible because it can integrate with virtually any log system (API, filesystem) as long as you have programmatic access to it.
 
 Here is how you integrate a log file into `ftw`.
 
