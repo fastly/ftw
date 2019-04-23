@@ -14,7 +14,7 @@ while getopts "Dd:f:F" opt; do
             if [ "$OPTARG" != "-" ]; then
                 ruledir=$OPTARG
             else
-                T=`mktemp -d /tmp/rules.XXXXX`
+                T=`mktemp -d -t rules.XXXXXX`
                 while IFS= read LINE; do
                     echo "$LINE" >> $T/rules.yaml
                 done
