@@ -4,13 +4,13 @@ from ftw import util, testrunner
 def diag_print(test, rule_id):
     print 'Running test %s from rule file %s' % (test.test_title, rule_id)
 
-def build_journal(journal_file, ruledir, ruledir_recurse, tablename, destaddr, headers):
+def build_journal(journal_file, ruledir, ruledir_recurse, tablename, destaddr, headers, protocol, port):
     util.instantiate_database(journal_file)
     rulesets = util.get_rulesets(ruledir, ruledir_recurse)
     for rule in rulesets:
         for test in rule.tests:
             runner = testrunner.TestRunner() 
-            runner.run_test_build_journal(test.ruleset_meta['name'], test, journal_file, tablename, destaddr, diag_print, headers)
+            runner.run_test_build_journal(test.ruleset_meta['name'], test, journal_file, tablename, destaddr, diag_print, protocol, port, headers)
 
 def main():
     parser = argparse.ArgumentParser(description='Build FTW Journal database')
@@ -26,6 +26,10 @@ def main():
         help='Destination host for the payloads')
     parser.add_argument('--destaddr_as_host', action='store_true',
         help='Use destination address as the Host header')
+    parser.add_argument('--protocol', default=None,
+        help='Specify protocol: http or https (default http)')
+    parser.add_argument('--port', default=None,
+        help='Specify port number (default 80)')
     args = parser.parse_args()
     destaddr = args.destaddr
     journal_file = args.journal
@@ -33,9 +37,11 @@ def main():
     ruledir_recurse = args.ruledir_recurse
     tablename = args.tablename
     headers = {}
+    protocol = args.protocol
+    port = int(args.port)
     if args.destaddr_as_host:
         headers['Host'] = destaddr = args.destaddr
-    build_journal(journal_file, ruledir, ruledir_recurse, tablename, destaddr, headers)
+    build_journal(journal_file, ruledir, ruledir_recurse, tablename, destaddr, headers, protocol, port)
 
 if __name__ == '__main__':
     main()
