@@ -21,7 +21,7 @@
               uri: "/"
             output: 
               status: 200
-              response_contains: "established to be used for" 
+              response_contains: "for use in illustrative examples in documents" 
     - 
       test_title: "response_contains(2)"
       stages: 
