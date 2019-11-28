@@ -32,7 +32,7 @@ def test_search3():
     x = ruleset.Input(dest_addr="example.com",headers={"Host":"example.com"})
     http_ua = http.HttpUA()
     http_ua.send_request(x)    
-    runner.test_response(http_ua.response_object,re.compile('established to be used for'))
+    runner.test_response(http_ua.response_object,re.compile('for use in illustrative examples in documents'))
 
 # Should return a success because we found our regex
 def test_search4():   
