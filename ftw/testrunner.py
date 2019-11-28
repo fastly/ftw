@@ -141,7 +141,7 @@ class TestRunner(object):
                     stage.input.dest_addr = destaddr
                 if proto:
                     stage.input.protocol = proto
-                if port:
+                if port != 0:
                     stage.input.port = port
                 '''
                     Merge in/override the headers that were passed in by

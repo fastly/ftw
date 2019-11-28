@@ -38,7 +38,9 @@ def main():
     tablename = args.tablename
     headers = {}
     protocol = args.protocol
-    port = int(args.port)
+    port = 0
+    if args.port:
+        port = int(args.port)
     if args.destaddr_as_host:
         headers['Host'] = destaddr = args.destaddr
     build_journal(journal_file, ruledir, ruledir_recurse, tablename, destaddr, headers, protocol, port)
