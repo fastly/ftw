@@ -15,8 +15,8 @@ while getopts "Dd:f:FP:p:" opt; do
                 ruledir=$OPTARG
             else
                 T=`mktemp -d -t rules.XXXXXX`
-                while IFS= read LINE; do
-                    echo "$LINE" >> $T/rules.yaml
+                while IFS= read -r LINE; do
+                    echo -E "$LINE" >> /$T/rules.yaml
                 done
                 ruledir=$T
             fi
