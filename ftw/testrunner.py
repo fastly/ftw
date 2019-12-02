@@ -122,7 +122,7 @@ class TestRunner(object):
             if stage.output.status:
                 self.test_status(stage.output.status, status)
 
-    def run_test_build_journal(self, rule_id, test, journal_file, tablename, destaddr, callback, headers = {}):
+    def run_test_build_journal(self, rule_id, test, journal_file, tablename, destaddr, callback, proto, port, headers = {}):
         """
         Build journal entries from a test within a specified rule_id
         Pass in the rule_id, test object, and path to journal_file 
@@ -139,6 +139,10 @@ class TestRunner(object):
                     callback(test, rule_id)
                 if destaddr is not None:
                     stage.input.dest_addr = destaddr
+                if proto:
+                    stage.input.protocol = proto
+                if port != 0:
+                    stage.input.port = port
                 '''
                     Merge in/override the headers that were passed in by
                     the caller.

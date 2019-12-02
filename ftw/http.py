@@ -46,7 +46,15 @@ class HttpResponse(object):
         if response_headers['content-encoding'] == 'gzip':
             buf = StringIO.StringIO(response_data)
             zipbuf = gzip.GzipFile(fileobj=buf)
-            response_data = zipbuf.read()
+            try:
+                response_data = zipbuf.read()
+            except IOError:
+                raise errors.TestError(
+                    'Content encoding gzip but no compressed data',
+                    {
+                        'response_data': str(response_data),
+                        'function': 'http.HttpResponse.parse_content_encoding'
+                    })
         elif response_headers['content-encoding'] == 'deflate':
             data = StringIO.StringIO(zlib.decompress(response_data))
             response_data = data.read()

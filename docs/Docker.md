@@ -28,3 +28,11 @@ If you are testing through the CDN, you can use `-F` to use the target specifica
 ```
 	% docker run -i ftw-test -F -d <hostname> -f - < mytest.yaml
 ```
+
+## Connecting using TLS
+
+If you want to connect using TLS, you need to change the port and protocol:
+
+```
+	% docker run -i ftw-test -P https -p 443 -F -d <hostname> -f - < mytest.yaml
+```

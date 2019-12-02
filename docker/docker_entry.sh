@@ -5,7 +5,7 @@ destaddr="127.0.0.1"
 ruledir=/CRS/tests
 cmd_args="--ruledir_recurse "
 
-while getopts "Dd:f:F" opt; do
+while getopts "Dd:f:FP:p:" opt; do
     case $opt in
         F)
             cmd_args="$cmd_args --destaddr_as_host "
@@ -15,8 +15,8 @@ while getopts "Dd:f:F" opt; do
                 ruledir=$OPTARG
             else
                 T=`mktemp -d -t rules.XXXXXX`
-                while IFS= read LINE; do
-                    echo "$LINE" >> $T/rules.yaml
+                while IFS= read -r LINE; do
+                    echo -E "$LINE" >> $T/rules.yaml
                 done
                 ruledir=$T
             fi
@@ -28,6 +28,14 @@ while getopts "Dd:f:F" opt; do
         d)
             destaddr=$OPTARG
             cmd_args="$cmd_args --destaddr $destaddr "
+            ;;
+        p)
+            port=$OPTARG
+            cmd_args="$cmd_args --port $port"
+            ;;
+        P)
+            proto=$OPTARG
+            cmd_args="$cmd_args --protocol $proto"
             ;;
     esac
 done
