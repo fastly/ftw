@@ -1,3 +1,5 @@
+:warning: *NOTE: This project is no longer maintained at this location, please refer to https://github.com/coreruleset/ftw instead.*
+
 ## Framework for Testing WAFs (FTW)
 [![Build Status](https://travis-ci.org/fastly/ftw.svg?branch=master)](https://travis-ci.org/fastly/ftw)
 
