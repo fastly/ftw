@@ -25,7 +25,7 @@ setup(name='ftw',
           'pylint==1.5.5',
           'pytest==2.9.1',
           'PyYAML==4.2b1',
-          'requests==2.20.0',
+          'requests==2.31.0',
           'six==1.10.0',
           'wrapt==1.10.8',
           'python-dateutil==2.6.0'
